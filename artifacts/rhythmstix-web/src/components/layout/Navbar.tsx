@@ -36,14 +36,14 @@ export function Navbar() {
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center group">
+        <div className="flex items-center">
+          <Link href="/" className="flex items-center group mr-8">
             <span className="font-extrabold text-xl tracking-tight">
               <span className="text-[rgb(52,154,167)]">r</span><span className="text-foreground">hythm</span><span className="text-[rgb(52,154,167)]">tix</span>
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-6 mr-auto">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
@@ -74,7 +74,7 @@ export function Navbar() {
           </nav>
 
           <button
-            className="md:hidden p-2 text-muted-foreground hover:text-foreground"
+            className="md:hidden ml-auto p-2 text-muted-foreground hover:text-foreground"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle Menu"
           >
