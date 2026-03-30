@@ -100,9 +100,9 @@ export function Navbar() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
             <img
-              src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-new.svg`}
+              src={`${import.meta.env.BASE_URL}images/${isScrolled ? 'rhythmstix-logo-new.svg' : 'rhythmstix-logo-hero.svg'}`}
               alt="Rhythmstix - Making Learning Stick"
-              className="h-10 w-auto object-contain"
+              className="h-10 w-auto object-contain transition-all duration-300"
             />
           </Link>
 
@@ -113,7 +113,10 @@ export function Navbar() {
               onMouseLeave={closeDropdown}
             >
               <button
-                className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2"
+                className={cn(
+                  "flex items-center gap-1 text-sm font-medium transition-colors py-2",
+                  isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
+                )}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
                 Apps
@@ -176,13 +179,16 @@ export function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                className={cn(
+                  "text-sm font-medium transition-colors",
+                  isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
+                )}
               >
                 {link.label}
               </Link>
             ))}
 
-            <Button variant="glass" size="sm" className="ml-2" asChild>
+            <Button variant="glass" size="sm" className={cn("ml-2", !isScrolled && "border-white/30 text-white hover:bg-white/10")} asChild>
               <a
                 href="https://www.rhythmstix.co.uk/my-account/"
                 target="_blank"
@@ -194,7 +200,7 @@ export function Navbar() {
           </nav>
 
           <button
-            className="md:hidden p-2 text-muted-foreground hover:text-foreground"
+            className={cn("md:hidden p-2", isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white")}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle Menu"
           >
