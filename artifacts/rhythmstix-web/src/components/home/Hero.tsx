@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 
 const APP_LINKS = [
@@ -47,7 +45,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
-            className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-10"
+            className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2"
           >
             {APP_LINKS.map((app) => (
               <Link
@@ -58,25 +56,6 @@ export function Hero() {
                 {app.name}
               </Link>
             ))}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Button size="lg" className="w-full sm:w-auto group bg-[#0e9aa7] hover:bg-[#12b5c4] text-white shadow-lg shadow-[#0e9aa7]/25 border-0 text-base px-8 py-6" asChild>
-              <a href="#products">
-                Explore Apps
-                <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
-            </Button>
-            <Button size="lg" className="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-base px-8 py-6" asChild>
-              <Link href="/shop">
-                Visit Shop
-              </Link>
-            </Button>
           </motion.div>
         </div>
       </div>
