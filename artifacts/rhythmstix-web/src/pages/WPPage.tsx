@@ -2,7 +2,7 @@ import { useParams } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useWPPage } from "@/hooks/use-wp";
-import { decodeHtml } from "@/lib/wordpress";
+import { decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
@@ -33,7 +33,7 @@ export default function WPPage() {
 
   const processedContent = useMemo(() => {
     if (!page?.content?.rendered) return "";
-    return highlightProducts(page.content.rendered);
+    return rewriteWPLinks(highlightProducts(page.content.rendered));
   }, [page]);
 
   return (

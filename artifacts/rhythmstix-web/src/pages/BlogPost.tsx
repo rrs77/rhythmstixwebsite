@@ -2,7 +2,7 @@ import { useParams } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useWPPost } from "@/hooks/use-wp";
-import { decodeHtml } from "@/lib/wordpress";
+import { decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,7 @@ export default function BlogPost() {
               </p>
               <div
                 className="wp-content prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+                dangerouslySetInnerHTML={{ __html: rewriteWPLinks(post.content.rendered) }}
               />
             </>
           )}

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useWPPage } from "@/hooks/use-wp";
-import { decodeHtml } from "@/lib/wordpress";
+import { decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,7 @@ export default function Community() {
 
               <div
                 className="wp-content prose prose-lg max-w-none mb-12"
-                dangerouslySetInnerHTML={{ __html: page.content.rendered }}
+                dangerouslySetInnerHTML={{ __html: rewriteWPLinks(page.content.rendered) }}
               />
             </motion.div>
           )}

@@ -76,3 +76,41 @@ export function decodeHtml(html: string): string {
   txt.innerHTML = html;
   return txt.value;
 }
+
+const KNOWN_ROUTES: Record<string, string> = {
+  assessify: "/assessify",
+  ccdesigner: "/ccdesigner",
+  "creative-curriculum-designer": "/ccdesigner",
+  perifeedback: "/perifeedback",
+  periplanner: "/perifeedback",
+  progresspath: "/progresspath",
+  "progress-path": "/progresspath",
+  "e-learning": "/elearning",
+  elearning: "/elearning",
+  "rhythmstix-app": "/rhythmstix-app",
+  shop: "/shop",
+  blog: "/blog",
+  community: "/community",
+  contact: "/contact",
+  "contact-us": "/contact",
+};
+
+export function rewriteWPLinks(html: string): string {
+  return html.replace(
+    /href=["'](https?:\/\/(?:www\.)?rhythmstix\.co\.uk)\/?([^"'#?]*)([^"']*)["']/gi,
+    (_match, _domain, path, extra) => {
+      const cleanPath = path.replace(/\/$/, "").toLowerCase();
+
+      if (!cleanPath) {
+        return `href="/${extra}"`;
+      }
+
+      const route = KNOWN_ROUTES[cleanPath];
+      if (route) {
+        return `href="${route}${extra}"`;
+      }
+
+      return `href="/page/${cleanPath}${extra}"`;
+    }
+  );
+}

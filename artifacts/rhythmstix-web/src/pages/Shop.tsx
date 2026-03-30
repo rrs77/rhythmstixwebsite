@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { SchoolsSection } from "@/components/home/SchoolsSection";
 import { ELearningSection } from "@/components/home/ELearningSection";
 import { useShopProducts, useShopCategories, createOrder, type ShopProduct } from "@/hooks/use-shop";
+import { rewriteWPLinks } from "@/lib/wordpress";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2, Package, Palette, ClipboardCheck, CalendarDays, GraduationCap, ArrowRight, ShoppingCart, Download, X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -164,7 +165,7 @@ function ProductModal({ product, onClose }: { product: ShopProduct; onClose: () 
           {product.description && (
             <div
               className="text-sm text-muted-foreground leading-relaxed mb-5 prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: product.description }}
+              dangerouslySetInnerHTML={{ __html: rewriteWPLinks(product.description) }}
             />
           )}
 
