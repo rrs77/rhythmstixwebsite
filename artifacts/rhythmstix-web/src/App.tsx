@@ -12,7 +12,7 @@ import PeriFeedback from "@/pages/PeriFeedback";
 import ProgressPath from "@/pages/ProgressPath";
 import RhythmstixApp from "@/pages/RhythmstixApp";
 import ELearning from "@/pages/ELearning";
-import Resources from "@/pages/Resources";
+
 import Community from "@/pages/Community";
 import ContactUs from "@/pages/ContactUs";
 import Cookies from "@/pages/Cookies";
@@ -35,7 +35,7 @@ function Router() {
       <Route path="/progresspath" component={ProgressPath} />
       <Route path="/rhythmstix-app" component={RhythmstixApp} />
       <Route path="/elearning" component={ELearning} />
-      <Route path="/resources" component={Resources} />
+
       <Route path="/community" component={Community} />
       <Route path="/contact" component={ContactUs} />
       <Route path="/cookies" component={Cookies} />

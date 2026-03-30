@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SchoolsSection } from "@/components/home/SchoolsSection";
+import { ELearningSection } from "@/components/home/ELearningSection";
 import { useShopProducts, useShopCategories, createOrder, type ShopProduct } from "@/hooks/use-shop";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2, Package, Palette, ClipboardCheck, CalendarDays, GraduationCap, ArrowRight, ShoppingCart, Download, X, CheckCircle2 } from "lucide-react";
@@ -394,6 +396,9 @@ export default function Shop() {
             );
             return null;
           })()}
+
+          <SchoolsSection />
+          <ELearningSection />
 
           <div className="mt-16 mb-10">
             <h2 className="text-2xl font-bold text-foreground mb-2">Our Apps</h2>
