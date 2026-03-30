@@ -8,10 +8,15 @@ const ELEARNING_RESOURCES = [
   {
     title: "BandLab — Let's Get Started",
     subtitle: "Music Production",
-    description: "Dive into music production with our comprehensive starter guide for BandLab. Perfect for classroom integration or independent student learning. Master the basics of recording, mixing, and creating loops. Includes step-by-step video tutorials, downloadable lesson plans, and interactive quizzes.",
+    description: "Dive into music production with our comprehensive starter guide for BandLab. Perfect for classroom integration or independent student learning. Master the basics of recording, mixing, and creating loops.",
     image: "images/bandlab-cover.png",
     tag: "E-Learning",
     tagColor: "bg-[#3a9ca5] text-white",
+    features: [
+      "Step-by-step video tutorials",
+      "Downloadable lesson plans and resources",
+      "Interactive quizzes to test knowledge",
+    ],
   },
 ];
 
@@ -23,15 +28,15 @@ function ResourceModal({ resource, onClose }: { resource: Resource; onClose: () 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        initial={{ opacity: 0, scale: 0.9, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        exit={{ opacity: 0, scale: 0.9, y: 30 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="bg-card rounded-2xl overflow-hidden border border-border shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
+        className="bg-card rounded-2xl overflow-hidden border border-[#3a9ca5]/20 shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative aspect-[16/9] overflow-hidden">
@@ -57,9 +62,21 @@ function ResourceModal({ resource, onClose }: { resource: Resource; onClose: () 
         <div className="p-6">
           <p className="text-xs font-semibold text-[#3a9ca5] mb-1 uppercase tracking-wider">{resource.subtitle}</p>
           <h3 className="text-xl font-bold mb-3 text-foreground">{resource.title}</h3>
-          <p className="text-muted-foreground text-sm leading-relaxed mb-5">
+          <p className="text-muted-foreground text-sm leading-relaxed mb-4">
             {resource.description}
           </p>
+
+          {resource.features && resource.features.length > 0 && (
+            <ul className="space-y-2 mb-5">
+              {resource.features.map((f, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#3a9ca5] mt-1.5 shrink-0" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          )}
+
           <Button className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" asChild>
             <Link href="/shop">
               <ShoppingCart className="w-4 h-4 mr-2" />
@@ -79,7 +96,8 @@ export function ELearningSection() {
     <section id="elearning" className="py-12 relative">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-2">E-Learning</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-[#3a9ca5]">E-Learning</h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd] mx-auto rounded-full mb-3" />
           <p className="text-muted-foreground max-w-xl mx-auto">
             Digital courses and interactive modules for modern music education.
           </p>
@@ -94,7 +112,7 @@ export function ELearningSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="group bg-card rounded-xl overflow-hidden border border-border hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-md hover:shadow-[#3a9ca5]/10 flex flex-col text-left cursor-pointer"
+              className="group bg-card rounded-xl overflow-hidden border border-[#3a9ca5]/10 hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-lg hover:shadow-[#3a9ca5]/10 flex flex-col text-left cursor-pointer"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
