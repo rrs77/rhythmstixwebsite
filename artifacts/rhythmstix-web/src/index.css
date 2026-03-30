@@ -164,3 +164,22 @@
   background: hsl(var(--secondary));
   font-weight: 600;
 }
+.wp-content .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 1.5rem 0;
+}
+@media (max-width: 768px) {
+  .wp-content .row {
+    grid-template-columns: 1fr;
+  }
+}
+.wp-content .col-lg-6 {
+  min-width: 0;
+}
+.wp-content .col-lg-6 img {
+  border-radius: 50%;
+  margin: 0 auto 0.5rem;
+  display: block;
+}
