@@ -91,6 +91,36 @@ Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used b
 
 Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
 
+### `artifacts/rhythmstix-web` (`@workspace/rhythmstix-web`)
+
+React + Vite frontend for the Rhythmstix music education platform. Dynamically pulls content from the existing WordPress site at `www.rhythmstix.co.uk` via the WP REST API.
+
+- **Framework**: React 19 + Vite + TypeScript
+- **Routing**: wouter (client-side routing)
+- **State/Data**: @tanstack/react-query for WP API caching
+- **UI**: Tailwind CSS + shadcn/ui components + Framer Motion animations
+- **WordPress API**: `https://www.rhythmstix.co.uk/wp-json/wp/v2/` (must use `www.` subdomain)
+- **Theme**: Teal colour scheme (dark background `hsl(180,25%,15%)`, primary teal `hsl(174,72%,50%)`)
+
+#### Key Files
+- `src/lib/wordpress.ts` — WP REST API client (pages, posts, media)
+- `src/hooks/use-wp.ts` — React Query hooks for WP data
+- `src/pages/Home.tsx` — Homepage with hero, product grid, testimonials
+- `src/pages/WPPage.tsx` — Generic WordPress page renderer (route: `/page/:slug`)
+- `src/pages/BlogList.tsx` — Blog listing from WP posts (route: `/blog`)
+- `src/pages/BlogPost.tsx` — Individual blog post (route: `/post/:slug`)
+- `src/components/layout/Navbar.tsx` — Navigation with internal links
+- `src/components/layout/Footer.tsx` — Footer with contact info and links
+- `src/components/home/ProductGrid.tsx` — Product cards (Assessify, PeriPlanner, etc.)
+
+#### WordPress Page Slugs
+about, assessify, periplanner, blog, community, contact-us, learning-platform, shop, policy, cookies
+
+#### Logos
+- `public/images/rhythmstix-logo-full.png` — Main logo (hero, navbar)
+- `public/images/rhythmstix-logo-alt.png` — Alternative logo
+- `public/images/rhythmstix-logo.jpg` — Small square icon
+
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.

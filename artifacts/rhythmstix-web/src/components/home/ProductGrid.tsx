@@ -8,6 +8,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 const PRODUCTS = [
   {
@@ -16,7 +17,7 @@ const PRODUCTS = [
     description: "Streamlined assessment tools tailored for performing arts. Evaluate, record, and provide feedback instantly.",
     icon: ClipboardCheck,
     color: "from-blue-500 to-cyan-400",
-    link: "#assessify",
+    link: "/page/assessify",
     cta: "Open Assessify"
   },
   {
@@ -25,7 +26,7 @@ const PRODUCTS = [
     description: "The ultimate timetabling and scheduling solution for peripatetic teachers and school departments.",
     icon: CalendarDays,
     color: "from-purple-500 to-indigo-400",
-    link: "#periplanner",
+    link: "/page/periplanner",
     cta: "Learn More"
   },
   {
@@ -34,7 +35,7 @@ const PRODUCTS = [
     description: "Visualize student journeys. Map out clear progression routes from early years to advanced levels.",
     icon: TrendingUp,
     color: "from-emerald-500 to-teal-400",
-    link: "#progresspath",
+    link: "/page/learning-platform",
     cta: "Learn More"
   },
   {
@@ -43,7 +44,7 @@ const PRODUCTS = [
     description: "Interactive tools, backing tracks, and resources directly in your pocket for teaching on the go.",
     icon: Smartphone,
     color: "from-orange-500 to-pink-400",
-    link: "#app",
+    link: "/page/learning-platform",
     cta: "Get the App"
   },
   {
@@ -52,7 +53,7 @@ const PRODUCTS = [
     description: "Comprehensive digital courses, sheet music, and interactive modules for modern music education.",
     icon: GraduationCap,
     color: "from-blue-600 to-indigo-500",
-    link: "#elearning",
+    link: "/blog",
     cta: "Browse Resources",
     wide: true
   }
@@ -95,10 +96,10 @@ export function ProductGrid() {
               
               <div className="mt-auto pt-4 flex items-center">
                 <Button variant="ghost" className="p-0 hover:bg-transparent group/btn text-primary hover:text-accent" asChild>
-                  <a href={product.link}>
+                  <Link href={product.link}>
                     {product.cta}
                     <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </motion.div>

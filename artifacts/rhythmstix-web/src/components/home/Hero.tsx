@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import { RhythmstixLogo } from "@/components/RhythmstixLogo";
+import { Link } from "wouter";
 
 export function Hero() {
   return (
@@ -23,7 +23,11 @@ export function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-6"
         >
-          <RhythmstixLogo size={180} showText={true} />
+          <img
+            src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-full.png`}
+            alt="Rhythmstix - Music for Education"
+            className="h-32 sm:h-40 md:h-48 w-auto object-contain mx-auto"
+          />
         </motion.div>
 
         <motion.div
@@ -48,7 +52,7 @@ export function Hero() {
               </a>
             </Button>
             <Button size="lg" variant="glass" className="w-full sm:w-auto" asChild>
-              <a href="#assessify">Open Assessify</a>
+              <Link href="/page/assessify">Open Assessify</Link>
             </Button>
           </div>
         </motion.div>

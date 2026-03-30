@@ -4,18 +4,17 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { RhythmstixIcon } from "@/components/RhythmstixLogo";
 
 const MAIN_LINKS = [
-  { label: "Products", href: "#products" },
-  { label: "Assessify", href: "#assessify" },
-  { label: "App", href: "#app" },
-  { label: "About", href: "#about" },
+  { label: "Products", href: "/" },
+  { label: "Assessify", href: "/page/assessify" },
+  { label: "App", href: "/page/learning-platform" },
+  { label: "About", href: "/page/about" },
 ];
 
 const EXTRA_LINKS = [
-  { label: "Community", href: "#community" },
-  { label: "Blog", href: "#blog" },
+  { label: "Community", href: "/page/community" },
+  { label: "Blog", href: "/blog" },
 ];
 
 export function Navbar() {
@@ -35,40 +34,41 @@ export function Navbar() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
-          ? "py-3 bg-background/80 backdrop-blur-xl border-b border-white/5 shadow-lg shadow-black/20"
-          : "py-5 bg-transparent"
+          ? "py-2 bg-background/80 backdrop-blur-xl border-b border-white/5 shadow-lg shadow-black/20"
+          : "py-4 bg-transparent"
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-            <RhythmstixIcon size={36} />
-            <span className="font-bold text-xl tracking-tight hidden sm:block">
-              Rhythmstix
-            </span>
+            <img
+              src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-full.png`}
+              alt="Rhythmstix"
+              className="h-10 w-auto object-contain"
+            />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
             <ul className="flex items-center gap-6">
               {MAIN_LINKS.map((link) => (
                 <li key={link.label}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
             <div className="flex items-center gap-3 pl-6 border-l border-border/50">
               {EXTRA_LINKS.map((link) => (
-                <a key={link.label} href={link.href} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                <Link key={link.label} href={link.href} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
                   {link.label}
-                </a>
+                </Link>
               ))}
               <Button variant="glass" size="sm" className="ml-2" asChild>
-                <a href="#login">Login</a>
+                <a href="https://www.rhythmstix.co.uk/my-account/" target="_blank" rel="noopener noreferrer">Login</a>
               </Button>
             </div>
           </nav>
@@ -93,17 +93,17 @@ export function Navbar() {
           >
             <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
               {[...MAIN_LINKS, ...EXTRA_LINKS].map((link) => (
-                <a
+                <Link
                   key={link.label}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-lg font-medium text-foreground py-2 border-b border-border/50"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
               <Button className="mt-4 w-full" asChild>
-                <a href="#login" onClick={() => setIsMobileMenuOpen(false)}>Login</a>
+                <a href="https://www.rhythmstix.co.uk/my-account/" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>Login</a>
               </Button>
             </div>
           </motion.div>
