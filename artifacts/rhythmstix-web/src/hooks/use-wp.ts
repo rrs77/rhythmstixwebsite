@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPage, getPosts, getPost, getPages } from "@/lib/wordpress";
+import { getPage, getPosts, getPost, getPages, getMedia } from "@/lib/wordpress";
 
 export function useWPPage(slug: string) {
   return useQuery({
@@ -22,6 +22,15 @@ export function useWPPosts(perPage = 20) {
     queryKey: ["wp-posts", perPage],
     queryFn: () => getPosts(perPage),
     staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useWPMedia(id: number) {
+  return useQuery({
+    queryKey: ["wp-media", id],
+    queryFn: () => getMedia(id),
+    enabled: id > 0,
+    staleTime: 30 * 60 * 1000,
   });
 }
 
