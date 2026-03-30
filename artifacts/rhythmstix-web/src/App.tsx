@@ -13,6 +13,7 @@ import ProgressPath from "@/pages/ProgressPath";
 import RhythmstixApp from "@/pages/RhythmstixApp";
 import ELearning from "@/pages/ELearning";
 import Resources from "@/pages/Resources";
+import Community from "@/pages/Community";
 import Shop from "@/pages/Shop";
 import NotFound from "@/pages/not-found";
 
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/rhythmstix-app" component={RhythmstixApp} />
       <Route path="/elearning" component={ELearning} />
       <Route path="/resources" component={Resources} />
+      <Route path="/community" component={Community} />
       <Route path="/shop" component={Shop} />
       <Route path="/blog" component={BlogList} />
       <Route path="/post/:slug" component={BlogPost} />
