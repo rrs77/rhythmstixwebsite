@@ -15,8 +15,10 @@ import ELearning from "@/pages/ELearning";
 import Resources from "@/pages/Resources";
 import Community from "@/pages/Community";
 import ContactUs from "@/pages/ContactUs";
+import Cookies from "@/pages/Cookies";
 import Shop from "@/pages/Shop";
 import NotFound from "@/pages/not-found";
+import { CookieConsent } from "@/components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,7 @@ function Router() {
       <Route path="/resources" component={Resources} />
       <Route path="/community" component={Community} />
       <Route path="/contact" component={ContactUs} />
+      <Route path="/cookies" component={Cookies} />
       <Route path="/shop" component={Shop} />
       <Route path="/blog" component={BlogList} />
       <Route path="/post/:slug" component={BlogPost} />
@@ -48,6 +51,7 @@ function App() {
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <Router />
+          <CookieConsent />
         </WouterRouter>
         <Toaster />
       </TooltipProvider>
