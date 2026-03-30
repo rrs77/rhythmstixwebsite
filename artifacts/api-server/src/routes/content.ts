@@ -31,4 +31,30 @@ router.put("/content/:key", requireAdmin, async (req: Request, res: Response) =>
   res.json({ success: true });
 });
 
+router.get("/hidden-posts", async (_req: Request, res: Response) => {
+  try {
+    const rows = await db.select().from(siteContentTable).where(eq(siteContentTable.key, "hidden_posts"));
+    const hiddenIds: number[] = rows.length > 0 ? JSON.parse(rows[0].value) : [];
+    res.json(hiddenIds);
+  } catch {
+    res.json([]);
+  }
+});
+
+router.put("/hidden-posts", requireAdmin, async (req: Request, res: Response) => {
+  const { postIds } = req.body;
+  if (!Array.isArray(postIds)) {
+    res.status(400).json({ error: "postIds must be an array" });
+    return;
+  }
+  const value = JSON.stringify(postIds);
+  const existing = await db.select().from(siteContentTable).where(eq(siteContentTable.key, "hidden_posts"));
+  if (existing.length > 0) {
+    await db.update(siteContentTable).set({ value, updatedAt: new Date() }).where(eq(siteContentTable.key, "hidden_posts"));
+  } else {
+    await db.insert(siteContentTable).values({ key: "hidden_posts", value });
+  }
+  res.json({ success: true });
+});
+
 export default router;

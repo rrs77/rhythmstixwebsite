@@ -243,6 +243,20 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "rhythmstix2024";
 
+router.post("/auth/admin-login", (req: Request, res: Response) => {
+  const { password } = req.body;
+  if (password === ADMIN_PASSWORD) {
+    (req.session as any).isAdmin = true;
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ error: "Invalid password" });
+  }
+});
+
+router.get("/auth/admin-check", (req: Request, res: Response) => {
+  res.json({ authenticated: !!(req.session as any)?.isAdmin });
+});
+
 export function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if ((req.session as any)?.isAdmin) {
     next();
