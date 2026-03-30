@@ -101,7 +101,10 @@ export default function BlogList() {
       <main className="flex-grow pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-bold text-[rgb(52,154,167)]">Blog</h1>
+            <div>
+              <h1 className="text-4xl font-bold text-[rgb(52,154,167)]">Blog</h1>
+              <div className="w-16 h-1 rounded-full bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd] mt-2" />
+            </div>
             <Button
               variant="ghost"
               size="sm"
@@ -180,7 +183,7 @@ export default function BlogList() {
                     <Link
                       href={`/post/${post.slug}`}
                       className={cn(
-                        "block bg-card rounded-2xl p-6 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group",
+                        "block bg-card rounded-2xl p-6 border border-[#3a9ca5]/10 hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-lg hover:shadow-[#3a9ca5]/10 group",
                         isHidden && adminMode && "opacity-50 border-dashed"
                       )}
                     >

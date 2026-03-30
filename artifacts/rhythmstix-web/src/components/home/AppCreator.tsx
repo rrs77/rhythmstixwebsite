@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export function AppCreator() {
   return (
-    <section className="py-16 bg-background">
+    <section className="py-16 bg-gradient-to-b from-background to-[#3a9ca5]/[0.03]">
       <div className="container mx-auto px-4 max-w-3xl">
         <motion.h2
           initial={{ opacity: 0, y: 15 }}
@@ -19,7 +19,7 @@ export function AppCreator() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="bg-card rounded-2xl border border-border p-8 md:p-10 shadow-sm"
+          className="bg-card rounded-2xl border border-[#3a9ca5]/20 p-8 md:p-10 shadow-sm shadow-[#3a9ca5]/5"
         >
           <div className="flex items-center gap-3 mb-6">
             <motion.div

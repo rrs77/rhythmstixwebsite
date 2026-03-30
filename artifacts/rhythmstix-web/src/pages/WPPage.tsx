@@ -55,14 +55,19 @@ export default function WPPage() {
           {page && (
             <>
               {page.title.rendered && (
-                <h1 className="text-4xl font-bold mb-8 text-[rgb(52,154,167)]">
-                  {decodeHtml(page.title.rendered)}
-                </h1>
+                <div className="mb-8">
+                  <h1 className="text-4xl font-bold text-[rgb(52,154,167)] mb-2">
+                    {decodeHtml(page.title.rendered)}
+                  </h1>
+                  <div className="w-20 h-1 rounded-full bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd]" />
+                </div>
               )}
-              <WPContent
-                className="wp-content prose prose-lg max-w-none"
-                html={processedContent}
-              />
+              <div className="rounded-2xl border border-[#3a9ca5]/10 bg-card p-6 md:p-10 shadow-sm">
+                <WPContent
+                  className="wp-content prose prose-lg max-w-none"
+                  html={processedContent}
+                />
+              </div>
             </>
           )}
           {!isLoading && !error && !page && (

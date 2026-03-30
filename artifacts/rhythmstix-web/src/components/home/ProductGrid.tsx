@@ -59,7 +59,7 @@ const PRODUCTS = [
 
 export function ProductGrid() {
   return (
-    <section id="products" className="py-12 relative">
+    <section id="products" className="py-16 relative">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -67,8 +67,11 @@ export function ProductGrid() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">Our Apps & Tools</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-1.5 h-10 rounded-full bg-gradient-to-b from-[#3a9ca5] to-[#4cb5bd]" />
+            <h2 className="text-3xl md:text-4xl font-bold">Our Apps & Tools</h2>
+          </div>
+          <p className="text-muted-foreground text-lg max-w-2xl ml-5">
             A cohesive suite of applications designed specifically to make teaching, assessing, and learning easier.
           </p>
         </motion.div>
@@ -106,6 +109,18 @@ export function ProductGrid() {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-10 rounded-2xl bg-gradient-to-r from-[#3a9ca5]/5 via-[#4cb5bd]/8 to-[#3a9ca5]/5 border border-[#3a9ca5]/15 p-6 md:p-8 text-center"
+        >
+          <p className="text-muted-foreground text-sm md:text-base">
+            All our apps are designed to work together — giving schools a{" "}
+            <span className="text-[#3a9ca5] font-semibold">complete toolkit</span> for music education.
+          </p>
+        </motion.div>
       </div>
     </section>
   );

@@ -55,7 +55,7 @@ export function Testimonials() {
   }, [emblaApi]);
 
   return (
-    <section className="py-12 bg-secondary/30 relative">
+    <section className="py-16 bg-gradient-to-br from-[#3a9ca5]/[0.04] via-secondary/30 to-[#4cb5bd]/[0.04] relative">
       <div className="container mx-auto px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -63,8 +63,8 @@ export function Testimonials() {
           viewport={{ once: true }}
           className="text-center mb-8"
         >
-          <h2 className="text-2xl font-bold mb-2">What People Say</h2>
-          <div className="w-12 h-0.5 bg-primary mx-auto rounded-full" />
+          <h2 className="text-2xl font-bold mb-3">What People Say</h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd] mx-auto rounded-full" />
         </motion.div>
 
         <div className="max-w-3xl mx-auto relative">
@@ -72,7 +72,7 @@ export function Testimonials() {
             <div className="flex touch-pan-y">
               {TESTIMONIALS.map((testimonial) => (
                 <div key={testimonial.id} className="flex-[0_0_100%] min-w-0 px-4">
-                  <div className="glass-panel rounded-2xl p-6 md:p-8 text-center relative mx-auto max-w-2xl">
+                  <div className="glass-panel rounded-2xl p-6 md:p-8 text-center relative mx-auto max-w-2xl border border-[#3a9ca5]/10">
                     <Quote className="w-8 h-8 text-primary/15 mx-auto mb-4 rotate-180" />
                     <p className="text-base md:text-lg font-medium text-foreground mb-4 leading-relaxed">
                       "{testimonial.quote}"
