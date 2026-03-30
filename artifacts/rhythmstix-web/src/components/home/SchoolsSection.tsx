@@ -18,7 +18,7 @@ const RESOURCES = [
     description: "A complete, modern nativity package for Key Stage 2 with script, sheet music, and performance tracks.",
     image: "images/guide-the-way.png",
     tag: "Premium Package",
-    tagColor: "bg-[#0e9aa7] text-white",
+    tagColor: "bg-[#3a9ca5] text-white",
     link: "https://www.rhythmstix.co.uk/guide-the-way/"
   }
 ];
@@ -45,7 +45,7 @@ export function SchoolsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="group bg-card rounded-2xl overflow-hidden border border-border hover:border-[#0e9aa7]/40 transition-all duration-300 hover:shadow-lg hover:shadow-[#0e9aa7]/10 flex flex-col"
+              className="group bg-card rounded-2xl overflow-hidden border border-border hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-lg hover:shadow-[#3a9ca5]/10 flex flex-col"
             >
               <div className="relative aspect-[16/10] overflow-hidden">
                 <img
@@ -61,12 +61,12 @@ export function SchoolsSection() {
               </div>
 
               <div className="p-5">
-                <p className="text-xs font-semibold text-[#0e9aa7] mb-1 uppercase tracking-wider">{resource.subtitle}</p>
-                <h3 className="text-lg font-bold mb-2 text-foreground group-hover:text-[#0e9aa7] transition-colors">{resource.title}</h3>
+                <p className="text-xs font-semibold text-[#3a9ca5] mb-1 uppercase tracking-wider">{resource.subtitle}</p>
+                <h3 className="text-lg font-bold mb-2 text-foreground group-hover:text-[#3a9ca5] transition-colors">{resource.title}</h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   {resource.description}
                 </p>
-                <span className="inline-flex items-center text-sm font-medium text-[#0e9aa7]">
+                <span className="inline-flex items-center text-sm font-medium text-[#3a9ca5]">
                   View Resource
                   <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
                 </span>

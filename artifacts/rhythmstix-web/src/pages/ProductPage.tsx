@@ -66,7 +66,7 @@ export default function ProductPage({
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-start gap-5 mb-6">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#0e9aa7] to-[#12b5c4] shadow-md shrink-0">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#3a9ca5] to-[#4cb5bd] shadow-md shrink-0">
                 <Icon className="w-8 h-8 text-white" />
               </div>
               <div>
@@ -84,7 +84,7 @@ export default function ProductPage({
                 <img src={heroImage} alt={name} className="w-full h-auto" />
               </div>
             ) : (
-              <div className="mb-8 rounded-2xl overflow-hidden border border-border bg-gradient-to-br from-[#0e9aa7]/5 to-[#12b5c4]/10 flex items-center justify-center h-64">
+              <div className="mb-8 rounded-2xl overflow-hidden border border-border bg-gradient-to-br from-[#3a9ca5]/5 to-[#4cb5bd]/10 flex items-center justify-center h-64">
                 <div className="text-center text-muted-foreground/40">
                   <ImageIcon className="w-12 h-12 mx-auto mb-2" />
                   <p className="text-sm">Product image coming soon</p>
@@ -100,7 +100,7 @@ export default function ProductPage({
 
             {externalUrl && (
               <div className="mb-12">
-                <Button size="lg" className="group bg-[#0e9aa7] hover:bg-[#12b5c4]" asChild>
+                <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
                   <a href={externalUrl} target="_blank" rel="noopener noreferrer">
                     {externalLabel || `Visit ${name}`}
                     <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -143,10 +143,10 @@ export default function ProductPage({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08 }}
-                  className="bg-card rounded-2xl p-6 border border-border hover:border-[#0e9aa7]/30 transition-all"
+                  className="bg-card rounded-2xl p-6 border border-border hover:border-[#3a9ca5]/30 transition-all"
                 >
-                  <div className="w-11 h-11 rounded-xl mb-4 flex items-center justify-center bg-[#0e9aa7]/10">
-                    <feature.icon className="w-5 h-5 text-[#0e9aa7]" />
+                  <div className="w-11 h-11 rounded-xl mb-4 flex items-center justify-center bg-[#3a9ca5]/10">
+                    <feature.icon className="w-5 h-5 text-[#3a9ca5]" />
                   </div>
                   <h3 className="text-lg font-semibold mb-2 text-foreground">{feature.title}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
@@ -201,7 +201,7 @@ export default function ProductPage({
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-br from-[#0e9aa7]/5 to-[#12b5c4]/10 rounded-2xl p-8 md:p-12 border border-[#0e9aa7]/20 text-center mb-8"
+            className="bg-gradient-to-br from-[#3a9ca5]/5 to-[#4cb5bd]/10 rounded-2xl p-8 md:p-12 border border-[#3a9ca5]/20 text-center mb-8"
           >
             <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               {ctaHeading}
@@ -210,14 +210,14 @@ export default function ProductPage({
               {ctaText}
             </p>
             {externalUrl ? (
-              <Button size="lg" className="group bg-[#0e9aa7] hover:bg-[#12b5c4]" asChild>
+              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
                 <a href={externalUrl} target="_blank" rel="noopener noreferrer">
                   {externalLabel || `Get Started with ${name}`}
                   <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
               </Button>
             ) : (
-              <Button size="lg" className="group bg-[#0e9aa7] hover:bg-[#12b5c4]" asChild>
+              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
                 <Link href="/#products">
                   Explore All Apps
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />

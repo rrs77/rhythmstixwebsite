@@ -100,7 +100,7 @@ React + Vite frontend for the Rhythmstix music education platform. Dynamically p
 - **State/Data**: @tanstack/react-query for WP API caching
 - **UI**: Tailwind CSS + shadcn/ui components + Framer Motion animations
 - **WordPress API**: `https://www.rhythmstix.co.uk/wp-json/wp/v2/` (must use `www.` subdomain)
-- **Theme**: Teal colour scheme (dark background `hsl(180,25%,15%)`, primary teal `hsl(174,72%,50%)`)
+- **Theme**: Teal colour scheme matching logo (`#3a9ca5` primary, `#4cb5bd` lighter, `#2d8890` darker)
 
 #### Key Files
 - `src/lib/wordpress.ts` — WP REST API client (pages, posts, media)
@@ -111,7 +111,7 @@ React + Vite frontend for the Rhythmstix music education platform. Dynamically p
 - `src/pages/BlogPost.tsx` — Individual blog post (route: `/post/:slug`)
 - `src/components/layout/Navbar.tsx` — Navigation with internal links
 - `src/components/layout/Footer.tsx` — Footer with contact info and links
-- `src/components/home/ProductGrid.tsx` — Product cards (Assessify, PeriFeedback, etc.)
+- `src/components/home/ProductGrid.tsx` — Product cards (CCDesigner, PeriFeedback, ProgressPath, E-Learning)
 
 #### WordPress Page Slugs
 about, assessify, periplanner, blog, community, contact-us, learning-platform, shop, policy, cookies
@@ -126,8 +126,9 @@ about, assessify, periplanner, blog, community, contact-us, learning-platform, s
 
 #### Logos
 - `public/images/rhythmstix-logo-colour.png` — Colour logo (hero, light backgrounds)
-- `public/images/rs-monogram.svg` — RS monogram (navbar top-left, footer)
+- `public/images/rhythmstix-logo-new.png` — New logo with updated branding
 - `public/images/rhythmstix-logo-white.png` — White logo (dark backgrounds)
+- Navbar/footer use text-only "rhythmstix" wordmark (no monogram box)
 
 #### Product Pages
 Each app has a dedicated page using the shared `ProductPage` component (`src/pages/ProductPage.tsx`):
@@ -148,8 +149,10 @@ Each page includes: hero image placeholder, description text, key features grid,
 - `/progresspath` — ProgressPath product page
 - `/rhythmstix-app` — Rhythmstix App product page
 - `/elearning` — E-Learning product page
-- `/shop` — Shop page (WooCommerce products)
+- `/shop` — Shop page (WooCommerce products, "Assessify Plan" filtered out)
 - `/resources` — Resources page
+- `/community` — Community forum (embedded WordPress/bbPress)
+- `/contact` — Contact Us page with form
 - `/blog` — Blog listing
 - `/post/:slug` — Individual blog post
 - `/page/:slug` — WordPress page renderer

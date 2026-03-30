@@ -43,9 +43,9 @@
   
   --border: 180 10% 88%;
   --input: 180 10% 88%;
-  --ring: 174 72% 45%;
+  --ring: 184 42% 44%;
 
-  --primary: 174 72% 40%;
+  --primary: 184 42% 44%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 180 12% 93%;
@@ -118,13 +118,13 @@
   font-weight: 500;
   transition: color 0.2s;
 }
-.wp-content a:hover { color: #0e9aa7; }
+.wp-content a:hover { color: #3a9ca5; }
 .wp-content strong, .wp-content b {
   color: hsl(var(--foreground));
   font-weight: 700;
 }
 .wp-content strong.product-highlight {
-  color: #0e9aa7;
+  color: #3a9ca5;
   font-weight: 700;
 }
 .wp-content img {

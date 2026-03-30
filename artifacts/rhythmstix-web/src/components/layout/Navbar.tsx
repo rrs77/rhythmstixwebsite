@@ -35,14 +35,9 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-end gap-2.5 group">
-            <img
-              src={`${import.meta.env.BASE_URL}images/rs-monogram.svg`}
-              alt="RS"
-              className="h-9 w-9 object-contain transition-all duration-300"
-            />
-            <span className="font-extrabold text-lg tracking-tight text-foreground leading-none mb-0.5">
-              rhythm<span className="text-[#2a9fa8]">stix</span>
+          <Link href="/" className="flex items-center group">
+            <span className="font-extrabold text-xl tracking-tight text-foreground">
+              rhythm<span className="text-[#3a9ca5]">stix</span>
             </span>
           </Link>
 
