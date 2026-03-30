@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, MessageSquare, Users, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Community() {
@@ -14,53 +14,98 @@ export default function Community() {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       <main className="flex-grow pt-24 pb-16">
-        <div className="container mx-auto px-4 max-w-5xl">
+        <div className="container mx-auto px-4 max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-8"
+            className="text-center mb-12"
           >
             <h1 className="text-3xl md:text-4xl font-bold mb-3">Community Forum</h1>
-            <p className="text-muted-foreground text-lg max-w-2xl">
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Join the Rhythmstix community — share ideas, ask questions, and connect with other educators.
             </p>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="rounded-2xl overflow-hidden border border-border bg-card"
-          >
-            <iframe
-              src="https://www.rhythmstix.co.uk/community/"
-              title="Rhythmstix Community Forum"
-              className="w-full border-0"
-              style={{ minHeight: "800px" }}
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
-            />
-          </motion.div>
+          <div className="grid md:grid-cols-3 gap-6 mb-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-card rounded-2xl border border-border p-6 text-center"
+            >
+              <div className="w-12 h-12 rounded-xl mx-auto mb-4 flex items-center justify-center bg-[#3a9ca5]/10">
+                <MessageSquare className="w-6 h-6 text-[#3a9ca5]" />
+              </div>
+              <h3 className="font-semibold mb-2">Discuss & Share</h3>
+              <p className="text-sm text-muted-foreground">
+                Post questions, share teaching ideas, and get advice from fellow educators.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="bg-card rounded-2xl border border-border p-6 text-center"
+            >
+              <div className="w-12 h-12 rounded-xl mx-auto mb-4 flex items-center justify-center bg-[#3a9ca5]/10">
+                <Users className="w-6 h-6 text-[#3a9ca5]" />
+              </div>
+              <h3 className="font-semibold mb-2">Connect</h3>
+              <p className="text-sm text-muted-foreground">
+                Network with music teachers, peripatetic instructors, and curriculum leads.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-card rounded-2xl border border-border p-6 text-center"
+            >
+              <div className="w-12 h-12 rounded-xl mx-auto mb-4 flex items-center justify-center bg-[#3a9ca5]/10">
+                <LogIn className="w-6 h-6 text-[#3a9ca5]" />
+              </div>
+              <h3 className="font-semibold mb-2">Your Account</h3>
+              <p className="text-sm text-muted-foreground">
+                Log in with your existing Rhythmstix account to participate in discussions.
+              </p>
+            </motion.div>
+          </div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 text-center"
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="bg-gradient-to-br from-[#3a9ca5]/5 to-[#4cb5bd]/10 rounded-2xl p-8 md:p-12 border border-[#3a9ca5]/20 text-center"
           >
-            <p className="text-muted-foreground text-sm mb-3">
-              Having trouble viewing the forum? Open it directly on the Rhythmstix website.
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Visit the Forum</h2>
+            <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+              The Rhythmstix community forum is hosted on our main website. Log in with your Rhythmstix account to browse topics and join conversations.
             </p>
-            <Button variant="outline" size="sm" asChild>
-              <a
-                href="https://www.rhythmstix.co.uk/community/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open Forum in New Tab
-                <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
-              </a>
-            </Button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Button size="lg" className="bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" asChild>
+                <a
+                  href="https://www.rhythmstix.co.uk/community/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open Community Forum
+                  <ExternalLink className="w-4 h-4 ml-2" />
+                </a>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <a
+                  href="https://www.rhythmstix.co.uk/my-account/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Log In / Register
+                  <LogIn className="w-4 h-4 ml-2" />
+                </a>
+              </Button>
+            </div>
           </motion.div>
         </div>
       </main>
