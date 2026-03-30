@@ -44,18 +44,45 @@ export function Hero() {
 
       <div className="container relative z-10 mx-auto px-4 pt-24 pb-12">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-2"
-          >
-            <img
-              src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-colour.png`}
-              alt="Rhythmstix - Education Solutions"
-              className="h-28 sm:h-36 md:h-44 w-auto object-contain mx-auto"
-            />
-          </motion.div>
+          <div className="mb-2 flex flex-col items-center">
+            <div className="flex items-baseline justify-center">
+              <motion.span
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4, type: "spring", stiffness: 150 }}
+                className="text-5xl sm:text-6xl md:text-8xl font-black text-[#3a9ca5] leading-none"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
+              >
+                r
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-5xl sm:text-6xl md:text-8xl font-black text-foreground leading-none"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
+              >
+                hythm
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6, type: "spring", stiffness: 150 }}
+                className="text-5xl sm:text-6xl md:text-8xl font-black text-[#3a9ca5] leading-none"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
+              >
+                tix
+              </motion.span>
+            </div>
+            <motion.span
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.9 }}
+              className="text-sm sm:text-base md:text-lg tracking-[0.25em] text-muted-foreground font-medium mt-1"
+            >
+              education solutions.
+            </motion.span>
+          </div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
