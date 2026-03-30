@@ -36,8 +36,6 @@ export default function ELearning() {
         "Content focused on music education specifically",
         "Works best when integrated into existing schemes of work",
       ]}
-      externalUrl="https://www.rhythmstix.co.uk/learning-platform/"
-      externalLabel="Browse the Learning Platform"
       ctaHeading="Quality music education for every classroom"
       ctaText="The E-Learning platform gives schools comprehensive, ready-to-teach music resources that work for specialists and non-specialists alike."
     />

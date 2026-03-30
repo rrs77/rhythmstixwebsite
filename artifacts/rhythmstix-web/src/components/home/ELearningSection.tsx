@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { PlayCircle } from "lucide-react";
+import { Link } from "wouter";
 
 export function ELearningSection() {
   return (
@@ -20,11 +20,6 @@ export function ELearningSection() {
                 alt="BandLab Interface"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Button size="icon" className="w-16 h-16 rounded-full bg-primary/90 text-white backdrop-blur-md">
-                  <PlayCircle className="w-8 h-8 ml-1" />
-                </Button>
-              </div>
             </div>
           </motion.div>
 
@@ -51,7 +46,9 @@ export function ELearningSection() {
                 </li>
               ))}
             </ul>
-            <Button size="lg">Start Course</Button>
+            <Button size="lg" asChild>
+              <Link href="/elearning">Learn More</Link>
+            </Button>
           </motion.div>
           
         </div>

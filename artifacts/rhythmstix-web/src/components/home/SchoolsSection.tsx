@@ -12,7 +12,6 @@ const RESOURCES = [
     image: "images/sneaky-creatures.png",
     tag: "Free Resource",
     tagColor: "bg-emerald-500 text-white",
-    link: "https://www.rhythmstix.co.uk/sneaky-creatures/"
   },
   {
     title: "Guide The Way",
@@ -21,7 +20,6 @@ const RESOURCES = [
     image: "images/guide-the-way.png",
     tag: "Premium Package",
     tagColor: "bg-[#3a9ca5] text-white",
-    link: "https://www.rhythmstix.co.uk/guide-the-way/"
   }
 ];
 

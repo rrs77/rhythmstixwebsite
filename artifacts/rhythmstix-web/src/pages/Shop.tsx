@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useShopProducts, useShopCategories, type ShopProduct } from "@/hooks/use-shop";
-import { Loader2, ExternalLink, ShoppingCart, Package, Palette, ClipboardCheck, CalendarDays, GraduationCap, ArrowRight } from "lucide-react";
+import { Loader2, Package, Palette, ClipboardCheck, CalendarDays, GraduationCap, ArrowRight, ShoppingCart, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const APP_FEATURES = [
@@ -66,19 +66,96 @@ function stripHtml(html: string): string {
   return tmp.textContent || tmp.innerText || "";
 }
 
-function ProductCard({ product }: { product: ShopProduct }) {
+function ProductModal({ product, onClose }: { product: ShopProduct; onClose: () => void }) {
   const hasImage = product.images.length > 0;
   const priceDisplay = formatPrice(product.price);
   const isFree = priceDisplay === "Free";
 
   return (
-    <motion.a
-      href={product.permalink}
-      target="_blank"
-      rel="noopener noreferrer"
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        className="bg-card rounded-2xl overflow-hidden border border-border shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {hasImage && (
+          <div className="relative aspect-[16/9] overflow-hidden">
+            <img
+              src={product.images[0].src}
+              alt={product.images[0].alt || product.name}
+              className="w-full h-full object-cover"
+            />
+            <button
+              onClick={onClose}
+              className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+        {!hasImage && (
+          <div className="relative">
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-secondary hover:bg-secondary/80 text-muted-foreground flex items-center justify-center transition-colors z-10"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        <div className="p-6">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <h3 className="text-xl font-bold text-foreground">{product.name}</h3>
+            <span className={cn(
+              "shrink-0 text-sm font-bold px-3 py-1 rounded-full",
+              isFree ? "bg-green-100 text-green-700" : "bg-[#3a9ca5]/10 text-[#3a9ca5]"
+            )}>
+              {priceDisplay}
+            </span>
+          </div>
+
+          {product.description && (
+            <div
+              className="text-sm text-muted-foreground leading-relaxed mb-5 prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: product.description }}
+            />
+          )}
+
+          <Button className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" asChild>
+            <Link href="/contact">
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Enquire About This Product
+            </Link>
+          </Button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function ProductCard({ product, onClick }: { product: ShopProduct; onClick: () => void }) {
+  const hasImage = product.images.length > 0;
+  const priceDisplay = formatPrice(product.price);
+  const isFree = priceDisplay === "Free";
+
+  return (
+    <motion.button
+      onClick={onClick}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group bg-card rounded-xl border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 overflow-hidden flex flex-col h-full"
+      className="group bg-card rounded-xl border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 overflow-hidden flex flex-col h-full text-left cursor-pointer"
     >
       {hasImage ? (
         <div className="aspect-[3/2] bg-secondary overflow-hidden">
@@ -117,16 +194,16 @@ function ProductCard({ product }: { product: ShopProduct }) {
 
         <div className="flex items-center gap-1.5 text-xs font-medium text-[#3a9ca5] mt-auto">
           <ShoppingCart className="w-3 h-3" />
-          {isFree ? "Get it free" : "View in Shop"}
-          <ExternalLink className="w-2.5 h-2.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+          View Details
         </div>
       </div>
-    </motion.a>
+    </motion.button>
   );
 }
 
 export default function Shop() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
   const { data: products, isLoading, error } = useShopProducts(selectedCategory || undefined);
   const { data: categories } = useShopCategories();
 
@@ -141,7 +218,7 @@ export default function Shop() {
             <h1 className="text-4xl font-bold text-foreground mb-3">Shop</h1>
             <p className="text-lg text-muted-foreground">
               Resources, licenses, and tools for music education.
-              All purchases are handled securely through our main website.
+              Browse our products and get in touch to find out more.
             </p>
           </div>
 
@@ -209,7 +286,7 @@ export default function Shop() {
                   transition={{ delay: i * 0.05 }}
                   className="h-full"
                 >
-                  <ProductCard product={product} />
+                  <ProductCard product={product} onClick={() => setSelectedProduct(product)} />
                 </motion.div>
               ))}
             </div>
@@ -273,6 +350,12 @@ export default function Shop() {
         </div>
       </main>
       <Footer />
+
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

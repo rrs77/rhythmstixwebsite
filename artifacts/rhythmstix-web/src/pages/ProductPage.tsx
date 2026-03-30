@@ -3,7 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ExternalLink, CheckCircle2, AlertCircle, ImageIcon, ArrowRight } from "lucide-react";
+import { ArrowLeft, CheckCircle2, AlertCircle, ImageIcon, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import type { LucideIcon } from "lucide-react";
 
@@ -21,8 +21,6 @@ interface ProductPageProps {
   features: Feature[];
   pros: string[];
   considerations: string[];
-  externalUrl?: string;
-  externalLabel?: string;
   ctaHeading: string;
   ctaText: string;
   heroImage?: string;
@@ -37,8 +35,6 @@ export default function ProductPage({
   features,
   pros,
   considerations,
-  externalUrl,
-  externalLabel,
   ctaHeading,
   ctaText,
   heroImage,
@@ -98,16 +94,14 @@ export default function ProductPage({
               </p>
             ))}
 
-            {externalUrl && (
-              <div className="mb-12">
-                <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
-                  <a href={externalUrl} target="_blank" rel="noopener noreferrer">
-                    {externalLabel || `Visit ${name}`}
-                    <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </a>
-                </Button>
-              </div>
-            )}
+            <div className="mb-12">
+              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
+                <Link href="/contact">
+                  Enquire About {name}
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Button>
+            </div>
           </motion.div>
 
           {screenshots && screenshots.length > 0 && (
@@ -209,21 +203,12 @@ export default function ProductPage({
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               {ctaText}
             </p>
-            {externalUrl ? (
-              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
-                <a href={externalUrl} target="_blank" rel="noopener noreferrer">
-                  {externalLabel || `Get Started with ${name}`}
-                  <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </a>
-              </Button>
-            ) : (
-              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
-                <Link href="/#products">
-                  Explore All Apps
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            )}
+            <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
+              <Link href="/contact">
+                Get In Touch
+                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
           </motion.div>
         </section>
       </main>

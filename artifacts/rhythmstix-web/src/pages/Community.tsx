@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
-import { ExternalLink, MessageSquare, Users, LogIn } from "lucide-react";
+import { MessageSquare, Users, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 export default function Community() {
   useEffect(() => {
@@ -80,30 +81,15 @@ export default function Community() {
             transition={{ duration: 0.5, delay: 0.25 }}
             className="bg-gradient-to-br from-[#3a9ca5]/5 to-[#4cb5bd]/10 rounded-2xl p-8 md:p-12 border border-[#3a9ca5]/20 text-center"
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-3">Visit the Forum</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Join the Community</h2>
             <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-              The Rhythmstix community forum is hosted on our main website. Log in with your Rhythmstix account to browse topics and join conversations.
+              The Rhythmstix community is a place for educators to share ideas, collaborate, and grow together. Get in touch to find out more about joining.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Button size="lg" className="bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" asChild>
-                <a
-                  href="https://www.rhythmstix.co.uk/community/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Open Community Forum
-                  <ExternalLink className="w-4 h-4 ml-2" />
-                </a>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <a
-                  href="https://www.rhythmstix.co.uk/my-account/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Log In / Register
-                  <LogIn className="w-4 h-4 ml-2" />
-                </a>
+                <Link href="/contact">
+                  Get In Touch
+                </Link>
               </Button>
             </div>
           </motion.div>
