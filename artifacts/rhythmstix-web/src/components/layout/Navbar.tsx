@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const MAIN_LINKS = [
   { label: "Products", href: "/" },
   { label: "Assessify", href: "/page/assessify" },
+  { label: "CCDesigner", href: "/ccdesigner" },
   { label: "App", href: "/page/learning-platform" },
   { label: "About", href: "/page/about" },
 ];

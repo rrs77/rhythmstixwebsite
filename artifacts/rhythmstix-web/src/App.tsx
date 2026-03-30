@@ -6,6 +6,7 @@ import Home from "@/pages/Home";
 import WPPage from "@/pages/WPPage";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
+import CCDesigner from "@/pages/CCDesigner";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -14,6 +15,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/ccdesigner" component={CCDesigner} />
       <Route path="/blog" component={BlogList} />
       <Route path="/post/:slug" component={BlogPost} />
       <Route path="/page/:slug" component={WPPage} />
