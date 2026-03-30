@@ -10,7 +10,7 @@ export default function ELearning() {
       description={[
         "The Rhythmstix E-Learning platform delivers comprehensive digital courses, resources, and interactive modules designed for modern music education. It provides schools with structured, curriculum-aligned content that teachers can use directly or adapt to their own schemes of work.",
         "The platform includes differentiated music lessons complete with multimedia content — video demonstrations, audio examples, quizzes, and straightforward assessments. Lessons are designed to support both specialist music teachers and non-specialists who need high-quality, ready-to-teach resources.",
-        "Content is delivered through the Rhythmstix Learning Platform and is accessible on PC, Mac, Chromebook, and iPad. Schools get a year's access for an unlimited number of users, making it excellent value for whole-school music provision.",
+        "Content is delivered through the Rhythmstix Learning Platform, accessible through a browser-based app on any device. Schools get a year's access for an unlimited number of users, making it excellent value for whole-school music provision.",
       ]}
       features={[
         { icon: Monitor, title: "Interactive Lessons", description: "Differentiated music lessons with multimedia content — video, audio, quizzes, and assessments. Ready to teach or adapt to your scheme of work." },
@@ -25,7 +25,7 @@ export default function ELearning() {
         "Multimedia content — video, audio, quizzes, and assessments",
         "Supports both specialist and non-specialist teachers",
         "Unlimited users per school — excellent value",
-        "Works on PC, Mac, Chromebook, and iPad",
+        "Accessible through a browser-based app",
         "Curriculum-aligned to UK requirements",
         "Built-in assessment saves separate tracking",
         "Structured by key stage and year group",
