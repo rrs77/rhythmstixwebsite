@@ -65,6 +65,7 @@ const NAV_LINKS = [
   { label: "Resources", href: "/resources" },
   { label: "Community", href: "/page/community" },
   { label: "Blog", href: "/blog" },
+  { label: "Shop", href: "https://www.rhythmstix.co.uk/shop/", external: true },
 ];
 
 export function Navbar() {
@@ -182,18 +183,33 @@ export function Navbar() {
               </AnimatePresence>
             </div>
 
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={cn(
-                  "text-sm font-medium transition-colors",
-                  isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) =>
+              'external' in link && link.external ? (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "text-sm font-medium transition-colors",
+                    isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
+                  )}
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={cn(
+                    "text-sm font-medium transition-colors",
+                    isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
 
             <Button variant="glass" size="sm" className={cn("ml-2", !isScrolled && "border-white/30 text-white hover:bg-white/10")} asChild>
               <a
@@ -252,16 +268,29 @@ export function Navbar() {
               ))}
 
               <div className="border-t border-border mt-3 pt-3">
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-base font-medium text-foreground py-3 px-2"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {NAV_LINKS.map((link) =>
+                  'external' in link && link.external ? (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block text-base font-medium text-foreground py-3 px-2"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block text-base font-medium text-foreground py-3 px-2"
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                )}
               </div>
 
               <Button className="mt-4 w-full" asChild>

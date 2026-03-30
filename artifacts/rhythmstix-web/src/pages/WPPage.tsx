@@ -4,10 +4,37 @@ import { Footer } from "@/components/layout/Footer";
 import { useWPPage } from "@/hooks/use-wp";
 import { decodeHtml } from "@/lib/wordpress";
 import { Loader2 } from "lucide-react";
+import { useMemo } from "react";
+
+const PRODUCT_NAMES = [
+  "Assessify",
+  "CCDesigner",
+  "Creative Curriculum Designer",
+  "PeriFeedback",
+  "PeriPlanner",
+  "ProgressPath",
+  "Rhythmstix App",
+  "Rhythmstix",
+  "E-Learning",
+];
+
+function highlightProducts(html: string): string {
+  const sorted = [...PRODUCT_NAMES].sort((a, b) => b.length - a.length);
+  const pattern = new RegExp(
+    `(?<![<\\/\\w])\\b(${sorted.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\b(?![^<]*>)`,
+    'g'
+  );
+  return html.replace(pattern, '<strong class="product-highlight">$1</strong>');
+}
 
 export default function WPPage() {
   const { slug } = useParams<{ slug: string }>();
   const { data: page, isLoading, error } = useWPPage(slug || "");
+
+  const processedContent = useMemo(() => {
+    if (!page?.content?.rendered) return "";
+    return highlightProducts(page.content.rendered);
+  }, [page]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -33,7 +60,7 @@ export default function WPPage() {
               )}
               <div
                 className="wp-content prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: page.content.rendered }}
+                dangerouslySetInnerHTML={{ __html: processedContent }}
               />
             </>
           )}

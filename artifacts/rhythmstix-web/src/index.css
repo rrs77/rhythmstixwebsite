@@ -112,11 +112,21 @@
 .wp-content h3 { font-size: 1.5rem; }
 .wp-content p { margin-bottom: 1rem; }
 .wp-content a {
-  color: hsl(var(--primary));
+  color: #0369a1;
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color 0.2s;
 }
-.wp-content a:hover { opacity: 0.8; }
+.wp-content a:hover { color: #0e9aa7; }
+.wp-content strong, .wp-content b {
+  color: hsl(var(--foreground));
+  font-weight: 700;
+}
+.wp-content strong.product-highlight {
+  color: #0e9aa7;
+  font-weight: 700;
+}
 .wp-content img {
   max-width: 100%;
   height: auto;
