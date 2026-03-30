@@ -4,6 +4,7 @@ import {
   TrendingUp, 
   GraduationCap,
   Palette,
+  ClipboardCheck,
   ArrowRight
 } from "lucide-react";
 import { Link } from "wouter";
@@ -16,6 +17,15 @@ const PRODUCTS = [
     icon: Palette,
     color: "from-[#3a9ca5] to-[#2d8890]",
     link: "/ccdesigner",
+    cta: "Learn More"
+  },
+  {
+    id: "assessify",
+    title: "Assessify",
+    description: "Fair and personalised assessment for Performing Arts. AI-powered reports, customisable rubrics, and detailed analytics.",
+    icon: ClipboardCheck,
+    color: "from-[#2d8890] to-[#3a9ca5]",
+    link: "/assessify",
     cta: "Learn More"
   },
   {
