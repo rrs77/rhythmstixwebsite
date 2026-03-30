@@ -42,7 +42,7 @@ export default function BlogPost() {
                 {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
               </p>
               <div
-                className="wp-content prose prose-invert prose-lg max-w-none"
+                className="wp-content prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: post.content.rendered }}
               />
             </>

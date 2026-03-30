@@ -34,7 +34,7 @@ export function Navbar() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
-          ? "py-2 bg-background/80 backdrop-blur-xl border-b border-white/5 shadow-lg shadow-black/20"
+          ? "py-2 bg-background/90 backdrop-blur-xl border-b border-border shadow-sm"
           : "py-4 bg-transparent"
       )}
     >
@@ -89,7 +89,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-card/95 backdrop-blur-xl border-b border-border overflow-hidden"
+            className="md:hidden bg-card/98 backdrop-blur-xl border-b border-border overflow-hidden"
           >
             <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
               {[...MAIN_LINKS, ...EXTRA_LINKS].map((link) => (
@@ -97,7 +97,7 @@ export function Navbar() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-lg font-medium text-foreground py-2 border-b border-border/50"
+                  className="text-lg font-medium text-foreground py-2 border-b border-border"
                 >
                   {link.label}
                 </Link>

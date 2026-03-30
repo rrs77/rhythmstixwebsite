@@ -35,30 +35,30 @@
 }
 
 :root {
-  --background: 180 25% 15%;
-  --foreground: 180 10% 98%;
+  --background: 180 15% 97%;
+  --foreground: 210 25% 15%;
   
-  --card: 180 22% 20%;
-  --card-foreground: 180 10% 98%;
+  --card: 0 0% 100%;
+  --card-foreground: 210 25% 15%;
   
-  --border: 180 18% 28%;
-  --input: 180 18% 28%;
-  --ring: 174 72% 50%;
+  --border: 180 10% 88%;
+  --input: 180 10% 88%;
+  --ring: 174 72% 45%;
 
-  --primary: 174 72% 50%;
-  --primary-foreground: 180 30% 10%;
+  --primary: 174 72% 40%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 180 20% 24%;
-  --secondary-foreground: 180 10% 95%;
+  --secondary: 180 12% 93%;
+  --secondary-foreground: 210 20% 25%;
 
-  --muted: 180 18% 22%;
-  --muted-foreground: 180 12% 60%;
+  --muted: 180 10% 94%;
+  --muted-foreground: 210 10% 45%;
 
-  --accent: 190 75% 55%;
-  --accent-foreground: 180 30% 10%;
+  --accent: 200 80% 45%;
+  --accent-foreground: 0 0% 100%;
 
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 180 10% 98%;
+  --destructive: 0 62.8% 50%;
+  --destructive-foreground: 0 0% 100%;
 }
 
 @layer base {
@@ -94,13 +94,13 @@
   }
   
   .glass-panel {
-    @apply bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl shadow-black/50;
+    @apply bg-card/80 backdrop-blur-xl border border-border shadow-xl shadow-black/5;
   }
 }
 
 .wp-content {
   color: hsl(var(--foreground));
-  line-height: 1.8;
+  line-height: 1.85;
 }
 .wp-content h1, .wp-content h2, .wp-content h3, .wp-content h4, .wp-content h5, .wp-content h6 {
   color: hsl(var(--foreground));

@@ -31,7 +31,7 @@ export default function BlogList() {
                 <Link
                   key={post.id}
                   href={`/post/${post.slug}`}
-                  className="block bg-card rounded-2xl p-6 border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group"
+                  className="block bg-card rounded-2xl p-6 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group"
                 >
                   <h2 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
                     {decodeHtml(post.title.rendered)}

@@ -32,7 +32,7 @@ export default function WPPage() {
                 </h1>
               )}
               <div
-                className="wp-content prose prose-invert prose-lg max-w-none"
+                className="wp-content prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: page.content.rendered }}
               />
             </>

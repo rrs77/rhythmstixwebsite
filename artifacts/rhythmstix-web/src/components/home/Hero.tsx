@@ -12,8 +12,8 @@ export function Hero() {
           alt="Abstract dark background"
           className="w-full h-full object-cover opacity-40"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,180,170,0.2),transparent_70%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,180,170,0.08),transparent_70%)]" />
       </div>
 
       <div className="container relative z-10 mx-auto px-4 flex flex-col items-center text-center">

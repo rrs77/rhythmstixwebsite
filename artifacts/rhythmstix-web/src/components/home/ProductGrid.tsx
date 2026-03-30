@@ -78,11 +78,11 @@ export function ProductGrid() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={`group relative bg-card rounded-[16px] p-8 border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 ${
+              className={`group relative bg-card rounded-[16px] p-8 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 ${
                 product.wide ? 'md:col-span-2 lg:col-span-2' : ''
               }`}
             >
-              <div className={`w-14 h-14 rounded-xl mb-6 flex items-center justify-center bg-gradient-to-br ${product.color} shadow-lg shadow-black/20`}>
+              <div className={`w-14 h-14 rounded-xl mb-6 flex items-center justify-center bg-gradient-to-br ${product.color} shadow-md`}>
                 <product.icon className="w-7 h-7 text-white" />
               </div>
               
