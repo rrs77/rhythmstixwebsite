@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/hooks/use-auth";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -17,6 +18,7 @@ const NAV_LINKS = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -52,11 +54,21 @@ export function Navbar() {
               </Link>
             ))}
 
-            <Button variant="glass" size="sm" className="ml-2" asChild>
-              <Link href="/contact">
-                Login
-              </Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button variant="glass" size="sm" className="ml-2" asChild>
+                <Link href="/account">
+                  <User className="w-4 h-4 mr-1.5" />
+                  {user?.firstName || "Account"}
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="glass" size="sm" className="ml-2" asChild>
+                <Link href="/login">
+                  <LogIn className="w-4 h-4 mr-1.5" />
+                  Login
+                </Link>
+              </Button>
+            )}
           </nav>
 
           <button
@@ -89,14 +101,27 @@ export function Navbar() {
                 </Link>
               ))}
 
-              <Button className="mt-4 w-full" asChild>
-                <Link
-                  href="/contact"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Login
-                </Link>
-              </Button>
+              {isAuthenticated ? (
+                <Button className="mt-4 w-full" asChild>
+                  <Link
+                    href="/account"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <User className="w-4 h-4 mr-1.5" />
+                    {user?.firstName || "Account"}
+                  </Link>
+                </Button>
+              ) : (
+                <Button className="mt-4 w-full" asChild>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <LogIn className="w-4 h-4 mr-1.5" />
+                    Login
+                  </Link>
+                </Button>
+              )}
             </div>
           </motion.div>
         )}

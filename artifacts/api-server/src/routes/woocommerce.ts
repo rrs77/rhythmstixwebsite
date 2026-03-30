@@ -6,14 +6,20 @@ const WC_BASE = "https://www.rhythmstix.co.uk/wp-json/wc/v3";
 const WC_KEY = process.env.WC_CONSUMER_KEY;
 const WC_SECRET = process.env.WC_CONSUMER_SECRET;
 
+const WC_AUTH_HEADER = `Basic ${Buffer.from(`${WC_KEY || ""}:${WC_SECRET || ""}`).toString("base64")}`;
+
 function wcUrl(endpoint: string, params: Record<string, string> = {}) {
   const url = new URL(`${WC_BASE}/${endpoint}`);
-  url.searchParams.set("consumer_key", WC_KEY || "");
-  url.searchParams.set("consumer_secret", WC_SECRET || "");
   for (const [k, v] of Object.entries(params)) {
     url.searchParams.set(k, v);
   }
   return url.toString();
+}
+
+function wcFetch(endpoint: string, params: Record<string, string> = {}) {
+  return fetch(wcUrl(endpoint, params), {
+    headers: { Authorization: WC_AUTH_HEADER },
+  });
 }
 
 router.get("/shop/products", async (req: Request, res: Response) => {
@@ -27,7 +33,7 @@ router.get("/shop/products", async (req: Request, res: Response) => {
     };
     if (category) params.category = category;
 
-    const response = await fetch(wcUrl("products", params));
+    const response = await wcFetch("products", params);
     if (!response.ok) {
       res.status(response.status).json({ error: "Failed to fetch products" });
       return;
@@ -69,12 +75,12 @@ router.get("/shop/products", async (req: Request, res: Response) => {
 
 router.get("/shop/categories", async (_req: Request, res: Response) => {
   try {
-    const response = await fetch(wcUrl("products/categories", {
+    const response = await wcFetch("products/categories", {
       per_page: "50",
       orderby: "name",
       order: "asc",
       hide_empty: "true",
-    }));
+    });
     if (!response.ok) {
       res.status(response.status).json({ error: "Failed to fetch categories" });
       return;

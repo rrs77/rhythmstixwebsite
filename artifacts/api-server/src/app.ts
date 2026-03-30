@@ -26,8 +26,24 @@ app.use(
     },
   }),
 );
+const isProduction = process.env.NODE_ENV === "production";
+const trustedOrigins = process.env.REPLIT_DEV_DOMAIN
+  ? [`https://${process.env.REPLIT_DEV_DOMAIN}`]
+  : ["http://localhost:3000"];
+if (process.env.REPLIT_DOMAINS) {
+  for (const d of process.env.REPLIT_DOMAINS.split(",")) {
+    trustedOrigins.push(`https://${d.trim()}`);
+  }
+}
+
 app.use(cors({
-  origin: true,
+  origin: (origin, callback) => {
+    if (!origin || trustedOrigins.some((o) => origin.startsWith(o))) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
@@ -37,8 +53,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
+    secure: isProduction,
     httpOnly: true,
+    sameSite: "lax",
     maxAge: 24 * 60 * 60 * 1000,
   },
 }));

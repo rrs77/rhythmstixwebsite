@@ -130,14 +130,26 @@ about, assessify, periplanner, blog, community, contact-us, learning-platform, s
 - `public/images/rhythmstix-logo-white.png` — White logo (dark backgrounds)
 - Navbar/footer use text-only "rhythmstix" wordmark (no monogram box)
 
+#### User Authentication & Account
+- `src/hooks/use-auth.ts` — Auth hooks (useAuth, useOrders, forgotPassword)
+- `src/pages/Login.tsx` — Login page (`/login`) authenticates via WordPress wp-login.php
+- `src/pages/ForgotPassword.tsx` — Password reset (`/forgot-password`) triggers WordPress reset email
+- `src/pages/Account.tsx` — Account dashboard (`/account`) with expandable order history from WooCommerce
+- Navbar dynamically shows "Login" or user's first name + "Account" based on auth state
+- Backend: `api-server/src/routes/auth.ts` — `/auth/login`, `/auth/logout`, `/auth/me`, `/auth/forgot-password`, `/account/orders`, `/account/orders/:id`
+- Authentication flow: email → WooCommerce customer lookup → WordPress wp-login.php validation → session creation
+- WooCommerce API uses Basic Auth headers (not query string credentials)
+- CORS restricted to trusted Replit origins only; cookies use sameSite: "lax"
+
 #### Product Pages
 Each app has a dedicated page using the shared `ProductPage` component (`src/pages/ProductPage.tsx`):
-- `src/pages/Assessify.tsx` — `/assessify` (external: assessify.co.uk)
-- `src/pages/CCDesigner.tsx` — `/ccdesigner` (external: ccdesigner.co.uk)
-- `src/pages/PeriFeedback.tsx` — `/perifeedback` (no external URL yet)
-- `src/pages/ProgressPath.tsx` — `/progresspath` (no external URL yet)
-- `src/pages/RhythmstixApp.tsx` — `/rhythmstix-app` (no external URL yet)
-- `src/pages/ELearning.tsx` — `/elearning` (external: rhythmstix.co.uk/learning-platform)
+- `src/pages/Assessify.tsx` — `/assessify`
+- `src/pages/CCDesigner.tsx` — `/ccdesigner`
+- `src/pages/PeriFeedback.tsx` — `/perifeedback`
+- `src/pages/ProgressPath.tsx` — `/progresspath`
+- `src/pages/RhythmstixApp.tsx` — `/rhythmstix-app`
+- `src/pages/ELearning.tsx` — `/elearning`
+- No external product URLs — all CTAs link to `/contact`
 
 Each page includes: hero image placeholder, description text, key features grid, pros/considerations, and CTA section.
 
@@ -151,8 +163,12 @@ Each page includes: hero image placeholder, description text, key features grid,
 - `/elearning` — E-Learning product page
 - `/shop` — Shop page (WooCommerce products, "Assessify Plan" filtered out)
 - `/resources` — Resources page
-- `/community` — Community forum (embedded WordPress/bbPress)
+- `/community` — Community page
 - `/contact` — Contact Us page with form
+- `/login` — User login (WordPress authentication)
+- `/forgot-password` — Password reset request
+- `/account` — User account dashboard (orders, invoices) — requires login
+- `/cookies` — Cookie policy
 - `/blog` — Blog listing
 - `/post/:slug` — Individual blog post
 - `/page/:slug` — WordPress page renderer

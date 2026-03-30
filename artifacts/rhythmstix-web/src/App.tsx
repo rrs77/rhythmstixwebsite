@@ -17,6 +17,9 @@ import Community from "@/pages/Community";
 import ContactUs from "@/pages/ContactUs";
 import Cookies from "@/pages/Cookies";
 import Shop from "@/pages/Shop";
+import Login from "@/pages/Login";
+import ForgotPassword from "@/pages/ForgotPassword";
+import Account from "@/pages/Account";
 import NotFound from "@/pages/not-found";
 import { CookieConsent } from "@/components/CookieConsent";
 
@@ -37,6 +40,9 @@ function Router() {
       <Route path="/contact" component={ContactUs} />
       <Route path="/cookies" component={Cookies} />
       <Route path="/shop" component={Shop} />
+      <Route path="/login" component={Login} />
+      <Route path="/forgot-password" component={ForgotPassword} />
+      <Route path="/account" component={Account} />
       <Route path="/blog" component={BlogList} />
       <Route path="/post/:slug" component={BlogPost} />
       <Route path="/page/:slug" component={WPPage} />
