@@ -9,11 +9,38 @@ export interface ShopProduct {
   regularPrice: string;
   salePrice: string;
   onSale: boolean;
+  downloadable: boolean;
+  virtual: boolean;
+  purchasable: boolean;
   description: string;
   permalink: string;
   images: { id: number; src: string; alt: string }[];
   categories: { id: number; name: string; slug: string }[];
   attributes: { name: string; options: string[] }[];
+}
+
+export interface OrderResult {
+  orderId: number;
+  status: string;
+  total: string;
+  paymentUrl: string | null;
+  downloads: { name: string; url: string }[];
+}
+
+export async function createOrder(productId: number, quantity = 1): Promise<OrderResult> {
+  const res = await fetch("/api/shop/orders", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ productId, quantity }),
+  });
+  if (res.status === 401) {
+    throw new Error("LOGIN_REQUIRED");
+  }
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to create order");
+  }
+  return res.json();
 }
 
 export interface ShopCategory {

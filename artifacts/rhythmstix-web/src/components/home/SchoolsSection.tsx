@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ShoppingCart, Download, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 
 const RESOURCES = [
   {
@@ -29,6 +30,8 @@ const FREE_RESOURCES = [
 type Resource = typeof RESOURCES[number];
 
 function ResourceModal({ resource, onClose }: { resource: Resource; onClose: () => void }) {
+  const isFree = resource.tag === "Free Resource";
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -72,8 +75,18 @@ function ResourceModal({ resource, onClose }: { resource: Resource; onClose: () 
             {resource.description}
           </p>
           <Button className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" asChild>
-            <Link href="/contact">
-              Enquire About This Resource
+            <Link href="/shop">
+              {isFree ? (
+                <>
+                  <Download className="w-4 h-4 mr-2" />
+                  Get Free Download in Shop
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Purchase in Shop
+                </>
+              )}
             </Link>
           </Button>
         </div>

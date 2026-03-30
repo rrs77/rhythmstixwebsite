@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
@@ -61,8 +61,9 @@ function ResourceModal({ resource, onClose }: { resource: Resource; onClose: () 
             {resource.description}
           </p>
           <Button className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" asChild>
-            <Link href="/elearning">
-              Learn More
+            <Link href="/shop">
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              View in Shop
             </Link>
           </Button>
         </div>

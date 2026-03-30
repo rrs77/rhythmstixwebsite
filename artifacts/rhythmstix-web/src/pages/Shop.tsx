@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { useShopProducts, useShopCategories, type ShopProduct } from "@/hooks/use-shop";
-import { Loader2, Package, Palette, ClipboardCheck, CalendarDays, GraduationCap, ArrowRight, ShoppingCart, X } from "lucide-react";
+import { useShopProducts, useShopCategories, createOrder, type ShopProduct } from "@/hooks/use-shop";
+import { useAuth } from "@/hooks/use-auth";
+import { Loader2, Package, Palette, ClipboardCheck, CalendarDays, GraduationCap, ArrowRight, ShoppingCart, Download, X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -70,6 +71,38 @@ function ProductModal({ product, onClose }: { product: ShopProduct; onClose: () 
   const hasImage = product.images.length > 0;
   const priceDisplay = formatPrice(product.price);
   const isFree = priceDisplay === "Free";
+  const { user } = useAuth();
+  const [, navigate] = useLocation();
+  const [ordering, setOrdering] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState<{ downloads: { name: string; url: string }[]; paymentUrl: string | null } | null>(null);
+  const [orderError, setOrderError] = useState("");
+
+  const handlePurchase = async () => {
+    if (!user) {
+      onClose();
+      navigate("/login?redirect=/shop");
+      return;
+    }
+
+    setOrdering(true);
+    setOrderError("");
+    try {
+      const result = await createOrder(product.id);
+      setOrderSuccess({
+        downloads: result.downloads,
+        paymentUrl: result.paymentUrl,
+      });
+    } catch (err: any) {
+      if (err.message === "LOGIN_REQUIRED") {
+        onClose();
+        navigate("/login?redirect=/shop");
+        return;
+      }
+      setOrderError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setOrdering(false);
+    }
+  };
 
   return (
     <motion.div
@@ -133,12 +166,80 @@ function ProductModal({ product, onClose }: { product: ShopProduct; onClose: () 
             />
           )}
 
-          <Button className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" asChild>
-            <Link href="/contact">
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Enquire About This Product
-            </Link>
-          </Button>
+          {orderError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              {orderError}
+            </div>
+          )}
+
+          {orderSuccess ? (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-green-700 mb-2">
+                <CheckCircle2 className="w-5 h-5" />
+                <span className="font-semibold">Order placed successfully!</span>
+              </div>
+              {orderSuccess.downloads.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Your downloads:</p>
+                  {orderSuccess.downloads.map((d, i) => (
+                    <a
+                      key={i}
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg text-sm font-medium text-green-800 hover:bg-green-100 transition-colors"
+                    >
+                      <Download className="w-4 h-4" />
+                      {d.name}
+                    </a>
+                  ))}
+                </div>
+              )}
+              {!isFree && orderSuccess.paymentUrl && (
+                <a
+                  href={orderSuccess.paymentUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <Button className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white">
+                    Complete Payment
+                  </Button>
+                </a>
+              )}
+              <Button variant="outline" className="w-full" onClick={onClose}>
+                Close
+              </Button>
+            </div>
+          ) : (
+            <Button
+              className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white"
+              onClick={handlePurchase}
+              disabled={ordering}
+            >
+              {ordering ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : !user ? (
+                <>
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Log in to {isFree ? "Download" : "Purchase"}
+                </>
+              ) : isFree ? (
+                <>
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Free
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Purchase — {priceDisplay}
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </motion.div>
     </motion.div>
