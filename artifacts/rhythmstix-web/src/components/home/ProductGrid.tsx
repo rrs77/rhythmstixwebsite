@@ -5,6 +5,7 @@ import {
   TrendingUp, 
   Smartphone, 
   GraduationCap,
+  Palette,
   ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,15 @@ const PRODUCTS = [
     color: "from-blue-500 to-cyan-400",
     link: "/page/assessify",
     cta: "Open Assessify"
+  },
+  {
+    id: "ccdesigner",
+    title: "CCDesigner",
+    description: "Creative Curriculum Designer — plan, organise, and reuse music and creative curriculum content across EYFS, KS1, and KS2.",
+    icon: Palette,
+    color: "from-rose-500 to-amber-400",
+    link: "/ccdesigner",
+    cta: "Explore CCDesigner"
   },
   {
     id: "periplanner",
