@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
@@ -43,6 +44,10 @@ export default function ProductPage({
   heroImage,
   screenshots,
 }: ProductPageProps) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
