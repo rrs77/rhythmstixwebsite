@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Menu, X, User, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,15 +12,21 @@ const NAV_LINKS = [
   { label: "Resources", href: "https://app.rhythmstix.co.uk/", external: true },
   { label: "Learning Portal", href: "https://app.rhythmstix.co.uk/", external: true },
   { label: "Community", href: "/community" },
-  { label: "Blog", href: "/blog", highlight: true },
+  { label: "Blog", href: "/blog" },
   { label: "Shop", href: "/shop" },
   { label: "Contact Us", href: "/contact" },
 ];
+
+function isActive(linkHref: string, pathname: string): boolean {
+  if (linkHref === "/") return pathname === "/";
+  return pathname.startsWith(linkHref);
+}
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user } = useAuth();
+  const [location] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -47,7 +53,11 @@ export function Navbar() {
 
           <nav className="hidden md:flex items-center gap-6 mr-auto">
             {NAV_LINKS.map((link) => {
-              const cls = `text-sm font-medium transition-colors ${(link as any).highlight ? "text-[rgb(52,154,167)] font-semibold" : "text-muted-foreground hover:text-primary"}`;
+              const active = !(link as any).external && isActive(link.href, location);
+              const cls = cn(
+                "text-sm font-medium transition-colors",
+                active ? "text-[#3a9ca5] font-semibold" : "text-muted-foreground hover:text-[#3a9ca5]"
+              );
               return (link as any).external ? (
                 <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={cls}>
                   {link.label}
