@@ -73,7 +73,7 @@ export function Footer() {
             <span>© Rhythmstix 2021</span>
           </div>
           <p className="text-xs text-muted-foreground/60">
-            Designed for performing arts education.
+            Designed for education.
           </p>
         </div>
       </div>

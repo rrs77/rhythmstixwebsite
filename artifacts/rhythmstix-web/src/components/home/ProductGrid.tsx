@@ -76,7 +76,7 @@ export function ProductGrid() {
         <div className="mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Apps & Tools</h2>
           <p className="text-muted-foreground text-lg max-w-2xl">
-            A cohesive suite of applications designed specifically to make teaching, assessing, and learning performing arts easier.
+            A cohesive suite of applications designed specifically to make teaching, assessing, and learning easier.
           </p>
         </div>
 
