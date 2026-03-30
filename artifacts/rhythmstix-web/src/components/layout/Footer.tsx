@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Youtube, Linkedin, Facebook, MapPin, Phone, Mail } from "lucide-react";
+import { RhythmstixIcon } from "@/components/RhythmstixLogo";
 
 export function Footer() {
   return (
@@ -69,12 +70,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
-            <div className="w-6 h-6 rounded bg-gradient-to-br from-primary to-accent flex items-center justify-center opacity-80">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-primary-foreground">
-                <path d="m14.5 9.5-9 9" />
-                <path d="m9.5 14.5 9-9" />
-              </svg>
-            </div>
+            <RhythmstixIcon size={24} />
             <span>© Rhythmstix 2021</span>
           </div>
           <p className="text-xs text-muted-foreground/60">
