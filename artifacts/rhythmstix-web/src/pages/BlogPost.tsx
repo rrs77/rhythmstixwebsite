@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { useWPPost, useWPMedia } from "@/hooks/use-wp";
 import { decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
 import { WPContent } from "@/components/WPContent";
+import { YouTubeThumbnail } from "@/components/YouTubeModal";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -96,15 +97,7 @@ export default function BlogPost() {
               </p>
 
               {youtubeId ? (
-                <div className="mb-8 rounded-2xl overflow-hidden border border-border aspect-video">
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
-                    title="Video"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                  />
-                </div>
+                <YouTubeThumbnail videoId={youtubeId} className="mb-8 aspect-video w-full" />
               ) : heroImage ? (
                 <div className="mb-8 rounded-2xl overflow-hidden border border-border">
                   <img
