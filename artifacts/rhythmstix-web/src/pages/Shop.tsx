@@ -262,13 +262,12 @@ export default function Shop() {
 
           <div className="mt-12 text-center">
             <p className="text-sm text-muted-foreground mb-3">
-              Looking for something specific? Visit our full shop for the complete catalogue.
+              Can't find what you're looking for? Get in touch and we'll help.
             </p>
             <Button className="bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" asChild>
-              <a href="https://www.rhythmstix.co.uk/shop/" target="_blank" rel="noopener noreferrer">
-                Visit Full Shop
-                <ExternalLink className="w-4 h-4 ml-2" />
-              </a>
+              <Link href="/contact">
+                Contact Us
+              </Link>
             </Button>
           </div>
         </div>

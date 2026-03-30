@@ -53,13 +53,9 @@ export function Navbar() {
             ))}
 
             <Button variant="glass" size="sm" className="ml-2" asChild>
-              <a
-                href="https://www.rhythmstix.co.uk/my-account/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href="/contact">
                 Login
-              </a>
+              </Link>
             </Button>
           </nav>
 
@@ -94,14 +90,12 @@ export function Navbar() {
               ))}
 
               <Button className="mt-4 w-full" asChild>
-                <a
-                  href="https://www.rhythmstix.co.uk/my-account/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/contact"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Login
-                </a>
+                </Link>
               </Button>
             </div>
           </motion.div>

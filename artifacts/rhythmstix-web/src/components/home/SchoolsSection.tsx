@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, X, Music, Star } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 const RESOURCES = [
   {
@@ -70,10 +71,9 @@ function ResourceModal({ resource, onClose }: { resource: Resource; onClose: () 
             {resource.description}
           </p>
           <Button className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" asChild>
-            <a href={resource.link} target="_blank" rel="noopener noreferrer">
-              View Resource
-              <ExternalLink className="w-4 h-4 ml-2" />
-            </a>
+            <Link href="/contact">
+              Enquire About This Resource
+            </Link>
           </Button>
         </div>
       </motion.div>
