@@ -1,0 +1,126 @@
+IMPORTANT CONTEXT – EXISTING WEBSITE REBUILD
+
+I already have a live website that is connected to working apps and internal links.
+
+GOAL:
+Redesign the outward appearance (UI/UX and styling) of the site WITHOUT breaking any existing functionality, routing, or internal links.
+
+CRITICAL RULES:
+- DO NOT change or remove any existing internal links, routes, or endpoints
+- DO NOT rename URLs that are already in use
+- DO NOT break connections to:
+  - Assessify
+  - PeriPlanner
+  - Rhythmstix App
+  - any existing backend or hosted tools
+- Treat the current system as production software that must continue working
+
+Instead:
+- Wrap the existing structure in a new UI layer
+- Improve layout, styling, and responsiveness only
+- Preserve all working navigation logic
+
+---
+
+BRAND & POSITIONING
+
+The website should clearly communicate:
+
+Rhythmstix is:
+“A platform providing performing arts tools, apps, and teaching resources.”
+
+Primary purpose:
+👉 Promote and provide access to my apps and online teaching tools
+
+This MUST be obvious within 3 seconds of landing on the homepage.
+
+---
+
+BRANDING RULES
+
+- Keep the existing logo (do not redesign it)
+- Site title should be displayed clearly as:
+  Rhythmstix
+- Remove clutter and simplify visual identity
+- Make it feel like a modern SaaS platform, not just a resource site
+
+Tone:
+- clear
+- professional
+- creative (performing arts feel)
+- teacher-friendly
+
+---
+
+HOMEPAGE MESSAGING STRUCTURE
+
+The homepage must clearly communicate:
+
+1. WHAT THIS IS
+A short headline such as:
+“Performing Arts Tools & Teaching Platform”
+
+2. WHAT IT DOES
+A short subheading:
+“Assessment, planning, progression tracking, and interactive teaching — all in one place.”
+
+3. PRIMARY ACTION
+Clear buttons:
+- Explore Apps
+- Open Assessify
+
+---
+
+VISUAL PRIORITY
+
+The MOST important elements on the homepage:
+
+1. App / product cards (Assessify, PeriPlanner, ProgressPath, App, Resources, etc.)
+2. Clear pathways into tools
+3. Simple, modern layout
+
+Avoid:
+- clutter
+- long text blocks
+- confusing navigation
+
+---
+
+DESIGN DIRECTION
+
+- Rounded cards (very important)
+- Clean spacing
+- Soft shadows
+- Modern fonts
+- Mobile-first layout
+- Clear CTA buttons
+- Consistent icon system
+
+Make it feel like:
+👉 a unified platform (not separate random tools)
+
+---
+
+TECHNICAL APPROACH
+
+- Keep existing structure intact
+- Refactor styling using:
+  - modern CSS or Tailwind
+- Use reusable components
+- Ensure responsiveness across:
+  - iPhone
+  - tablets
+  - desktop
+
+---
+
+SUCCESS CRITERIA
+
+The redesign is successful if:
+
+- All existing links still work
+- Apps launch correctly
+- The site looks modern and professional
+- A new visitor instantly understands:
+  → “This is a platform for performing arts teaching tools”
+- Navigation is simpler and clearer than before

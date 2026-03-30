@@ -1,0 +1,23 @@
+packages:
+  "framer-motion": "For smooth scroll animations and carousel transitions"
+  "embla-carousel-react": "For the testimonial carousel component"
+  "lucide-react": "For consistent, beautiful icon system"
+
+images:
+  - path: "artifacts/rhythmstix-web/public/images/hero-bg.png"
+    description: "Abstract dark background with glowing teal and deep blue bokeh light leaks, professional SaaS platform feel, subtle and elegant"
+    aspect_ratio: "16:9"
+  - path: "artifacts/rhythmstix-web/public/images/bandlab-cover.png"
+    description: "Modern digital audio workstation interface abstract representation, vibrant teal and blue accents on dark background"
+    aspect_ratio: "16:9"
+  - path: "artifacts/rhythmstix-web/public/images/sneaky-creatures.png"
+    description: "Playful, colorful abstract shapes representing early years music learning, dark background with vibrant accents"
+    aspect_ratio: "16:9"
+  - path: "artifacts/rhythmstix-web/public/images/guide-the-way.png"
+    description: "Theatrical stage lights, winter or nativity play concept, atmospheric, deep blue and warm gold lights"
+    aspect_ratio: "16:9"
+
+notes:
+  - This is a purely frontend static website for marketing/platform entry
+  - No backend API integration required
+  - All hash links (#assessify, etc.) should work as anchor links or just maintain the URL state
