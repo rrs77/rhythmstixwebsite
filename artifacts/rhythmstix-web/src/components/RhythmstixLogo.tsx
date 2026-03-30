@@ -8,7 +8,7 @@ export function RhythmstixLogo({ size = 200, className = "", showText = true }: 
   return (
     <div className={`flex flex-col items-center ${className}`}>
       <div
-        className="bg-black flex flex-col items-center justify-center"
+        className="bg-[hsl(180,30%,12%)] rounded-xl flex flex-col items-center justify-center"
         style={{ width: size, height: showText ? size * 1.2 : size, padding: size * 0.1 }}
       >
         <svg
@@ -52,7 +52,7 @@ export function RhythmstixLogo({ size = 200, className = "", showText = true }: 
 export function RhythmstixIcon({ size = 40, className = "" }: { size?: number; className?: string }) {
   return (
     <div
-      className={`bg-black flex items-center justify-center rounded-lg ${className}`}
+      className={`bg-[hsl(180,30%,12%)] flex items-center justify-center rounded-lg ${className}`}
       style={{ width: size, height: size }}
     >
       <svg
