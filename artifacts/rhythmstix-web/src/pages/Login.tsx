@@ -42,9 +42,11 @@ export default function Login() {
             transition={{ duration: 0.5 }}
           >
             <div className="text-center mb-8">
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-gradient-to-br from-[#3a9ca5] to-[#4cb5bd] shadow-md">
-                <LogIn className="w-7 h-7 text-white" />
-              </div>
+              <img
+                src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-colour.png`}
+                alt="Rhythmstix"
+                className="h-16 w-auto mx-auto mb-2"
+              />
               <h1 className="text-2xl font-bold">Welcome Back</h1>
               <p className="text-muted-foreground text-sm mt-1">
                 Sign in to your Rhythmstix account
