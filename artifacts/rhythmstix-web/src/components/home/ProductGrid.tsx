@@ -18,7 +18,7 @@ const PRODUCTS = [
     description: "Streamlined assessment tools for teachers. Evaluate, record, and provide detailed feedback instantly.",
     icon: ClipboardCheck,
     color: "from-[#0e9aa7] to-[#12b5c4]",
-    link: "/page/assessify",
+    link: "/assessify",
     cta: "Learn More"
   },
   {
@@ -36,7 +36,7 @@ const PRODUCTS = [
     description: "Feedback and scheduling solution for peripatetic teachers and school departments.",
     icon: CalendarDays,
     color: "from-[#12b5c4] to-[#0e9aa7]",
-    link: "/page/periplanner",
+    link: "/perifeedback",
     cta: "Learn More"
   },
   {
@@ -45,7 +45,7 @@ const PRODUCTS = [
     description: "Visualise student journeys. Map out clear progression routes from early years to advanced levels.",
     icon: TrendingUp,
     color: "from-[#0c7e88] to-[#0e9aa7]",
-    link: "/page/learning-platform",
+    link: "/progresspath",
     cta: "Learn More"
   },
   {
@@ -54,7 +54,7 @@ const PRODUCTS = [
     description: "Interactive tools, backing tracks, and resources directly in your pocket for teaching on the go.",
     icon: Smartphone,
     color: "from-[#0e9aa7] to-[#12b5c4]",
-    link: "/page/learning-platform",
+    link: "/rhythmstix-app",
     cta: "Learn More"
   },
   {
@@ -63,8 +63,8 @@ const PRODUCTS = [
     description: "Comprehensive digital courses, resources, and interactive modules for modern education.",
     icon: GraduationCap,
     color: "from-[#0c7e88] to-[#12b5c4]",
-    link: "/resources",
-    cta: "Browse Resources"
+    link: "/elearning",
+    cta: "Learn More"
   }
 ];
 

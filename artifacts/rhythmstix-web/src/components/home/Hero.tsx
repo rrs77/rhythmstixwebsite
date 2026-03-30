@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 
 const APP_LINKS = [
-  { name: "Assessify", href: "https://www.assessify.co.uk/" },
-  { name: "CCDesigner", href: "https://www.ccdesigner.co.uk/" },
-  { name: "PeriFeedback", href: "#" },
-  { name: "ProgressPath", href: "#" },
-  { name: "E-Learning", href: "https://www.rhythmstix.co.uk/learning-platform/" },
+  { name: "Assessify", href: "/assessify" },
+  { name: "CCDesigner", href: "/ccdesigner" },
+  { name: "PeriFeedback", href: "/perifeedback" },
+  { name: "ProgressPath", href: "/progresspath" },
+  { name: "Rhythmstix App", href: "/rhythmstix-app" },
+  { name: "E-Learning", href: "/elearning" },
 ];
 
 export function Hero() {
@@ -49,16 +50,13 @@ export function Hero() {
             className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-10"
           >
             {APP_LINKS.map((app) => (
-              <a
+              <Link
                 key={app.name}
                 href={app.href}
-                target={app.href.startsWith("http") ? "_blank" : undefined}
-                rel={app.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="text-sm font-medium text-slate-400 hover:text-[#0e9aa7] transition-colors flex items-center gap-1"
+                className="text-sm font-medium text-slate-400 hover:text-[#0e9aa7] transition-colors"
               >
                 {app.name}
-                {app.href.startsWith("http") && <ExternalLink className="w-3 h-3" />}
-              </a>
+              </Link>
             ))}
           </motion.div>
 

@@ -129,10 +129,26 @@ about, assessify, periplanner, blog, community, contact-us, learning-platform, s
 - `public/images/rs-monogram.svg` — RS monogram (navbar top-left, footer)
 - `public/images/rhythmstix-logo-white.png` — White logo (dark backgrounds)
 
+#### Product Pages
+Each app has a dedicated page using the shared `ProductPage` component (`src/pages/ProductPage.tsx`):
+- `src/pages/Assessify.tsx` — `/assessify` (external: assessify.co.uk)
+- `src/pages/CCDesigner.tsx` — `/ccdesigner` (external: ccdesigner.co.uk)
+- `src/pages/PeriFeedback.tsx` — `/perifeedback` (no external URL yet)
+- `src/pages/ProgressPath.tsx` — `/progresspath` (no external URL yet)
+- `src/pages/RhythmstixApp.tsx` — `/rhythmstix-app` (no external URL yet)
+- `src/pages/ELearning.tsx` — `/elearning` (external: rhythmstix.co.uk/learning-platform)
+
+Each page includes: hero image placeholder, description text, key features grid, pros/considerations, and CTA section.
+
 #### Routes
 - `/` — Homepage (Hero, ProductGrid, Testimonials)
+- `/assessify` — Assessify product page
+- `/ccdesigner` — CCDesigner product page
+- `/perifeedback` — PeriFeedback product page
+- `/progresspath` — ProgressPath product page
+- `/rhythmstix-app` — Rhythmstix App product page
+- `/elearning` — E-Learning product page
 - `/shop` — Shop page (WooCommerce products)
-- `/ccdesigner` — CCDesigner info page
 - `/resources` — Resources page
 - `/blog` — Blog listing
 - `/post/:slug` — Individual blog post

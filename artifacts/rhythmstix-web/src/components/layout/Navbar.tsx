@@ -18,10 +18,10 @@ import { motion, AnimatePresence } from "framer-motion";
 const APPS = [
   {
     title: "Assessify",
-    description: "Assessment tools for performing arts",
+    description: "Streamlined assessment for teachers",
     icon: ClipboardCheck,
     color: "from-blue-500 to-cyan-400",
-    href: "/page/assessify",
+    href: "/assessify",
   },
   {
     title: "CCDesigner",
@@ -32,35 +32,36 @@ const APPS = [
   },
   {
     title: "PeriFeedback",
-    description: "Timetabling for peripatetic teachers",
+    description: "Feedback & scheduling for peripatetic teachers",
     icon: CalendarDays,
     color: "from-purple-500 to-indigo-400",
-    href: "/page/perifeedback",
+    href: "/perifeedback",
   },
   {
     title: "ProgressPath",
     description: "Visual student progression tracking",
     icon: TrendingUp,
     color: "from-emerald-500 to-teal-400",
-    href: "/page/learning-platform",
+    href: "/progresspath",
   },
   {
     title: "Rhythmstix App",
     description: "Interactive teaching tools on the go",
     icon: Smartphone,
     color: "from-orange-500 to-pink-400",
-    href: "/page/learning-platform",
+    href: "/rhythmstix-app",
   },
   {
     title: "E-Learning",
     description: "Digital courses and music resources",
     icon: GraduationCap,
     color: "from-blue-600 to-indigo-500",
-    href: "/blog",
+    href: "/elearning",
   },
 ];
 
 const NAV_LINKS = [
+  { label: "Home", href: "/" },
   { label: "About", href: "/page/about" },
   { label: "Resources", href: "/resources" },
   { label: "Community", href: "/page/community" },

@@ -7,6 +7,11 @@ import WPPage from "@/pages/WPPage";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
 import CCDesigner from "@/pages/CCDesigner";
+import Assessify from "@/pages/Assessify";
+import PeriFeedback from "@/pages/PeriFeedback";
+import ProgressPath from "@/pages/ProgressPath";
+import RhythmstixApp from "@/pages/RhythmstixApp";
+import ELearning from "@/pages/ELearning";
 import Resources from "@/pages/Resources";
 import Shop from "@/pages/Shop";
 import NotFound from "@/pages/not-found";
@@ -17,7 +22,12 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/assessify" component={Assessify} />
       <Route path="/ccdesigner" component={CCDesigner} />
+      <Route path="/perifeedback" component={PeriFeedback} />
+      <Route path="/progresspath" component={ProgressPath} />
+      <Route path="/rhythmstix-app" component={RhythmstixApp} />
+      <Route path="/elearning" component={ELearning} />
       <Route path="/resources" component={Resources} />
       <Route path="/shop" component={Shop} />
       <Route path="/blog" component={BlogList} />
