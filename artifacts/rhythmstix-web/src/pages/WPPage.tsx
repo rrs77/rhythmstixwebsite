@@ -54,7 +54,7 @@ export default function WPPage() {
           {page && (
             <>
               {page.title.rendered && (
-                <h1 className="text-4xl font-bold mb-8 text-[#3a9ca5]">
+                <h1 className="text-4xl font-bold mb-8 text-[rgb(52,154,167)]">
                   {decodeHtml(page.title.rendered)}
                 </h1>
               )}

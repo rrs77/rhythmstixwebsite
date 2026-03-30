@@ -35,7 +35,7 @@ export default function BlogPost() {
           )}
           {post && (
             <>
-              <h1 className="text-4xl font-bold mb-4 text-[#3a9ca5]">
+              <h1 className="text-4xl font-bold mb-4 text-[rgb(52,154,167)]">
                 {decodeHtml(post.title.rendered)}
               </h1>
               <p className="text-muted-foreground text-sm mb-8">
