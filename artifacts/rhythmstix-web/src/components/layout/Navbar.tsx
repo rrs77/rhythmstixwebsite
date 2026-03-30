@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: "Blog", href: "/blog", highlight: true },
   { label: "Community", href: "/community" },
   { label: "Shop", href: "/shop" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 export function Navbar() {
