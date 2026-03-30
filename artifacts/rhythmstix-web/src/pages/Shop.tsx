@@ -158,7 +158,7 @@ function ProductCard({ product, onClick }: { product: ShopProduct; onClick: () =
       className="group bg-card rounded-xl border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 overflow-hidden flex flex-col h-full text-left cursor-pointer"
     >
       {hasImage ? (
-        <div className="aspect-[3/2] bg-secondary overflow-hidden">
+        <div className="aspect-[4/3] bg-secondary overflow-hidden">
           <img
             src={product.images[0].src}
             alt={product.images[0].alt || product.name}
@@ -166,18 +166,18 @@ function ProductCard({ product, onClick }: { product: ShopProduct; onClick: () =
           />
         </div>
       ) : (
-        <div className="aspect-[3/2] bg-gradient-to-br from-[#3a9ca5]/10 to-[#3a9ca5]/5 flex items-center justify-center">
-          <Package className="w-8 h-8 text-[#3a9ca5]/30" />
+        <div className="aspect-[4/3] bg-gradient-to-br from-[#3a9ca5]/10 to-[#3a9ca5]/5 flex items-center justify-center">
+          <Package className="w-5 h-5 text-[#3a9ca5]/30" />
         </div>
       )}
 
-      <div className="p-3 flex flex-col flex-grow">
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="font-semibold text-sm text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-2">
+      <div className="p-2 flex flex-col flex-grow">
+        <div className="flex items-start justify-between gap-1 mb-0.5">
+          <h3 className="font-semibold text-xs text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-1">
             {product.name}
           </h3>
           <span className={cn(
-            "shrink-0 text-xs font-bold px-2 py-0.5 rounded-full",
+            "shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded-full",
             isFree
               ? "bg-green-100 text-green-700"
               : "bg-[#3a9ca5]/10 text-[#3a9ca5]"
@@ -187,13 +187,13 @@ function ProductCard({ product, onClick }: { product: ShopProduct; onClick: () =
         </div>
 
         {product.description && (
-          <p className="text-xs text-muted-foreground mb-2 line-clamp-2 flex-grow">
+          <p className="text-[10px] text-muted-foreground mb-1 line-clamp-1 flex-grow">
             {stripHtml(product.description)}
           </p>
         )}
 
-        <div className="flex items-center gap-1.5 text-xs font-medium text-[#3a9ca5] mt-auto">
-          <ShoppingCart className="w-3 h-3" />
+        <div className="flex items-center gap-1 text-[10px] font-medium text-[#3a9ca5] mt-auto">
+          <ShoppingCart className="w-2.5 h-2.5" />
           View Details
         </div>
       </div>
@@ -277,7 +277,7 @@ export default function Shop() {
               </div>
             );
             if (visibleProducts.length > 0) return (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {visibleProducts.map((product, i) => (
                 <motion.div
                   key={product.id}
