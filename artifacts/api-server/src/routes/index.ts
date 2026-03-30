@@ -7,6 +7,7 @@ import testimonialsRouter from "./testimonials";
 import navLinksRouter from "./nav-links";
 import woocommerceRouter from "./woocommerce";
 import contactRouter from "./contact";
+import forumRouter from "./forum";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(testimonialsRouter);
 router.use(navLinksRouter);
 router.use(woocommerceRouter);
 router.use(contactRouter);
+router.use(forumRouter);
 
 export default router;

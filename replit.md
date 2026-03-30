@@ -68,7 +68,8 @@ Database layer using Drizzle ORM with PostgreSQL. Exports a Drizzle client insta
 
 - `src/index.ts` — creates a `Pool` + Drizzle instance, exports schema
 - `src/schema/index.ts` — barrel re-export of all models
-- `src/schema/<modelname>.ts` — table definitions with `drizzle-zod` insert schemas (no models definitions exist right now)
+- `src/schema/<modelname>.ts` — table definitions with `drizzle-zod` insert schemas
+- `src/schema/forum.ts` — forum_categories, forum_topics, forum_replies tables
 - `drizzle.config.ts` — Drizzle Kit config (requires `DATABASE_URL`, automatically provided by Replit)
 - Exports: `.` (pool, db, schema), `./schema` (schema only)
 
@@ -163,7 +164,7 @@ Each page includes: hero image placeholder, description text, key features grid,
 - `/elearning` — E-Learning product page
 - `/shop` — Shop page (WooCommerce products, "Assessify Plan" filtered out)
 - `/resources` — Resources page
-- `/community` — Community page
+- `/community` — Community forum (categories → topics → replies; admin can manage)
 - `/contact` — Contact Us page with form
 - `/login` — User login (WordPress authentication)
 - `/forgot-password` — Password reset request
