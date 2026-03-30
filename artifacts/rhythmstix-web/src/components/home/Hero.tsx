@@ -48,12 +48,12 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-6"
+            className="mb-2"
           >
             <img
               src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-colour.png`}
               alt="Rhythmstix - Education Solutions"
-              className="h-36 sm:h-44 md:h-56 w-auto object-contain mx-auto"
+              className="h-28 sm:h-36 md:h-44 w-auto object-contain mx-auto"
             />
           </motion.div>
 
@@ -61,7 +61,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2"
           >
             <span className="text-foreground">Making classrooms </span>
             <span className="text-[rgb(52,154,167)]">work</span>
@@ -71,7 +71,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-8"
+            className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-5"
           >
             A suite of apps and tools built specifically for music education —
             helping teachers{" "}
@@ -94,7 +94,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-8"
+            className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-5"
           >
             {APPS.map((app, i) => (
               <motion.div
