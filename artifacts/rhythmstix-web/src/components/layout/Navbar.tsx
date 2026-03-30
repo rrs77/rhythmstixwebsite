@@ -38,8 +38,8 @@ export function Navbar() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center group">
-            <span className="font-extrabold text-xl tracking-tight text-foreground">
-              rhythm<span className="text-[#3a9ca5]">stix</span>
+            <span className="font-extrabold text-xl tracking-tight">
+              <span className="text-[rgb(52,154,167)]">r</span><span className="text-foreground">hythm</span><span className="text-[rgb(52,154,167)]">tix</span>
             </span>
           </Link>
 
