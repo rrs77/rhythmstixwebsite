@@ -31,11 +31,11 @@ const APPS = [
     href: "/ccdesigner",
   },
   {
-    title: "PeriPlanner",
+    title: "PeriFeedback",
     description: "Timetabling for peripatetic teachers",
     icon: CalendarDays,
     color: "from-purple-500 to-indigo-400",
-    href: "/page/periplanner",
+    href: "/page/perifeedback",
   },
   {
     title: "ProgressPath",

@@ -111,7 +111,7 @@ React + Vite frontend for the Rhythmstix music education platform. Dynamically p
 - `src/pages/BlogPost.tsx` — Individual blog post (route: `/post/:slug`)
 - `src/components/layout/Navbar.tsx` — Navigation with internal links
 - `src/components/layout/Footer.tsx` — Footer with contact info and links
-- `src/components/home/ProductGrid.tsx` — Product cards (Assessify, PeriPlanner, etc.)
+- `src/components/home/ProductGrid.tsx` — Product cards (Assessify, PeriFeedback, etc.)
 
 #### WordPress Page Slugs
 about, assessify, periplanner, blog, community, contact-us, learning-platform, shop, policy, cookies

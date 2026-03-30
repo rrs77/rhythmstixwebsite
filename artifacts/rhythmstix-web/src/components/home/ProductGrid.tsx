@@ -31,12 +31,12 @@ const PRODUCTS = [
     cta: "Explore CCDesigner"
   },
   {
-    id: "periplanner",
-    title: "PeriPlanner",
+    id: "perifeedback",
+    title: "PeriFeedback",
     description: "The ultimate timetabling and scheduling solution for peripatetic teachers and school departments.",
     icon: CalendarDays,
     color: "from-purple-500 to-indigo-400",
-    link: "/page/periplanner",
+    link: "/page/perifeedback",
     cta: "Learn More"
   },
   {
