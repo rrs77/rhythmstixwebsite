@@ -9,8 +9,9 @@ import { useAuth } from "@/hooks/use-auth";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/page/about" },
-  { label: "Blog", href: "/blog", highlight: true },
+  { label: "Resources", href: "https://app.rhythmstix.co.uk/", external: true },
   { label: "Community", href: "/community" },
+  { label: "Blog", href: "/blog", highlight: true },
   { label: "Shop", href: "/shop" },
   { label: "Contact Us", href: "/contact" },
 ];
@@ -44,15 +45,18 @@ export function Navbar() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 mr-auto">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`text-sm font-medium transition-colors ${(link as any).highlight ? "text-[rgb(52,154,167)] font-semibold" : "text-muted-foreground hover:text-primary"}`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const cls = `text-sm font-medium transition-colors ${(link as any).highlight ? "text-[rgb(52,154,167)] font-semibold" : "text-muted-foreground hover:text-primary"}`;
+              return (link as any).external ? (
+                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={cls}>
+                  {link.label}
+                </a>
+              ) : (
+                <Link key={link.label} href={link.href} className={cls}>
+                  {link.label}
+                </Link>
+              );
+            })}
 
             <div className="ml-3 pl-3 border-l border-border">
               {isAuthenticated ? (
@@ -92,16 +96,29 @@ export function Navbar() {
             className="md:hidden bg-card/98 backdrop-blur-xl border-b border-border overflow-hidden"
           >
             <div className="container mx-auto px-4 py-6 flex flex-col gap-2">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-base font-medium text-foreground py-3 px-2"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {NAV_LINKS.map((link) =>
+                (link as any).external ? (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-medium text-foreground py-3 px-2"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-medium text-foreground py-3 px-2"
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
 
               {isAuthenticated ? (
                 <Button className="mt-4 w-full" asChild>
