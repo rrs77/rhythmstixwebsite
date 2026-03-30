@@ -106,10 +106,7 @@ export function Navbar() {
               alt="RS"
               className="h-9 w-9 object-contain transition-all duration-300"
             />
-            <span className={cn(
-              "font-extrabold text-lg tracking-tight transition-colors duration-300",
-              isScrolled ? "text-foreground" : "text-white"
-            )}>
+            <span className="font-extrabold text-lg tracking-tight text-foreground">
               rhythm<span className="text-[#0e9aa7]">stix</span>
             </span>
           </Link>
@@ -121,10 +118,7 @@ export function Navbar() {
               onMouseLeave={closeDropdown}
             >
               <button
-                className={cn(
-                  "flex items-center gap-1 text-sm font-medium transition-colors py-2",
-                  isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
-                )}
+                className="flex items-center gap-1 text-sm font-medium transition-colors py-2 text-muted-foreground hover:text-primary"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
                 Apps
@@ -190,10 +184,7 @@ export function Navbar() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={cn(
-                    "text-sm font-medium transition-colors",
-                    isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
-                  )}
+                  className="text-sm font-medium transition-colors text-muted-foreground hover:text-primary"
                 >
                   {link.label}
                 </a>
@@ -201,17 +192,14 @@ export function Navbar() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors",
-                    isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
-                  )}
+                  className="text-sm font-medium transition-colors text-muted-foreground hover:text-primary"
                 >
                   {link.label}
                 </Link>
               )
             )}
 
-            <Button variant="glass" size="sm" className={cn("ml-2", !isScrolled && "border-white/30 text-white hover:bg-white/10")} asChild>
+            <Button variant="glass" size="sm" className="ml-2" asChild>
               <a
                 href="https://www.rhythmstix.co.uk/my-account/"
                 target="_blank"
@@ -223,7 +211,7 @@ export function Navbar() {
           </nav>
 
           <button
-            className={cn("md:hidden p-2", isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white")}
+            className="md:hidden p-2 text-muted-foreground hover:text-foreground"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle Menu"
           >

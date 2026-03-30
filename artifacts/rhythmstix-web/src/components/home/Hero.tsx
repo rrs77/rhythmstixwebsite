@@ -4,17 +4,17 @@ import { ChevronRight, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 
 const APP_LINKS = [
-  { name: "Assessify", href: "https://www.assessify.co.uk/", color: "hover:text-cyan-300" },
-  { name: "CCDesigner", href: "https://www.ccdesigner.co.uk/", color: "hover:text-amber-300" },
-  { name: "PeriFeedback", href: "#", color: "hover:text-purple-300" },
-  { name: "ProgressPath", href: "#", color: "hover:text-emerald-300" },
-  { name: "E-Learning", href: "https://www.rhythmstix.co.uk/learning-platform/", color: "hover:text-blue-300" },
+  { name: "Assessify", href: "https://www.assessify.co.uk/" },
+  { name: "CCDesigner", href: "https://www.ccdesigner.co.uk/" },
+  { name: "PeriFeedback", href: "#" },
+  { name: "ProgressPath", href: "#" },
+  { name: "E-Learning", href: "https://www.rhythmstix.co.uk/learning-platform/" },
 ];
 
 export function Hero() {
   return (
     <section className="relative flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a2e3c] via-[#0c3d4a] to-[#0e4a52]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-slate-100" />
 
       <div className="container relative z-10 mx-auto px-4 pt-28 pb-16">
         <div className="max-w-4xl mx-auto text-center">
@@ -25,7 +25,7 @@ export function Hero() {
             className="mb-6"
           >
             <img
-              src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-white.png`}
+              src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-colour.png`}
               alt="Rhythmstix - Education Solutions"
               className="h-16 sm:h-20 md:h-28 w-auto object-contain mx-auto"
             />
@@ -35,7 +35,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg sm:text-xl md:text-2xl font-medium text-white/70 mb-6 leading-relaxed"
+            className="text-lg sm:text-xl md:text-2xl font-medium text-slate-500 mb-6 leading-relaxed"
           >
             Assessment, planning, progression tracking,
             <br className="hidden sm:block" />
@@ -54,7 +54,7 @@ export function Hero() {
                 href={app.href}
                 target={app.href.startsWith("http") ? "_blank" : undefined}
                 rel={app.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className={`text-sm font-medium text-white/50 ${app.color} transition-colors flex items-center gap-1`}
+                className="text-sm font-medium text-slate-400 hover:text-[#0e9aa7] transition-colors flex items-center gap-1"
               >
                 {app.name}
                 {app.href.startsWith("http") && <ExternalLink className="w-3 h-3" />}
@@ -74,7 +74,7 @@ export function Hero() {
                 <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
             </Button>
-            <Button size="lg" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-sm text-base px-8 py-6" asChild>
+            <Button size="lg" className="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-base px-8 py-6" asChild>
               <a href="https://www.rhythmstix.co.uk/shop/" target="_blank" rel="noopener noreferrer">
                 Visit Shop
               </a>
