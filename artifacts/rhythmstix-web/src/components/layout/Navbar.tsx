@@ -62,6 +62,7 @@ const APPS = [
 
 const NAV_LINKS = [
   { label: "About", href: "/page/about" },
+  { label: "Resources", href: "/resources" },
   { label: "Community", href: "/page/community" },
   { label: "Blog", href: "/blog" },
 ];
