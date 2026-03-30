@@ -1,45 +1,50 @@
 import ProductPage from "./ProductPage";
-import { ClipboardCheck, BarChart3, FileText, Brain, Users, Shield } from "lucide-react";
+import { ClipboardCheck, BarChart3, FileText, Brain, Users, Shield, Target, Sliders, Database, FileSpreadsheet } from "lucide-react";
 
 export default function Assessify() {
   return (
     <ProductPage
       name="Assessify"
-      subtitle="Streamlined Assessment for Teachers"
+      subtitle="Assessment Transformed for Performing Arts Teachers"
       icon={ClipboardCheck}
       description={[
-        "Assessify is a powerful assessment platform built specifically for teachers and schools. Launched in 2024, it transforms the way educators evaluate, record, and report on student progress — replacing clunky spreadsheets with a streamlined, intuitive interface.",
-        "The platform offers a user-friendly interface for grading work, evaluating progress, and generating detailed reports. Teachers can quickly record assessments during or after lessons, track student achievement over time, and produce professional reports ready to share with parents and senior leadership.",
-        "Assessify leverages AI to streamline the assessment process, making it easier for teachers to focus on what matters most — teaching and enhancing student learning. The tool is designed to save hours of administrative time while providing deeper, more meaningful insights into student progress.",
+        "Say goodbye to dry AI-generated reports with Assessify. Assessment within Performing Arts subjects has always been a challenge — making it useful and transparent for pupils, and informative for parents, is often time-consuming and frustrating for teachers. But there is another way.",
+        "Assessify is a brand new assessment tool created from the ground up specifically for Performing Arts subjects. Through a user-friendly interface you can quickly and easily grade work, evaluate student progress and generate detailed reports. Leveraging the power of artificial intelligence, Assessify streamlines the assessment process for teachers and enhances student learning.",
+        "Using personalised 'I can' statements throughout all lessons for AFL, you can ensure that your reports are personable, relevant and helpful to pupils. Build your own bank of assessments for each year group you teach and tailor the rubrics to match the needs of your children — keeping all previous assessments in one place so you can review progress easily.",
       ]}
       features={[
-        { icon: ClipboardCheck, title: "Quick Assessment", description: "Record student assessments quickly during or after lessons. Intuitive grading interface designed for speed and accuracy." },
-        { icon: BarChart3, title: "Progress Tracking", description: "Track student achievement over time with clear visualisations. Identify trends, gaps, and areas for intervention at a glance." },
-        { icon: FileText, title: "Report Generation", description: "Generate detailed, professional reports ready to share with parents, senior leadership, and Ofsted. No more manual formatting." },
-        { icon: Brain, title: "AI-Powered Insights", description: "Leverage AI to streamline assessment workflows and surface meaningful insights about student learning patterns." },
-        { icon: Users, title: "Department-Wide", description: "Designed for whole-school or department use. Share assessment frameworks, moderate grades, and ensure consistency across teachers." },
-        { icon: Shield, title: "Secure & Compliant", description: "Student data is stored securely and handled in compliance with UK data protection requirements." },
+        { icon: Target, title: "Accurate & Fair Grading", description: "Ensures fair and unbiased grading of assignments and assessments based on teacher-created rubrics and assessment criteria lists." },
+        { icon: Brain, title: "AI-Powered Reports", description: "Leverage bespoke AI tools to evaluate student performance and generate detailed, personalised reports — not dry, generic ones." },
+        { icon: BarChart3, title: "Insightful Analytics", description: "Generates detailed analytics and reports to inform your teaching, address student needs and support progress over time." },
+        { icon: Sliders, title: "Fully Customisable", description: "Customise assessment criteria to match your units, curriculum requirements and pupil needs. Create differentiated 'I can' statements or use the growing bank of ready-made criteria." },
+        { icon: Database, title: "Assessment Bank", description: "Build your own bank of assessments for each year group. Keep all previous assessments in one place so you can review progress and be prepared for pupil progress meetings." },
+        { icon: FileSpreadsheet, title: "Ready-Made Spreadsheets", description: "Export detailed spreadsheets for each unit to print and share with colleagues. Get organised for those pupil progress meetings." },
+        { icon: Shield, title: "User-Friendly Interface", description: "Enjoy a seamless and intuitive experience with no advanced tech knowledge needed. Sign up, set up your classes, and start assessing." },
+        { icon: Users, title: "PeriPlanner Included", description: "PeriPlanner (now PeriFeedback) is included free with all Assessify plans — including the free plan — for scheduling and feedback management." },
+        { icon: FileText, title: "Termly Reviews & Reports", description: "Create pupil progress feedback reports and termly reviews for parents with personalised, curriculum-aligned content." },
       ]}
       pros={[
+        "Built specifically for Performing Arts assessment — not a generic tool",
+        "AI-powered reports that are personable and relevant, not dry and generic",
+        "Fair and unbiased grading based on teacher-created rubrics",
         "Saves hours of administrative time on assessments and reports",
-        "AI-powered insights help identify student progress patterns",
-        "Professional report generation for parents and leadership",
-        "Intuitive interface designed specifically for teachers",
-        "Tracks progress over time with clear visualisations",
-        "Supports whole-school or department-wide assessment",
-        "Replaces scattered spreadsheets with one coherent system",
-        "Designed for UK curriculum frameworks",
+        "Customisable 'I can' statements for meaningful AFL",
+        "Assessment bank keeps all previous assessments in one place",
+        "Ready-made spreadsheets for sharing with colleagues",
+        "PeriFeedback included free with all plans",
+        "Detailed analytics inform teaching and support progress",
+        "No advanced tech knowledge needed",
       ]}
       considerations={[
-        "Requires initial setup to configure assessment frameworks",
-        "AI features work best with consistent assessment data",
-        "Report credit system for advanced reporting features",
-        "Best results when adopted across a department or school",
+        "Requires initial setup to create classes and customise assessment criteria",
+        "AI report features work best with consistent assessment data over time",
+        "Currently focused on Performing Arts subjects",
+        "Best results when assessment criteria are tailored to your curriculum",
       ]}
       externalUrl="https://www.assessify.co.uk/"
       externalLabel="Visit Assessify"
       ctaHeading="Ready to transform your assessments?"
-      ctaText="Stop spending hours on spreadsheets. Assessify gives teachers a fast, intelligent way to assess, track, and report on student progress."
+      ctaText="Say goodbye to dry, generic reports. Assessify gives Performing Arts teachers a fast, intelligent way to assess, track, and report on student progress — with AI-powered insights that actually sound like you wrote them."
     />
   );
 }
