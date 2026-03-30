@@ -46,8 +46,8 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 md:items-end">
-            <div className="w-full md:w-auto">
+          <div className="flex flex-col gap-4">
+            <div>
               <h3 className="text-lg font-semibold text-foreground mb-4">Follow Us</h3>
               <div className="flex items-center gap-4">
                 <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
