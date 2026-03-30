@@ -61,12 +61,17 @@ export function ProductGrid() {
   return (
     <section id="products" className="py-12 relative">
       <div className="container mx-auto px-4">
-        <div className="mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-12"
+        >
           <h2 className="text-3xl md:text-4xl font-bold mb-3">Our Apps & Tools</h2>
           <p className="text-muted-foreground text-lg max-w-2xl">
             A cohesive suite of applications designed specifically to make teaching, assessing, and learning easier.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {PRODUCTS.map((product, index) => (

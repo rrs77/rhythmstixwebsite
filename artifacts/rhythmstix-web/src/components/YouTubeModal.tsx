@@ -74,9 +74,11 @@ export function YouTubeThumbnail({ videoId, className = "" }: YouTubeThumbnailPr
 
   return (
     <>
-      <button
+      <motion.button
         onClick={() => setIsOpen(true)}
         className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-border ${className}`}
+        whileHover={{ scale: 1.01 }}
+        transition={{ duration: 0.3 }}
       >
         <img
           src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
@@ -87,11 +89,15 @@ export function YouTubeThumbnail({ videoId, className = "" }: YouTubeThumbnailPr
           }}
         />
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+          <motion.div
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-600 flex items-center justify-center shadow-lg"
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
             <Play className="w-8 h-8 sm:w-10 sm:h-10 text-white fill-white ml-1" />
-          </div>
+          </motion.div>
         </div>
-      </button>
+      </motion.button>
       <YouTubeModalOverlay videoId={videoId} isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );

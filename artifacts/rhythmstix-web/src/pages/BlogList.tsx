@@ -3,6 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useWPPosts } from "@/hooks/use-wp";
 import { decodeHtml } from "@/lib/wordpress";
+import { motion } from "framer-motion";
 import { Loader2, ArrowRight, Shield, Eye, EyeOff, Lock, X } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -166,10 +167,16 @@ export default function BlogList() {
           )}
           {visiblePosts && (
             <div className="grid gap-6">
-              {visiblePosts.map((post) => {
+              {visiblePosts.map((post, index) => {
                 const isHidden = hiddenPosts.includes(post.id);
                 return (
-                  <div key={post.id} className="relative group/card">
+                  <motion.div
+                    key={post.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.06 }}
+                    className="relative group/card"
+                  >
                     <Link
                       href={`/post/${post.slug}`}
                       className={cn(
@@ -203,7 +210,7 @@ export default function BlogList() {
                         {isHidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     )}
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>

@@ -5,6 +5,7 @@ import { useWPPost, useWPMedia } from "@/hooks/use-wp";
 import { decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
 import { WPContent } from "@/components/WPContent";
 import { YouTubeThumbnail } from "@/components/YouTubeModal";
+import { motion } from "framer-motion";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -89,29 +90,56 @@ export default function BlogPost() {
           )}
           {post && (
             <>
-              <h1 className="text-4xl font-bold mb-4 text-[rgb(52,154,167)]">
+              <motion.h1
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-4xl font-bold mb-4 text-[rgb(52,154,167)]"
+              >
                 {decodeHtml(post.title.rendered)}
-              </h1>
-              <p className="text-muted-foreground text-sm mb-6">
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.15 }}
+                className="text-muted-foreground text-sm mb-6"
+              >
                 {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
-              </p>
+              </motion.p>
 
               {youtubeId ? (
-                <YouTubeThumbnail videoId={youtubeId} className="mb-8 aspect-video w-full" />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <YouTubeThumbnail videoId={youtubeId} className="mb-8 aspect-video w-full" />
+                </motion.div>
               ) : heroImage ? (
-                <div className="mb-8 rounded-2xl overflow-hidden border border-border">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="mb-8 rounded-2xl overflow-hidden border border-border"
+                >
                   <img
                     src={heroImage}
                     alt={featuredMedia?.alt_text || decodeHtml(post.title.rendered)}
                     className="w-full h-auto"
                   />
-                </div>
+                </motion.div>
               ) : null}
 
-              <WPContent
-                className="wp-content prose prose-lg max-w-none"
-                html={processedContent}
-              />
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <WPContent
+                  className="wp-content prose prose-lg max-w-none"
+                  html={processedContent}
+                />
+              </motion.div>
             </>
           )}
           {!isLoading && !error && !post && (
