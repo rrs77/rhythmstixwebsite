@@ -66,13 +66,14 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-muted-foreground text-sm">
+          <div className="flex items-center gap-2.5 text-muted-foreground text-sm">
             <img
-              src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-new.svg`}
-              alt="Rhythmstix - Making Learning Stick"
-              className="h-7 w-auto object-contain opacity-80"
+              src={`${import.meta.env.BASE_URL}images/rs-monogram.svg`}
+              alt="RS"
+              className="h-7 w-7 object-contain"
             />
-            <span>© Rhythmstix 2021</span>
+            <span className="font-bold text-foreground/80">rhythm<span className="text-[#0e9aa7]">stix</span></span>
+            <span>© 2021</span>
           </div>
           <p className="text-xs text-muted-foreground/60">
             Designed for education.

@@ -15,36 +15,36 @@ const PRODUCTS = [
   {
     id: "assessify",
     title: "Assessify",
-    description: "Streamlined assessment tools tailored for performing arts. Evaluate, record, and provide feedback instantly.",
+    description: "Streamlined assessment tools for teachers. Evaluate, record, and provide detailed feedback instantly.",
     icon: ClipboardCheck,
-    color: "from-blue-500 to-cyan-400",
+    color: "from-[#0e9aa7] to-[#12b5c4]",
     link: "/page/assessify",
-    cta: "Open Assessify"
+    cta: "Learn More"
   },
   {
     id: "ccdesigner",
     title: "CCDesigner",
-    description: "Creative Curriculum Designer — plan, organise, and reuse music and creative curriculum content across EYFS, KS1, and KS2.",
+    description: "Creative Curriculum Designer — plan, organise, and reuse curriculum content across EYFS, KS1, and KS2.",
     icon: Palette,
-    color: "from-rose-500 to-amber-400",
+    color: "from-[#0e9aa7] to-[#0c7e88]",
     link: "/ccdesigner",
-    cta: "Explore CCDesigner"
+    cta: "Learn More"
   },
   {
     id: "perifeedback",
     title: "PeriFeedback",
-    description: "The ultimate timetabling and scheduling solution for peripatetic teachers and school departments.",
+    description: "Feedback and scheduling solution for peripatetic teachers and school departments.",
     icon: CalendarDays,
-    color: "from-purple-500 to-indigo-400",
-    link: "/page/perifeedback",
+    color: "from-[#12b5c4] to-[#0e9aa7]",
+    link: "/page/periplanner",
     cta: "Learn More"
   },
   {
     id: "progresspath",
     title: "ProgressPath",
-    description: "Visualize student journeys. Map out clear progression routes from early years to advanced levels.",
+    description: "Visualise student journeys. Map out clear progression routes from early years to advanced levels.",
     icon: TrendingUp,
-    color: "from-emerald-500 to-teal-400",
+    color: "from-[#0c7e88] to-[#0e9aa7]",
     link: "/page/learning-platform",
     cta: "Learn More"
   },
@@ -53,19 +53,18 @@ const PRODUCTS = [
     title: "Rhythmstix App",
     description: "Interactive tools, backing tracks, and resources directly in your pocket for teaching on the go.",
     icon: Smartphone,
-    color: "from-orange-500 to-pink-400",
+    color: "from-[#0e9aa7] to-[#12b5c4]",
     link: "/page/learning-platform",
-    cta: "Get the App"
+    cta: "Learn More"
   },
   {
     id: "elearning",
-    title: "E-Learning Resources",
-    description: "Comprehensive digital courses, sheet music, and interactive modules for modern music education.",
+    title: "E-Learning",
+    description: "Comprehensive digital courses, resources, and interactive modules for modern education.",
     icon: GraduationCap,
-    color: "from-blue-600 to-indigo-500",
-    link: "/blog",
-    cta: "Browse Resources",
-    wide: true
+    color: "from-[#0c7e88] to-[#12b5c4]",
+    link: "/resources",
+    cta: "Browse Resources"
   }
 ];
 
@@ -73,45 +72,43 @@ export function ProductGrid() {
   return (
     <section id="products" className="py-12 relative">
       <div className="container mx-auto px-4">
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Apps & Tools</h2>
+        <div className="mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3">Our Apps & Tools</h2>
           <p className="text-muted-foreground text-lg max-w-2xl">
             A cohesive suite of applications designed specifically to make teaching, assessing, and learning easier.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {PRODUCTS.map((product, index) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className={`group relative bg-card rounded-[16px] p-8 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 ${
-                product.wide ? 'md:col-span-2 lg:col-span-2' : ''
-              }`}
+              transition={{ delay: index * 0.08 }}
             >
-              <div className={`w-14 h-14 rounded-xl mb-6 flex items-center justify-center bg-gradient-to-br ${product.color} shadow-md`}>
-                <product.icon className="w-7 h-7 text-white" />
-              </div>
-              
-              <h3 className="text-2xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors">
-                {product.title}
-              </h3>
-              
-              <p className="text-muted-foreground mb-8 line-clamp-3">
-                {product.description}
-              </p>
-              
-              <div className="mt-auto pt-4 flex items-center">
-                <Button variant="ghost" className="p-0 hover:bg-transparent group/btn text-primary hover:text-accent" asChild>
-                  <Link href={product.link}>
-                    {product.cta}
-                    <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-              </div>
+              <Link
+                href={product.link}
+                className="group block relative bg-card rounded-2xl p-6 border border-border hover:border-[#0e9aa7]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#0e9aa7]/10 hover:-translate-y-1 h-full"
+              >
+                <div className={`w-12 h-12 rounded-xl mb-5 flex items-center justify-center bg-gradient-to-br ${product.color} shadow-md`}>
+                  <product.icon className="w-6 h-6 text-white" />
+                </div>
+                
+                <h3 className="text-xl font-bold mb-2 text-foreground group-hover:text-[#0e9aa7] transition-colors">
+                  {product.title}
+                </h3>
+                
+                <p className="text-muted-foreground text-sm mb-5 line-clamp-3">
+                  {product.description}
+                </p>
+                
+                <div className="flex items-center text-[#0e9aa7] text-sm font-medium">
+                  {product.cta}
+                  <ArrowRight className="ml-1.5 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>

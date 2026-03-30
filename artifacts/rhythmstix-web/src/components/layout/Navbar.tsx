@@ -99,12 +99,18 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2.5 group">
             <img
-              src={`${import.meta.env.BASE_URL}images/${isScrolled ? 'rhythmstix-logo-new.svg' : 'rhythmstix-logo-official.png'}`}
-              alt="Rhythmstix - Making Learning Stick"
-              className={cn("w-auto object-contain transition-all duration-300", isScrolled ? "h-10" : "h-12")}
+              src={`${import.meta.env.BASE_URL}images/rs-monogram.svg`}
+              alt="RS"
+              className="h-9 w-9 object-contain transition-all duration-300"
             />
+            <span className={cn(
+              "font-extrabold text-lg tracking-tight transition-colors duration-300",
+              isScrolled ? "text-foreground" : "text-white"
+            )}>
+              rhythm<span className="text-[#0e9aa7]">stix</span>
+            </span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
