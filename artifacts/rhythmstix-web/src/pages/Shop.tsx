@@ -2,10 +2,50 @@ import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useShopProducts, useShopCategories, type ShopProduct } from "@/hooks/use-shop";
-import { Loader2, ExternalLink, ShoppingCart, Package } from "lucide-react";
+import { Loader2, ExternalLink, ShoppingCart, Package, Palette, ClipboardCheck, CalendarDays, GraduationCap, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+
+const APP_FEATURES = [
+  {
+    id: "ccdesigner",
+    title: "CCDesigner",
+    subtitle: "Creative Curriculum Designer",
+    description: "Plan, organise, and reuse curriculum content across EYFS, KS1, and KS2. A single place to design, store, and share lessons and activities.",
+    icon: Palette,
+    color: "from-[#3a9ca5] to-[#2d8890]",
+    link: "/ccdesigner",
+  },
+  {
+    id: "assessify",
+    title: "Assessify",
+    subtitle: "Assessment Transformed",
+    description: "Fair and personalised assessment for Performing Arts. AI-powered reports, customisable rubrics, and detailed analytics — built for teachers, not IT departments.",
+    icon: ClipboardCheck,
+    color: "from-[#2d8890] to-[#3a9ca5]",
+    link: "/assessify",
+  },
+  {
+    id: "perifeedback",
+    title: "PeriFeedback",
+    subtitle: "Feedback & Scheduling",
+    description: "Purpose-built for peripatetic teachers. Log lesson feedback, manage schedules across schools, and keep everyone connected — no more chasing emails.",
+    icon: CalendarDays,
+    color: "from-[#4cb5bd] to-[#3a9ca5]",
+    link: "/perifeedback",
+  },
+  {
+    id: "elearning",
+    title: "Learning Platform",
+    subtitle: "Digital Courses & Resources",
+    description: "Ready-to-teach differentiated lessons with video, audio, quizzes, and built-in assessment. Curriculum-aligned, unlimited users, works on any device.",
+    icon: GraduationCap,
+    color: "from-[#3a9ca5] to-[#4cb5bd]",
+    link: "/elearning",
+  },
+];
 
 const CATEGORY_LABELS: Record<string, string> = {
   assessify: "Assessify",
@@ -176,6 +216,49 @@ export default function Shop() {
             );
             return null;
           })()}
+
+          <div className="mt-16 mb-10">
+            <h2 className="text-2xl font-bold text-foreground mb-2">Our Apps</h2>
+            <p className="text-muted-foreground">
+              Purpose-built tools for education — explore each app to find out more.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {APP_FEATURES.map((app, index) => (
+              <motion.div
+                key={app.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.08 }}
+              >
+                <Link
+                  href={app.link}
+                  className="group block bg-card rounded-xl p-5 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 h-full"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br ${app.color} shadow-sm`}>
+                      <app.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-grow min-w-0">
+                      <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                        {app.title}
+                      </h3>
+                      <p className="text-xs text-[#3a9ca5] font-medium mb-1.5">{app.subtitle}</p>
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                        {app.description}
+                      </p>
+                      <div className="flex items-center text-xs font-medium text-[#3a9ca5]">
+                        Learn More
+                        <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
 
           <div className="mt-12 text-center">
             <p className="text-sm text-muted-foreground mb-3">
