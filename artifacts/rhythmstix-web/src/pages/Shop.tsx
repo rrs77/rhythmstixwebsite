@@ -38,10 +38,10 @@ function ProductCard({ product }: { product: ShopProduct }) {
       rel="noopener noreferrer"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group bg-card rounded-2xl border border-border hover:border-[#3a9ca5]/40 hover:shadow-lg hover:shadow-[#3a9ca5]/5 transition-all duration-300 overflow-hidden flex flex-col h-full"
+      className="group bg-card rounded-xl border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 overflow-hidden flex flex-col h-full"
     >
       {hasImage ? (
-        <div className="aspect-[4/3] bg-secondary overflow-hidden">
+        <div className="aspect-[3/2] bg-secondary overflow-hidden">
           <img
             src={product.images[0].src}
             alt={product.images[0].alt || product.name}
@@ -49,18 +49,18 @@ function ProductCard({ product }: { product: ShopProduct }) {
           />
         </div>
       ) : (
-        <div className="aspect-[4/3] bg-gradient-to-br from-[#3a9ca5]/10 to-[#3a9ca5]/5 flex items-center justify-center">
-          <Package className="w-12 h-12 text-[#3a9ca5]/30" />
+        <div className="aspect-[3/2] bg-gradient-to-br from-[#3a9ca5]/10 to-[#3a9ca5]/5 flex items-center justify-center">
+          <Package className="w-8 h-8 text-[#3a9ca5]/30" />
         </div>
       )}
 
-      <div className="p-5 flex flex-col flex-grow">
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-2">
+      <div className="p-3 flex flex-col flex-grow">
+        <div className="flex items-start justify-between gap-2 mb-1">
+          <h3 className="font-semibold text-sm text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-2">
             {product.name}
           </h3>
           <span className={cn(
-            "shrink-0 text-sm font-bold px-2.5 py-1 rounded-full",
+            "shrink-0 text-xs font-bold px-2 py-0.5 rounded-full",
             isFree
               ? "bg-green-100 text-green-700"
               : "bg-[#3a9ca5]/10 text-[#3a9ca5]"
@@ -70,28 +70,15 @@ function ProductCard({ product }: { product: ShopProduct }) {
         </div>
 
         {product.description && (
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2 flex-grow">
+          <p className="text-xs text-muted-foreground mb-2 line-clamp-2 flex-grow">
             {stripHtml(product.description)}
           </p>
         )}
 
-        {product.categories.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            {product.categories.map((cat) => (
-              <span
-                key={cat.id}
-                className="text-xs bg-secondary text-muted-foreground px-2 py-0.5 rounded-full"
-              >
-                {CATEGORY_LABELS[cat.slug] || cat.name}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div className="flex items-center gap-2 text-sm font-medium text-[#3a9ca5] mt-auto">
-          <ShoppingCart className="w-4 h-4" />
+        <div className="flex items-center gap-1.5 text-xs font-medium text-[#3a9ca5] mt-auto">
+          <ShoppingCart className="w-3 h-3" />
           {isFree ? "Get it free" : "View in Shop"}
-          <ExternalLink className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+          <ExternalLink className="w-2.5 h-2.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
     </motion.a>
@@ -173,7 +160,7 @@ export default function Shop() {
               </div>
             );
             if (visibleProducts.length > 0) return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {visibleProducts.map((product, i) => (
                 <motion.div
                   key={product.id}
