@@ -68,7 +68,7 @@ export function Footer() {
             <img
               src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-new.svg`}
               alt="Rhythmstix - Making Learning Stick"
-              className="h-8 w-auto object-contain opacity-70"
+              className="h-7 w-auto object-contain opacity-80"
             />
             <span>© Rhythmstix 2021</span>
           </div>

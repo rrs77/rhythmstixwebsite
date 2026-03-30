@@ -100,9 +100,9 @@ export function Navbar() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
             <img
-              src={`${import.meta.env.BASE_URL}images/${isScrolled ? 'rhythmstix-logo-new.svg' : 'rhythmstix-logo-hero.svg'}`}
+              src={`${import.meta.env.BASE_URL}images/${isScrolled ? 'rhythmstix-logo-new.svg' : 'rhythmstix-logo-official.png'}`}
               alt="Rhythmstix - Making Learning Stick"
-              className="h-10 w-auto object-contain transition-all duration-300"
+              className={cn("w-auto object-contain transition-all duration-300", isScrolled ? "h-10" : "h-12")}
             />
           </Link>
 
