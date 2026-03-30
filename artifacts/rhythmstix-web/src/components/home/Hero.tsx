@@ -5,10 +5,10 @@ import { Link } from "wouter";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[75vh] flex items-center justify-center overflow-hidden">
+    <section className="relative flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a2e3c] via-[#0c3d4a] to-[#0e4a52]" />
 
-      <div className="container relative z-10 mx-auto px-4 py-20">
+      <div className="container relative z-10 mx-auto px-4 pt-28 pb-16">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -53,7 +53,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
 }

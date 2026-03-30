@@ -21,7 +21,7 @@ const TESTIMONIALS = [
   {
     id: 3,
     quote: "ProgressPath makes tracking student development intuitive and visual. Parents love the detailed reports we can now provide.",
-    author: "Performing Arts Teacher",
+    author: "Teacher",
     organization: "Creative Arts College, Sydney"
   }
 ];
@@ -46,7 +46,6 @@ export function Testimonials() {
     emblaApi.on("reInit", onSelect);
   }, [emblaApi, onSelect]);
 
-  // Auto-play
   useEffect(() => {
     if (!emblaApi) return;
     const interval = setInterval(() => {
@@ -56,31 +55,31 @@ export function Testimonials() {
   }, [emblaApi]);
 
   return (
-    <section className="py-24 bg-secondary/30 relative">
+    <section className="py-12 bg-secondary/30 relative">
       <div className="container mx-auto px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
-          <h2 className="text-3xl font-bold mb-4">Loved by Schools Worldwide</h2>
-          <div className="w-16 h-1 bg-primary mx-auto rounded-full" />
+          <h2 className="text-2xl font-bold mb-2">What People Say</h2>
+          <div className="w-12 h-0.5 bg-primary mx-auto rounded-full" />
         </motion.div>
 
-        <div className="max-w-4xl mx-auto relative">
+        <div className="max-w-3xl mx-auto relative">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex touch-pan-y">
               {TESTIMONIALS.map((testimonial) => (
                 <div key={testimonial.id} className="flex-[0_0_100%] min-w-0 px-4">
-                  <div className="glass-panel rounded-3xl p-8 md:p-12 text-center relative mx-auto max-w-3xl">
-                    <Quote className="w-12 h-12 text-primary/20 mx-auto mb-6 rotate-180" />
-                    <p className="text-xl md:text-3xl font-medium text-foreground mb-8 leading-relaxed">
+                  <div className="glass-panel rounded-2xl p-6 md:p-8 text-center relative mx-auto max-w-2xl">
+                    <Quote className="w-8 h-8 text-primary/15 mx-auto mb-4 rotate-180" />
+                    <p className="text-base md:text-lg font-medium text-foreground mb-4 leading-relaxed">
                       "{testimonial.quote}"
                     </p>
                     <div>
-                      <p className="font-semibold text-primary">{testimonial.author}</p>
-                      <p className="text-sm text-muted-foreground">{testimonial.organization}</p>
+                      <p className="text-sm font-semibold text-primary">{testimonial.author}</p>
+                      <p className="text-xs text-muted-foreground">{testimonial.organization}</p>
                     </div>
                   </div>
                 </div>
@@ -88,9 +87,9 @@ export function Testimonials() {
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-6 mt-8">
-            <Button variant="outline" size="icon" className="rounded-full w-10 h-10 border-border/50" onClick={scrollPrev}>
-              <ChevronLeft className="w-5 h-5" />
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <Button variant="outline" size="icon" className="rounded-full w-8 h-8 border-border/50" onClick={scrollPrev}>
+              <ChevronLeft className="w-4 h-4" />
             </Button>
             
             <div className="flex gap-2">
@@ -99,9 +98,9 @@ export function Testimonials() {
                   key={index}
                   onClick={() => scrollTo(index)}
                   className={cn(
-                    "w-2.5 h-2.5 rounded-full transition-all duration-300",
+                    "w-2 h-2 rounded-full transition-all duration-300",
                     index === selectedIndex 
-                      ? "bg-primary w-6" 
+                      ? "bg-primary w-5" 
                       : "bg-border hover:bg-muted-foreground"
                   )}
                   aria-label={`Go to slide ${index + 1}`}
@@ -109,8 +108,8 @@ export function Testimonials() {
               ))}
             </div>
 
-            <Button variant="outline" size="icon" className="rounded-full w-10 h-10 border-border/50" onClick={scrollNext}>
-              <ChevronRight className="w-5 h-5" />
+            <Button variant="outline" size="icon" className="rounded-full w-8 h-8 border-border/50" onClick={scrollNext}>
+              <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
