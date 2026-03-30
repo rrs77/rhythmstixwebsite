@@ -6,14 +6,6 @@ import { Link } from "wouter";
 
 const RESOURCES = [
   {
-    title: "Sneaky Creatures",
-    subtitle: "Free Early Years Song",
-    description: "A fun, interactive song for early years students to develop rhythm, coordination, and listening skills. Perfect for Reception and Year 1 classes, with actions and movement built in to keep young learners engaged.",
-    image: "images/sneaky-creatures.png",
-    tag: "Free Resource",
-    tagColor: "bg-emerald-500 text-white",
-  },
-  {
     title: "Guide The Way",
     subtitle: "Nativity for Years 3–6",
     description: "A complete, modern nativity package for Key Stage 2 with script, sheet music, and performance tracks. Everything you need to stage a memorable school production — from rehearsal guides to backing tracks.",
@@ -21,6 +13,17 @@ const RESOURCES = [
     tag: "Premium Package",
     tagColor: "bg-[#3a9ca5] text-white",
   }
+];
+
+const FREE_RESOURCES = [
+  {
+    title: "Sneaky Creatures",
+    subtitle: "Free Early Years Song",
+    description: "A fun, interactive song for early years students to develop rhythm, coordination, and listening skills. Perfect for Reception and Year 1 classes, with actions and movement built in to keep young learners engaged.",
+    image: "images/sneaky-creatures.png",
+    tag: "Free Resource",
+    tagColor: "bg-emerald-500 text-white",
+  },
 ];
 
 type Resource = typeof RESOURCES[number];
@@ -119,6 +122,48 @@ export function SchoolsSection() {
               <div className="p-3">
                 <p className="text-[10px] font-semibold text-[#3a9ca5] mb-0.5 uppercase tracking-wider">{resource.subtitle}</p>
                 <h3 className="text-sm font-bold text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-1">{resource.title}</h3>
+                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                  {resource.description}
+                </p>
+              </div>
+            </motion.button>
+          ))}
+        </div>
+
+        <div className="text-center mt-12 mb-8">
+          <h3 className="text-xl md:text-2xl font-bold mb-2">Free Resources</h3>
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm">
+            Free music resources for your classroom — no purchase required.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+          {FREE_RESOURCES.map((resource, idx) => (
+            <motion.button
+              key={resource.title}
+              onClick={() => setSelected(resource)}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              className="group bg-card rounded-xl overflow-hidden border border-border hover:border-emerald-400/40 transition-all duration-300 hover:shadow-md hover:shadow-emerald-400/10 flex flex-col text-left cursor-pointer"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <img
+                  src={resource.image.startsWith("http") ? resource.image : `${import.meta.env.BASE_URL}${resource.image}`}
+                  alt={resource.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute top-2 right-2">
+                  <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full ${resource.tagColor}`}>
+                    {resource.tag}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3">
+                <p className="text-[10px] font-semibold text-emerald-600 mb-0.5 uppercase tracking-wider">{resource.subtitle}</p>
+                <h3 className="text-sm font-bold text-foreground group-hover:text-emerald-600 transition-colors line-clamp-1">{resource.title}</h3>
                 <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                   {resource.description}
                 </p>
