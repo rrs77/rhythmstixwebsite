@@ -24,7 +24,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg sm:text-xl md:text-2xl font-medium text-slate-500 leading-relaxed"
+            className="text-lg sm:text-xl md:text-2xl font-medium text-black leading-relaxed"
           >
             Assessment, planning, progression tracking,
             <br className="hidden sm:block" />
