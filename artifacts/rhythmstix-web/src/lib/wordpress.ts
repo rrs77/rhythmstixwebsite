@@ -96,6 +96,11 @@ const KNOWN_ROUTES: Record<string, string> = {
 };
 
 export function rewriteWPLinks(html: string): string {
+  html = html.replace(
+    /href=["']https?:\/\/[^@"']*@rhythmstix\.co\.uk[^"']*["']/gi,
+    'href="/"'
+  );
+
   return html.replace(
     /href=["'](https?:\/\/(?:www\.)?rhythmstix\.co\.uk)\/?([^"'#?]*)([^"']*)["']/gi,
     (_match, _domain, path, extra) => {
@@ -105,9 +110,15 @@ export function rewriteWPLinks(html: string): string {
         return `href="/${extra}"`;
       }
 
-      const route = KNOWN_ROUTES[cleanPath];
+      const firstSegment = cleanPath.split("/")[0];
+      const route = KNOWN_ROUTES[firstSegment];
       if (route) {
         return `href="${route}${extra}"`;
+      }
+
+      const fullRoute = KNOWN_ROUTES[cleanPath];
+      if (fullRoute) {
+        return `href="${fullRoute}${extra}"`;
       }
 
       return `href="/page/${cleanPath}${extra}"`;

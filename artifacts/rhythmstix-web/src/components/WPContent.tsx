@@ -63,6 +63,14 @@ export function WPContent({ html, className = "" }: WPContentProps) {
     const href = anchor.getAttribute("href");
     if (!href) return;
 
+    if (/^https?:\/\/(?:www\.)?rhythmstix\.co\.uk/i.test(href)) {
+      e.preventDefault();
+      const url = new URL(href);
+      const path = url.pathname.replace(/\/$/, "").toLowerCase();
+      navigate(path ? `/page${path}` : "/");
+      return;
+    }
+
     if (href.startsWith("/") && !href.startsWith("//")) {
       e.preventDefault();
       navigate(href);
