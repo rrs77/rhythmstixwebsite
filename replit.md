@@ -116,10 +116,27 @@ React + Vite frontend for the Rhythmstix music education platform. Dynamically p
 #### WordPress Page Slugs
 about, assessify, periplanner, blog, community, contact-us, learning-platform, shop, policy, cookies
 
+#### Shop
+- `src/pages/Shop.tsx` — Shop page pulling products from WooCommerce
+- `src/hooks/use-shop.ts` — React Query hooks for WooCommerce products/categories
+- Products fetched via API server proxy at `/api/shop/products` and `/api/shop/categories`
+- WooCommerce API keys stored as secrets: `WC_CONSUMER_KEY`, `WC_CONSUMER_SECRET`
+- Product cards link to WordPress shop pages for actual purchasing
+- Category filtering supported
+
 #### Logos
-- `public/images/rhythmstix-logo-full.png` — Main logo (hero, navbar)
-- `public/images/rhythmstix-logo-alt.png` — Alternative logo
-- `public/images/rhythmstix-logo.jpg` — Small square icon
+- `public/images/rhythmstix-logo-colour.png` — Colour logo (hero, light backgrounds)
+- `public/images/rs-monogram.svg` — RS monogram (navbar top-left, footer)
+- `public/images/rhythmstix-logo-white.png` — White logo (dark backgrounds)
+
+#### Routes
+- `/` — Homepage (Hero, ProductGrid, Testimonials)
+- `/shop` — Shop page (WooCommerce products)
+- `/ccdesigner` — CCDesigner info page
+- `/resources` — Resources page
+- `/blog` — Blog listing
+- `/post/:slug` — Individual blog post
+- `/page/:slug` — WordPress page renderer
 
 ### `scripts` (`@workspace/scripts`)
 

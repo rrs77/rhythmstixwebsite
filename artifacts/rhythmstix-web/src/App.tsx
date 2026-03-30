@@ -8,6 +8,7 @@ import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
 import CCDesigner from "@/pages/CCDesigner";
 import Resources from "@/pages/Resources";
+import Shop from "@/pages/Shop";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/ccdesigner" component={CCDesigner} />
       <Route path="/resources" component={Resources} />
+      <Route path="/shop" component={Shop} />
       <Route path="/blog" component={BlogList} />
       <Route path="/post/:slug" component={BlogPost} />
       <Route path="/page/:slug" component={WPPage} />

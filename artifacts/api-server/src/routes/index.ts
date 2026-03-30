@@ -5,6 +5,7 @@ import contentRouter from "./content";
 import productsRouter from "./products";
 import testimonialsRouter from "./testimonials";
 import navLinksRouter from "./nav-links";
+import woocommerceRouter from "./woocommerce";
 
 const router: IRouter = Router();
 
@@ -14,5 +15,6 @@ router.use(contentRouter);
 router.use(productsRouter);
 router.use(testimonialsRouter);
 router.use(navLinksRouter);
+router.use(woocommerceRouter);
 
 export default router;

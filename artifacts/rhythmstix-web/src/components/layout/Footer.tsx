@@ -38,7 +38,7 @@ export function Footer() {
               <ul className="flex flex-col gap-3">
                 <li><Link href="/page/policy" className="text-muted-foreground hover:text-primary transition-colors text-sm">App Privacy Notice</Link></li>
                 <li><Link href="/page/cookies" className="text-muted-foreground hover:text-primary transition-colors text-sm">Cookies</Link></li>
-                <li><a href="https://www.rhythmstix.co.uk/shop/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-sm">Shop</a></li>
+                <li><Link href="/shop" className="text-muted-foreground hover:text-primary transition-colors text-sm">Shop</Link></li>
                 <li><Link href="/page/about" className="text-muted-foreground hover:text-primary transition-colors text-sm">About Us</Link></li>
                 <li><Link href="/page/contact-us" className="text-muted-foreground hover:text-primary transition-colors text-sm">Contact Us</Link></li>
                 <li><Link href="/page/copyright-and-licenses" className="text-muted-foreground hover:text-primary transition-colors text-sm">Copyright & Licenses</Link></li>

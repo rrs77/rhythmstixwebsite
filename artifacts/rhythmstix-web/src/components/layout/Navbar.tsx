@@ -65,7 +65,7 @@ const NAV_LINKS = [
   { label: "Resources", href: "/resources" },
   { label: "Community", href: "/page/community" },
   { label: "Blog", href: "/blog" },
-  { label: "Shop", href: "https://www.rhythmstix.co.uk/shop/", external: true },
+  { label: "Shop", href: "/shop" },
 ];
 
 export function Navbar() {

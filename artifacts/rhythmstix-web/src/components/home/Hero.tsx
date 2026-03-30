@@ -75,9 +75,9 @@ export function Hero() {
               </a>
             </Button>
             <Button size="lg" className="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-base px-8 py-6" asChild>
-              <a href="https://www.rhythmstix.co.uk/shop/" target="_blank" rel="noopener noreferrer">
+              <Link href="/shop">
                 Visit Shop
-              </a>
+              </Link>
             </Button>
           </motion.div>
         </div>
