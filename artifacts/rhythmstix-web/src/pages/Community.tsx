@@ -3,6 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useWPPage } from "@/hooks/use-wp";
 import { decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
+import { WPContent } from "@/components/WPContent";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -44,9 +45,9 @@ export default function Community() {
                 </h1>
               )}
 
-              <div
+              <WPContent
                 className="wp-content prose prose-lg max-w-none mb-12"
-                dangerouslySetInnerHTML={{ __html: rewriteWPLinks(page.content.rendered) }}
+                html={rewriteWPLinks(page.content.rendered)}
               />
             </motion.div>
           )}

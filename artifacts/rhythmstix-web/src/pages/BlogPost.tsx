@@ -3,6 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useWPPost } from "@/hooks/use-wp";
 import { decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
+import { WPContent } from "@/components/WPContent";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -41,9 +42,9 @@ export default function BlogPost() {
               <p className="text-muted-foreground text-sm mb-8">
                 {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
               </p>
-              <div
+              <WPContent
                 className="wp-content prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: rewriteWPLinks(post.content.rendered) }}
+                html={rewriteWPLinks(post.content.rendered)}
               />
             </>
           )}

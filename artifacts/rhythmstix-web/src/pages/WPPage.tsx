@@ -3,6 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useWPPage } from "@/hooks/use-wp";
 import { decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
+import { WPContent } from "@/components/WPContent";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
@@ -58,9 +59,9 @@ export default function WPPage() {
                   {decodeHtml(page.title.rendered)}
                 </h1>
               )}
-              <div
+              <WPContent
                 className="wp-content prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: processedContent }}
+                html={processedContent}
               />
             </>
           )}

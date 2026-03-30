@@ -321,8 +321,57 @@ export default function Shop() {
           <div className="max-w-3xl mb-10">
             <h1 className="text-4xl font-bold text-foreground mb-3">Shop</h1>
             <p className="text-lg text-muted-foreground">
-              Resources, licenses, and tools for music education.
-              Browse our products and get in touch to find out more.
+              Apps, resources, and tools for music education.
+            </p>
+          </div>
+
+          <div className="mb-10">
+            <h2 className="text-2xl font-bold text-foreground mb-2">Our Apps</h2>
+            <p className="text-muted-foreground mb-6">
+              Purpose-built tools for education — explore each app to find out more.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
+            {APP_FEATURES.map((app, index) => (
+              <motion.div
+                key={app.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.08 }}
+              >
+                <Link
+                  href={app.link}
+                  className="group block bg-card rounded-xl p-5 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 h-full"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br ${app.color} shadow-sm`}>
+                      <app.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-grow min-w-0">
+                      <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                        {app.title}
+                      </h3>
+                      <p className="text-xs text-[#3a9ca5] font-medium mb-1.5">{app.subtitle}</p>
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                        {app.description}
+                      </p>
+                      <div className="flex items-center text-xs font-medium text-[#3a9ca5]">
+                        Learn More
+                        <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-foreground mb-2">Products & Resources</h2>
+            <p className="text-muted-foreground mb-4">
+              Browse and purchase resources, licenses, and downloadable materials.
             </p>
           </div>
 
@@ -400,49 +449,6 @@ export default function Shop() {
 
           <SchoolsSection />
           <ELearningSection />
-
-          <div className="mt-16 mb-10">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Our Apps</h2>
-            <p className="text-muted-foreground">
-              Purpose-built tools for education — explore each app to find out more.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {APP_FEATURES.map((app, index) => (
-              <motion.div
-                key={app.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08 }}
-              >
-                <Link
-                  href={app.link}
-                  className="group block bg-card rounded-xl p-5 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 h-full"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br ${app.color} shadow-sm`}>
-                      <app.icon className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-grow min-w-0">
-                      <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                        {app.title}
-                      </h3>
-                      <p className="text-xs text-[#3a9ca5] font-medium mb-1.5">{app.subtitle}</p>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                        {app.description}
-                      </p>
-                      <div className="flex items-center text-xs font-medium text-[#3a9ca5]">
-                        Learn More
-                        <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
 
           <div className="mt-12 text-center">
             <p className="text-sm text-muted-foreground mb-3">
