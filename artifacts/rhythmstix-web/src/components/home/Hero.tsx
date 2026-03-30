@@ -24,9 +24,9 @@ export function Hero() {
           className="mb-6"
         >
           <img
-            src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-main.png`}
-            alt="Rhythmstix - Supporting Education"
-            className="h-24 sm:h-32 md:h-40 w-auto object-contain mx-auto"
+            src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-new.svg`}
+            alt="Rhythmstix - Making Learning Stick"
+            className="h-20 sm:h-28 md:h-32 w-auto object-contain mx-auto"
           />
         </motion.div>
 

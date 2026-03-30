@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 95" fill="none">
+  <text x="0" y="58" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-weight="800" font-size="65" letter-spacing="-2">
+    <tspan fill="#1a1a2e">Rhythm</tspan><tspan fill="#0e9aa7">stix</tspan>
+  </text>
+  <text x="2" y="86" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-weight="400" font-size="21" letter-spacing="0.8">
+    <tspan fill="#64748b">making learning stick</tspan><tspan fill="#0e9aa7" font-size="26" dy="-1"> &#x2022;</tspan>
+  </text>
+</svg>

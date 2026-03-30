@@ -100,8 +100,8 @@ export function Navbar() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
             <img
-              src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-main.png`}
-              alt="Rhythmstix - Supporting Education"
+              src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-new.svg`}
+              alt="Rhythmstix - Making Learning Stick"
               className="h-10 w-auto object-contain"
             />
           </Link>
