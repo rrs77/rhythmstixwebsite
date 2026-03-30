@@ -54,21 +54,23 @@ export function Navbar() {
               </Link>
             ))}
 
-            {isAuthenticated ? (
-              <Button variant="glass" size="sm" className="ml-2" asChild>
-                <Link href="/account">
-                  <User className="w-4 h-4 mr-1.5" />
+            <div className="ml-3 pl-3 border-l border-border">
+              {isAuthenticated ? (
+                <Link href="/account" className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-[rgb(52,154,167)] transition-colors" title="Account">
+                  <div className="w-8 h-8 rounded-full bg-[rgb(52,154,167)]/10 flex items-center justify-center">
+                    <User className="w-4 h-4 text-[rgb(52,154,167)]" />
+                  </div>
                   {user?.firstName || "Account"}
                 </Link>
-              </Button>
-            ) : (
-              <Button variant="glass" size="sm" className="ml-2" asChild>
-                <Link href="/login">
-                  <LogIn className="w-4 h-4 mr-1.5" />
+              ) : (
+                <Link href="/login" className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-[rgb(52,154,167)] transition-colors" title="Login">
+                  <div className="w-8 h-8 rounded-full bg-[rgb(52,154,167)]/10 flex items-center justify-center">
+                    <LogIn className="w-4 h-4 text-[rgb(52,154,167)]" />
+                  </div>
                   Login
                 </Link>
-              </Button>
-            )}
+              )}
+            </div>
           </nav>
 
           <button
