@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/page/about" },
   { label: "Resources", href: "https://app.rhythmstix.co.uk/", external: true },
+  { label: "Learning Portal", href: "https://app.rhythmstix.co.uk/", external: true },
   { label: "Community", href: "/community" },
   { label: "Blog", href: "/blog", highlight: true },
   { label: "Shop", href: "/shop" },
