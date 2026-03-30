@@ -9,9 +9,8 @@ import { useAuth } from "@/hooks/use-auth";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/page/about" },
-  { label: "Resources", href: "/resources" },
+  { label: "Blog", href: "/blog", highlight: true },
   { label: "Community", href: "/community" },
-  { label: "Blog", href: "/blog" },
   { label: "Shop", href: "/shop" },
 ];
 
@@ -48,7 +47,7 @@ export function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-sm font-medium transition-colors text-muted-foreground hover:text-primary"
+                className={`text-sm font-medium transition-colors ${(link as any).highlight ? "text-[rgb(52,154,167)] font-semibold" : "text-muted-foreground hover:text-primary"}`}
               >
                 {link.label}
               </Link>
