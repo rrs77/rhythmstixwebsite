@@ -5,7 +5,11 @@ import {
   GraduationCap,
   Palette,
   ClipboardCheck,
-  ArrowRight
+  ArrowRight,
+  BookOpen,
+  Video,
+  FileText,
+  LogIn
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -45,16 +49,13 @@ const PRODUCTS = [
     color: "from-[#2d8890] to-[#3a9ca5]",
     link: "/progresspath",
     cta: "Learn More"
-  },
-  {
-    id: "elearning",
-    title: "E-Learning",
-    description: "Comprehensive digital courses, resources, and interactive modules for modern education.",
-    icon: GraduationCap,
-    color: "from-[#3a9ca5] to-[#4cb5bd]",
-    link: "/elearning",
-    cta: "Learn More"
   }
+];
+
+const PLATFORM_FEATURES = [
+  { icon: Video, label: "Video tutorials" },
+  { icon: FileText, label: "Lesson plans & resources" },
+  { icon: BookOpen, label: "Interactive quizzes" },
 ];
 
 export function ProductGrid() {
@@ -120,6 +121,64 @@ export function ProductGrid() {
             All our apps are designed to work together — giving schools a{" "}
             <span className="text-[#3a9ca5] font-semibold">complete toolkit</span> for music education.
           </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16"
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-1.5 h-10 rounded-full bg-gradient-to-b from-[#3a9ca5] to-[#4cb5bd]" />
+            <h2 className="text-3xl md:text-4xl font-bold">E-Learning Platform</h2>
+          </div>
+
+          <a
+            href="https://app.rhythmstix.co.uk/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block rounded-2xl border border-[#3a9ca5]/20 bg-gradient-to-br from-[#3a9ca5]/[0.04] to-[#4cb5bd]/[0.06] hover:border-[#3a9ca5]/40 hover:shadow-lg hover:shadow-[#3a9ca5]/10 transition-all duration-300 overflow-hidden"
+          >
+            <div className="flex flex-col md:flex-row items-stretch">
+              <div className="md:w-2/5 bg-gradient-to-br from-[#1a2332] to-[#0d1821] p-8 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3a9ca5] to-[#4cb5bd] flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#3a9ca5]/30">
+                    <GraduationCap className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="text-white/90 font-bold text-lg">rhythmstix</p>
+                  <p className="text-[#4cb5bd] text-sm font-medium">Learning Portal</p>
+                </div>
+              </div>
+
+              <div className="md:w-3/5 p-6 md:p-8">
+                <p className="text-xs font-semibold text-[#3a9ca5] uppercase tracking-wider mb-2">Interactive Learning</p>
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 group-hover:text-[#3a9ca5] transition-colors">
+                  Comprehensive Digital Courses & Resources
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-5">
+                  Ready-to-teach differentiated lessons with video, audio, quizzes, and built-in assessment. Curriculum-aligned content for modern music education — works on any device.
+                </p>
+
+                <div className="flex flex-wrap gap-4 mb-6">
+                  {PLATFORM_FEATURES.map((feat) => (
+                    <div key={feat.label} className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <feat.icon className="w-4 h-4 text-[#3a9ca5]" />
+                      {feat.label}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#3a9ca5] text-white font-medium text-sm group-hover:bg-[#2d8890] transition-colors shadow-sm">
+                    <LogIn className="w-4 h-4" />
+                    Open Learning Portal
+                  </span>
+                  <ArrowRight className="w-5 h-5 text-[#3a9ca5] group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </div>
+          </a>
         </motion.div>
       </div>
     </section>
