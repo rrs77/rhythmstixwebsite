@@ -5,31 +5,29 @@ export function Hero() {
     <section className="relative flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-slate-100" />
 
-      <div className="container relative z-10 mx-auto px-4 pt-28 pb-16">
+      <div className="container relative z-10 mx-auto px-4 pt-24 pb-8">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-6"
+            className="mb-4"
           >
             <img
               src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-colour.png`}
               alt="Rhythmstix - Education Solutions"
-              className="h-28 sm:h-36 md:h-48 w-auto object-contain mx-auto"
+              className="h-36 sm:h-44 md:h-56 w-auto object-contain mx-auto"
             />
           </motion.div>
 
-          <motion.h2
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg sm:text-xl md:text-2xl font-medium text-black leading-relaxed"
+            className="text-base sm:text-lg md:text-xl font-medium text-black/80"
           >
-            Assessment, planning, progression tracking,
-            <br className="hidden sm:block" />
-            and interactive teaching — all in one place.
-          </motion.h2>
+            Assessment, planning, progression tracking & interactive teaching — all in one place.
+          </motion.p>
         </div>
       </div>
 
