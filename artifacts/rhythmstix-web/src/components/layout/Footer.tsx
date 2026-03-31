@@ -50,13 +50,13 @@ export function Footer() {
             <div>
               <h3 className="text-lg font-semibold text-foreground mb-4"><span className="border-b-2 border-[#3a9ca5]/40 pb-1">Follow Us</span></h3>
               <div className="flex items-center gap-4">
-                <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
+                <a href="https://www.youtube.com/@RhythmstixMusicForEducation" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
                   <Youtube size={20} />
                 </a>
-                <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
+                <a href="https://uk.linkedin.com/in/robert-reich-storer-974449144" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
                   <Linkedin size={18} />
                 </a>
-                <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
+                <a href="https://www.facebook.com/rhythmstix" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
                   <Facebook size={20} />
                 </a>
               </div>
