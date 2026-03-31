@@ -43,8 +43,10 @@ export default function Assessify() {
         "Best results when assessment criteria are tailored to your curriculum",
       ]}
       youtubeVideoId="WpnV7FNptW0"
+      shopUrl="https://www.rhythmstix.co.uk/product/assessify-plan/"
+      ctaButtonLabel="Start Your Free Trial"
       ctaHeading="Ready to transform your assessments?"
-      ctaText="Say goodbye to dry, generic reports. Assessify gives teachers across every subject a fast, intelligent way to assess, track, and report on student progress — with AI-powered insights that actually sound like you wrote them."
+      ctaText="Try Assessify free — no commitment, no card required. See how it transforms the way you assess, track, and report on student progress with AI-powered insights that actually sound like you wrote them."
     />
   );
 }

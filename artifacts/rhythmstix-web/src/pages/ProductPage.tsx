@@ -27,6 +27,9 @@ interface ProductPageProps {
   heroImage?: string;
   youtubeVideoId?: string;
   screenshots?: string[];
+  ctaButtonLabel?: string;
+  ctaButtonHref?: string;
+  shopUrl?: string;
 }
 
 export default function ProductPage({
@@ -42,6 +45,9 @@ export default function ProductPage({
   heroImage,
   youtubeVideoId,
   screenshots,
+  ctaButtonLabel,
+  ctaButtonHref,
+  shopUrl,
 }: ProductPageProps) {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -99,13 +105,22 @@ export default function ProductPage({
               </p>
             ))}
 
-            <div className="mb-12">
-              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
-                <Link href="/contact">
-                  Enquire About {name}
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
+            <div className="mb-12 flex flex-wrap gap-3">
+              {shopUrl ? (
+                <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
+                  <a href={shopUrl} target="_blank" rel="noopener noreferrer">
+                    {ctaButtonLabel || "Start Free Trial"}
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </Button>
+              ) : (
+                <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
+                  <Link href={ctaButtonHref || "/contact"}>
+                    {ctaButtonLabel || `Enquire About ${name}`}
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+              )}
             </div>
           </motion.div>
 
@@ -208,12 +223,21 @@ export default function ProductPage({
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               {ctaText}
             </p>
-            <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
-              <Link href="/contact">
-                Get In Touch
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
+            {shopUrl ? (
+              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
+                <a href={shopUrl} target="_blank" rel="noopener noreferrer">
+                  {ctaButtonLabel || "Start Free Trial"}
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </a>
+              </Button>
+            ) : (
+              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
+                <Link href="/contact">
+                  Get In Touch
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Button>
+            )}
           </motion.div>
         </section>
       </main>
