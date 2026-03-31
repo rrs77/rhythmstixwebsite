@@ -8,6 +8,7 @@ import navLinksRouter from "./nav-links";
 import woocommerceRouter from "./woocommerce";
 import contactRouter from "./contact";
 import forumRouter from "./forum";
+import socialRouter from "./social";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(navLinksRouter);
 router.use(woocommerceRouter);
 router.use(contactRouter);
 router.use(forumRouter);
+router.use(socialRouter);
 
 export default router;

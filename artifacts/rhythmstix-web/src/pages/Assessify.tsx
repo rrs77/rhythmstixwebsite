@@ -41,6 +41,7 @@ export default function Assessify() {
         "Currently focused on Performing Arts subjects",
         "Best results when assessment criteria are tailored to your curriculum",
       ]}
+      youtubeVideoId="WpnV7FNptW0"
       ctaHeading="Ready to transform your assessments?"
       ctaText="Say goodbye to dry, generic reports. Assessify gives Performing Arts teachers a fast, intelligent way to assess, track, and report on student progress — with AI-powered insights that actually sound like you wrote them."
     />

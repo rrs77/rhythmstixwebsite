@@ -108,7 +108,7 @@ React + Vite frontend for the Rhythmstix music education platform. Dynamically p
 - `src/hooks/use-wp.ts` — React Query hooks for WP data
 - `src/pages/Home.tsx` — Homepage with hero, product grid, testimonials
 - `src/pages/WPPage.tsx` — Generic WordPress page renderer (route: `/page/:slug`)
-- `src/pages/BlogList.tsx` — Blog listing from WP posts (route: `/blog`)
+- `src/pages/BlogList.tsx` — Multi-source blog feed: WordPress + YouTube (RSS from @RhythmstixMusicForEducation) + LinkedIn (admin-managed). Source filter pills, YouTube videos open in modal. Admin can hide any post.
 - `src/pages/BlogPost.tsx` — Individual blog post (route: `/post/:slug`)
 - `src/components/layout/Navbar.tsx` — Navigation with internal links
 - `src/components/layout/Footer.tsx` — Footer with contact info and links

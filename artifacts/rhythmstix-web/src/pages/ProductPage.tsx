@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2, AlertCircle, ImageIcon, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import type { LucideIcon } from "lucide-react";
+import { YouTubeThumbnail } from "@/components/YouTubeModal";
 
 interface Feature {
   icon: LucideIcon;
@@ -24,6 +25,7 @@ interface ProductPageProps {
   ctaHeading: string;
   ctaText: string;
   heroImage?: string;
+  youtubeVideoId?: string;
   screenshots?: string[];
 }
 
@@ -38,6 +40,7 @@ export default function ProductPage({
   ctaHeading,
   ctaText,
   heroImage,
+  youtubeVideoId,
   screenshots,
 }: ProductPageProps) {
   useEffect(() => {
@@ -75,7 +78,9 @@ export default function ProductPage({
               </div>
             </div>
 
-            {heroImage ? (
+            {youtubeVideoId ? (
+              <YouTubeThumbnail videoId={youtubeVideoId} className="mb-8 aspect-video w-full" />
+            ) : heroImage ? (
               <div className="mb-8 rounded-2xl overflow-hidden border border-border">
                 <img src={heroImage} alt={name} className="w-full h-auto" />
               </div>
