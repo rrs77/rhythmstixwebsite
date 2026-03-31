@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { SchoolsSection } from "@/components/home/SchoolsSection";
-import { ELearningSection } from "@/components/home/ELearningSection";
 import { useShopProducts, useShopCategories, createOrder, type ShopProduct } from "@/hooks/use-shop";
 import { rewriteWPLinks } from "@/lib/wordpress";
 import { useAuth } from "@/hooks/use-auth";
@@ -446,9 +444,6 @@ export default function Shop() {
             );
             return null;
           })()}
-
-          <SchoolsSection />
-          <ELearningSection />
 
           <div className="mt-12 text-center">
             <p className="text-sm text-muted-foreground mb-3">
