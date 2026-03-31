@@ -145,20 +145,6 @@ export function Hero() {
             ))}
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 0.6 }}
-            className="flex items-center justify-center gap-6 text-xs text-muted-foreground/60"
-          >
-            <span>Assessment</span>
-            <span className="w-1 h-1 rounded-full bg-[#3a9ca5]/30" />
-            <span>Planning</span>
-            <span className="w-1 h-1 rounded-full bg-[#3a9ca5]/30" />
-            <span>Progression Tracking</span>
-            <span className="w-1 h-1 rounded-full bg-[#3a9ca5]/30" />
-            <span>Interactive Teaching</span>
-          </motion.div>
         </div>
       </div>
 
