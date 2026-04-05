@@ -500,93 +500,91 @@ export default function BlogList() {
                         hidden && adminMode && "opacity-50 border-dashed"
                       )}
                     >
-                      {post.source === "youtube" && post.thumbnail && (
-                        <button
-                          onClick={() => setActiveVideoId(post.videoId || null)}
-                          className="group relative w-full aspect-video overflow-hidden cursor-pointer"
-                        >
-                          <img
-                            src={post.thumbnail}
-                            alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                            <motion.div
-                              className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-lg"
-                              animate={{ scale: [1, 1.08, 1] }}
-                              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                              <Play className="w-7 h-7 text-white fill-white ml-0.5" />
-                            </motion.div>
-                          </div>
-                        </button>
-                      )}
-
-                      <div className="p-6">
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium", sourceColor)}>
-                            <SourceIcon className="w-3 h-3" />
-                            {SOURCE_LABELS[post.source]}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                          </span>
-                        </div>
-
-                        {post.source === "wordpress" ? (
-                          <Link
-                            href={`/post/${post.slug}`}
-                            className="group block"
+                      {post.source === "youtube" ? (
+                        <div className="flex gap-4 p-4">
+                          <button
+                            onClick={() => setActiveVideoId(post.videoId || null)}
+                            className="group/thumb relative shrink-0 w-44 h-24 sm:w-52 sm:h-[7.25rem] rounded-xl overflow-hidden cursor-pointer"
                           >
-                            <h2 className="text-xl font-semibold mb-2 text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                              {post.title}
-                            </h2>
-                            <p className="text-muted-foreground text-sm line-clamp-2 mb-3">{post.excerpt}</p>
-                            <span className="inline-flex items-center text-[#3a9ca5] text-sm font-medium">
-                              Read More <ArrowRight className="w-4 h-4 ml-1" />
-                            </span>
-                          </Link>
-                        ) : post.source === "youtube" ? (
-                          <div>
+                            <img
+                              src={`https://img.youtube.com/vi/${post.videoId}/mqdefault.jpg`}
+                              alt={post.title}
+                              className="w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-black/20 group-hover/thumb:bg-black/30 transition-colors flex items-center justify-center">
+                              <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center shadow-md">
+                                <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+                              </div>
+                            </div>
+                          </button>
+                          <div className="flex-grow min-w-0 py-0.5">
+                            <div className="flex items-center gap-2 mb-1.5">
+                              <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium", sourceColor)}>
+                                <SourceIcon className="w-3 h-3" />
+                                {SOURCE_LABELS[post.source]}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                              </span>
+                            </div>
                             <button
                               onClick={() => setActiveVideoId(post.videoId || null)}
                               className="text-left group"
                             >
-                              <h2 className="text-xl font-semibold mb-2 text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                              <h2 className="text-base font-semibold mb-1 text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-2">
                                 {post.title}
                               </h2>
                             </button>
                             {post.excerpt && (
-                              <p className="text-muted-foreground text-sm line-clamp-2 mb-3">{post.excerpt}</p>
+                              <p className="text-muted-foreground text-xs line-clamp-2">{post.excerpt}</p>
                             )}
-                            <button
-                              onClick={() => setActiveVideoId(post.videoId || null)}
-                              className="inline-flex items-center text-red-600 text-sm font-medium hover:text-red-700 transition-colors"
-                            >
-                              <Play className="w-4 h-4 mr-1 fill-current" /> Watch Video
-                            </button>
                           </div>
-                        ) : (
-                          <div>
+                        </div>
+                      ) : (
+                        <div className="p-5">
+                          <div className="flex items-center gap-2 mb-2.5">
+                            <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium", sourceColor)}>
+                              <SourceIcon className="w-3 h-3" />
+                              {SOURCE_LABELS[post.source]}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                            </span>
+                          </div>
+
+                          {post.source === "wordpress" ? (
+                            <Link
+                              href={`/post/${post.slug}`}
+                              className="group block"
+                            >
+                              <h2 className="text-lg font-semibold mb-1.5 text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                                {post.title}
+                              </h2>
+                              <p className="text-muted-foreground text-sm line-clamp-2 mb-2.5">{post.excerpt}</p>
+                              <span className="inline-flex items-center text-[#3a9ca5] text-sm font-medium">
+                                Read More <ArrowRight className="w-4 h-4 ml-1" />
+                              </span>
+                            </Link>
+                          ) : (
                             <a
                               href={post.url}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="group block"
                             >
-                              <h2 className="text-xl font-semibold mb-2 text-foreground group-hover:text-[#0077b5] transition-colors">
+                              <h2 className="text-lg font-semibold mb-1.5 text-foreground group-hover:text-[#0077b5] transition-colors">
                                 {post.title}
                               </h2>
                               {post.excerpt && (
-                                <p className="text-muted-foreground text-sm line-clamp-2 mb-3">{post.excerpt}</p>
+                                <p className="text-muted-foreground text-sm line-clamp-2 mb-2.5">{post.excerpt}</p>
                               )}
                               <span className="inline-flex items-center text-[#0077b5] text-sm font-medium">
                                 View on LinkedIn <ExternalLink className="w-3.5 h-3.5 ml-1" />
                               </span>
                             </a>
-                          </div>
-                        )}
-                      </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {adminMode && (
