@@ -113,7 +113,7 @@ export default function BlogPost() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  <YouTubeThumbnail videoId={youtubeId} className="mb-8 aspect-video w-full" />
+                  <YouTubeThumbnail videoId={youtubeId} className="mb-8 aspect-video max-w-md mx-auto rounded-xl" />
                 </motion.div>
               ) : heroImage ? (
                 <motion.div
