@@ -118,12 +118,14 @@ React + Vite frontend for the Rhythmstix music education platform. Dynamically p
 about, assessify, periplanner, blog, community, contact-us, learning-platform, shop, policy, cookies
 
 #### Shop
-- `src/pages/Shop.tsx` — Shop page pulling products from WooCommerce
-- `src/hooks/use-shop.ts` — React Query hooks for WooCommerce products/categories
-- Products fetched via API server proxy at `/api/shop/products` and `/api/shop/categories`
+- `src/pages/Shop.tsx` — Clean shop overview showing 3 curated product families
+- `src/hooks/use-shop.ts` — `useGroupedProducts()` hook fetches grouped product data
+- Products fetched via API server proxy at `/api/shop/products?grouped=true`
+- API groups products into 3 families: Guide The Way, BandLab Let's Get Started, Sneaky Creatures
+- Server-side in-memory cache (5-minute TTL) for WooCommerce responses
 - WooCommerce API keys stored as secrets: `WC_CONSUMER_KEY`, `WC_CONSUMER_SECRET`
-- Product cards link to WordPress shop pages for actual purchasing
-- Category filtering supported
+- Clicking a card opens a detail modal with description + "View on Shop" link to WooCommerce
+- No variant/child product display — shop is an entry-point overview only
 
 #### Logos
 - `public/images/rhythmstix-logo-colour.png` — Colour logo (hero, light backgrounds)

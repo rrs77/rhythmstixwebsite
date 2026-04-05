@@ -1,0 +1,63 @@
+Refine my shop page so it is clean, consistent, and focused on core products only, while still dynamically pulling data from WooCommerce.
+
+Context:
+- This page is a product overview (not a full catalogue)
+- It should help users quickly choose a product, not configure options
+- WooCommerce is currently populating too many items (variants, options, duplicates), which creates clutter
+
+Please make the following changes:
+
+1. WooCommerce data handling
+- Only display top-level (parent) products
+- Exclude:
+  - product variations
+  - child/linked products
+  - add-ons or format-specific items (e.g. MP3s, scripts, licences)
+- Ensure the page shows only main products, not every purchasable variation
+- Use categories, tags, or product type filtering if needed to achieve this
+
+2. Products shown
+- Only display these products:
+  - Guide The Way
+  - BandLab Let’s Get Started
+  - Sneaky Creatures
+- Remove Assessify from this page completely
+- Assessify should only exist on its own dedicated app page
+
+3. Product cards
+- Create one clean, consistent card per product
+- Each card should include:
+  - Product title
+  - Short description
+  - One action: “View Details”
+- Do NOT show:
+  - multiple buttons
+  - selectable options
+  - variant choices
+  - multiple versions of the same product
+- Make the entire card clickable if possible
+
+4. Card layout consistency
+- Ensure all cards are equal height
+- Use a consistent grid layout
+- Align titles, descriptions, and buttons across all cards
+- Prevent uneven stretching caused by different text lengths
+
+5. Page structure
+- This page should show only main product entry points
+- All product options, formats, and purchasing choices should appear only on the product detail page or during checkout
+- Remove any duplicated or overly granular listings
+
+6. Filters
+- Simplify or remove filters that relate to product variations
+- Avoid exposing internal product structure (like variants or sub-items)
+
+7. Design direction
+- Clean, minimal, and easy to scan
+- Reduce clutter and decision overload
+- Strong visual consistency across cards
+- Maintain responsiveness and accessibility
+
+Important:
+- Refactor the existing page rather than rebuilding from scratch unless necessary
+- Keep WooCommerce integration intact, but control what is displayed so only the correct parent-level products appear

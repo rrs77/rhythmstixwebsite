@@ -22,9 +22,64 @@ function wcFetch(endpoint: string, params: Record<string, string> = {}) {
   });
 }
 
+const wcCache = new Map<string, { data: any; expires: number }>();
+const CACHE_TTL = 5 * 60 * 1000;
+
+async function cachedWcFetch(endpoint: string, params: Record<string, string> = {}) {
+  const key = `${endpoint}:${JSON.stringify(params)}`;
+  const cached = wcCache.get(key);
+  if (cached && Date.now() < cached.expires) {
+    return cached.data;
+  }
+  const response = await wcFetch(endpoint, params);
+  if (!response.ok) {
+    throw new Error(`WC API error: ${response.status}`);
+  }
+  const data = await response.json();
+  wcCache.set(key, { data, expires: Date.now() + CACHE_TTL });
+  return data;
+}
+
+interface ProductFamily {
+  id: string;
+  title: string;
+  description: string;
+  categorySlugs: string[];
+  representativeSlug: string;
+  priceLabel: string;
+}
+
+const PRODUCT_FAMILIES: ProductFamily[] = [
+  {
+    id: "guide-the-way",
+    title: "Guide The Way",
+    description: "A complete KS2 musical production with songs, script, choreography, and backing tracks. Available as individual components or a full package.",
+    categorySlugs: ["gtw"],
+    representativeSlug: "gtw-licence-re-verse-lyric-and-dance-viewer-script-and-score-pdf-and-all-audio-files",
+    priceLabel: "From £10",
+  },
+  {
+    id: "bandlab-lets-get-started",
+    title: "BandLab Let's Get Started",
+    description: "A step-by-step guide to using BandLab for music creation in the classroom. Ideal for KS2/KS3 music teachers getting started with digital music-making.",
+    categorySlugs: ["getstarted"],
+    representativeSlug: "lgs",
+    priceLabel: "£30",
+  },
+  {
+    id: "sneaky-creatures",
+    title: "Sneaky Creatures",
+    description: "A free, fun song resource for early years and KS1. Includes vocal and backing track versions ready to download.",
+    categorySlugs: [],
+    representativeSlug: "sneaky-creatures",
+    priceLabel: "Free",
+  },
+];
+
 router.get("/shop/products", async (req: Request, res: Response) => {
   try {
     const category = (req.query.category as string) || "";
+    const grouped = req.query.grouped === "true";
     const params: Record<string, string> = {
       per_page: "100",
       status: "publish",
@@ -33,14 +88,29 @@ router.get("/shop/products", async (req: Request, res: Response) => {
     };
     if (category) params.category = category;
 
-    const response = await wcFetch("products", params);
-    if (!response.ok) {
-      res.status(response.status).json({ error: "Failed to fetch products" });
+    const products = await cachedWcFetch("products", params);
+
+    const allProducts = (products as any[]).filter((p: any) => p.type !== "variation");
+
+    if (grouped) {
+      const families = PRODUCT_FAMILIES.map((family) => {
+        const rep = allProducts.find((p: any) => p.slug === family.representativeSlug);
+
+        return {
+          id: family.id,
+          title: family.title,
+          description: family.description,
+          priceLabel: family.priceLabel,
+          image: rep?.images?.[0] ? { src: rep.images[0].src, alt: rep.images[0].alt } : null,
+          permalink: rep?.permalink || null,
+        };
+      });
+
+      res.json(families);
       return;
     }
-    const products = await response.json();
 
-    const mapped = (products as any[]).map((p: any) => ({
+    const mapped = allProducts.map((p: any) => ({
       id: p.id,
       name: p.name,
       slug: p.slug,

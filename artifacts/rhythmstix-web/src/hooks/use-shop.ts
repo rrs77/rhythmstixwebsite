@@ -1,22 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 
-export interface ShopProduct {
-  id: number;
-  name: string;
-  slug: string;
-  type: string;
-  price: string;
-  regularPrice: string;
-  salePrice: string;
-  onSale: boolean;
-  downloadable: boolean;
-  virtual: boolean;
-  purchasable: boolean;
+export interface ProductFamily {
+  id: string;
+  title: string;
   description: string;
-  permalink: string;
-  images: { id: number; src: string; alt: string }[];
-  categories: { id: number; name: string; slug: string }[];
-  attributes: { name: string; options: string[] }[];
+  priceLabel: string;
+  image: { src: string; alt: string } | null;
+  permalink: string | null;
 }
 
 export interface OrderResult {
@@ -43,39 +33,16 @@ export async function createOrder(productId: number, quantity = 1): Promise<Orde
   return res.json();
 }
 
-export interface ShopCategory {
-  id: number;
-  name: string;
-  slug: string;
-  count: number;
-  image: { src: string; alt: string } | null;
-}
-
-async function fetchProducts(category?: string): Promise<ShopProduct[]> {
-  const params = category ? `?category=${category}` : "";
-  const res = await fetch(`/api/shop/products${params}`);
+async function fetchGroupedProducts(): Promise<ProductFamily[]> {
+  const res = await fetch("/api/shop/products?grouped=true");
   if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
 }
 
-async function fetchCategories(): Promise<ShopCategory[]> {
-  const res = await fetch("/api/shop/categories");
-  if (!res.ok) throw new Error("Failed to fetch categories");
-  return res.json();
-}
-
-export function useShopProducts(category?: string) {
+export function useGroupedProducts() {
   return useQuery({
-    queryKey: ["shop-products", category],
-    queryFn: () => fetchProducts(category),
+    queryKey: ["shop-products-grouped"],
+    queryFn: fetchGroupedProducts,
     staleTime: 5 * 60 * 1000,
-  });
-}
-
-export function useShopCategories() {
-  return useQuery({
-    queryKey: ["shop-categories"],
-    queryFn: fetchCategories,
-    staleTime: 10 * 60 * 1000,
   });
 }
