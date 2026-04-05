@@ -35,7 +35,8 @@ const PRODUCTS = [
     description: "Feedback and scheduling for peripatetic teachers and school departments.",
     icon: CalendarDays,
     color: "from-[#4cb5bd] to-[#3a9ca5]",
-    link: "/perifeedback",
+    link: "http://perifeedback.co.uk/",
+    external: true,
   },
   {
     id: "progresspath",

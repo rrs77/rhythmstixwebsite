@@ -38,7 +38,8 @@ const APP_FEATURES = [
     description: "Purpose-built for peripatetic teachers. Log lesson feedback, manage schedules across schools, and keep everyone connected — no more chasing emails.",
     icon: CalendarDays,
     color: "from-[#4cb5bd] to-[#3a9ca5]",
-    link: "/perifeedback",
+    link: "http://perifeedback.co.uk/",
+    external: true,
   },
   {
     id: "elearning",
