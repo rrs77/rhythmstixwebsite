@@ -4,14 +4,14 @@ import { Footer } from "@/components/layout/Footer";
 import { useShopProducts, useShopCategories, createOrder, type ShopProduct } from "@/hooks/use-shop";
 import { rewriteWPLinks } from "@/lib/wordpress";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader2, Package, Palette, ClipboardCheck, CalendarDays, GraduationCap, ArrowRight, ShoppingCart, Download, X, CheckCircle2 } from "lucide-react";
+import { Loader2, Package, Palette, ClipboardCheck, CalendarDays, GraduationCap, TrendingUp, ArrowRight, ShoppingCart, Download, X, CheckCircle2, ExternalLink, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { EditableText } from "@/components/EditableText";
 
-const APP_FEATURES = [
+const STANDALONE_APPS = [
   {
     id: "ccdesigner",
     title: "CCDesigner",
@@ -21,35 +21,44 @@ const APP_FEATURES = [
     color: "from-[#3a9ca5] to-[#2d8890]",
     link: "https://www.ccdesigner.co.uk/",
     external: true,
+    badge: "Web App",
+    internalPage: "/ccdesigner",
   },
   {
     id: "assessify",
     title: "Assessify",
     subtitle: "Assessment Transformed",
-    description: "Fair and personalised assessment for Performing Arts. AI-powered reports, customisable rubrics, and detailed analytics — built for teachers, not IT departments.",
+    description: "Fair and personalised assessment for any subject. AI-powered reports, customisable rubrics, and detailed analytics — built for teachers.",
     icon: ClipboardCheck,
     color: "from-[#2d8890] to-[#3a9ca5]",
     link: "https://assessify.rhythmstix.co.uk/",
     external: true,
+    badge: "Web App",
+    internalPage: "/assessify",
   },
   {
     id: "perifeedback",
     title: "PeriFeedback",
     subtitle: "Feedback & Scheduling",
-    description: "Purpose-built for peripatetic teachers. Log lesson feedback, manage schedules across schools, and keep everyone connected — no more chasing emails.",
+    description: "Purpose-built for peripatetic teachers. Log lesson feedback, manage schedules across schools, and keep everyone connected.",
     icon: CalendarDays,
     color: "from-[#4cb5bd] to-[#3a9ca5]",
     link: "http://perifeedback.co.uk/",
     external: true,
+    badge: "Web App",
+    internalPage: "/perifeedback",
   },
   {
-    id: "elearning",
-    title: "Teaching Portal",
-    subtitle: "Digital Courses & Resources",
-    description: "Ready-to-teach differentiated lessons with video, audio, quizzes, and built-in assessment. Curriculum-aligned, unlimited users, works on any device.",
-    icon: GraduationCap,
-    color: "from-[#3a9ca5] to-[#4cb5bd]",
-    link: "/elearning",
+    id: "progresspath",
+    title: "ProgressPath",
+    subtitle: "Visualise Learning Journeys",
+    description: "Visualise student journeys and map clear progression routes. Track development from early years to advanced levels.",
+    icon: TrendingUp,
+    color: "from-[#2d8890] to-[#4cb5bd]",
+    link: "/progresspath",
+    external: false,
+    badge: "Coming Soon",
+    internalPage: "/progresspath",
   },
 ];
 
@@ -59,6 +68,8 @@ const CATEGORY_LABELS: Record<string, string> = {
   getstarted: "BandLab",
   uncategorised: "Other",
 };
+
+type ShopSection = "all" | "apps" | "resources";
 
 function formatPrice(price: string): string {
   const num = parseFloat(price);
@@ -251,7 +262,7 @@ function ProductModal({ product, onClose }: { product: ShopProduct; onClose: () 
   );
 }
 
-function ProductCard({ product, onClick }: { product: ShopProduct; onClick: () => void }) {
+function ResourceCard({ product, onClick }: { product: ShopProduct; onClick: () => void }) {
   const hasImage = product.images.length > 0;
   const priceDisplay = formatPrice(product.price);
   const isFree = priceDisplay === "Free";
@@ -277,9 +288,9 @@ function ProductCard({ product, onClick }: { product: ShopProduct; onClick: () =
         </div>
       )}
 
-      <div className="p-2 flex flex-col flex-grow">
-        <div className="flex items-start justify-between gap-1 mb-0.5">
-          <h3 className="font-semibold text-xs text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-1">
+      <div className="p-3 flex flex-col flex-grow">
+        <div className="flex items-start justify-between gap-1 mb-1">
+          <h3 className="font-semibold text-sm text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-1">
             {product.name}
           </h3>
           <span className={cn(
@@ -293,13 +304,13 @@ function ProductCard({ product, onClick }: { product: ShopProduct; onClick: () =
         </div>
 
         {product.description && (
-          <p className="text-[10px] text-muted-foreground mb-1 line-clamp-1 flex-grow">
+          <p className="text-xs text-muted-foreground mb-2 line-clamp-2 flex-grow">
             {stripHtml(product.description)}
           </p>
         )}
 
-        <div className="flex items-center gap-1 text-[10px] font-medium text-[#3a9ca5] mt-auto">
-          <ShoppingCart className="w-2.5 h-2.5" />
+        <div className="flex items-center gap-1 text-xs font-medium text-[#3a9ca5] mt-auto">
+          <ShoppingCart className="w-3 h-3" />
           View Details
         </div>
       </div>
@@ -307,20 +318,92 @@ function ProductCard({ product, onClick }: { product: ShopProduct; onClick: () =
   );
 }
 
+function AppCard({ app, index }: { app: typeof STANDALONE_APPS[0]; index: number }) {
+  const Wrapper = app.external ? "a" : Link;
+  const wrapperProps = app.external
+    ? { href: app.link, target: "_blank", rel: "noopener noreferrer" }
+    : { href: app.internalPage };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.06 }}
+    >
+      <Wrapper
+        {...(wrapperProps as any)}
+        className="group block bg-card rounded-xl border border-border hover:border-[#3a9ca5]/30 hover:shadow-lg hover:shadow-[#3a9ca5]/5 transition-all duration-300 h-full overflow-hidden"
+      >
+        <div className="p-5">
+          <div className="flex items-start gap-4">
+            <div className={`w-11 h-11 rounded-xl shrink-0 flex items-center justify-center bg-gradient-to-br ${app.color} shadow-sm`}>
+              <app.icon className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-grow min-w-0">
+              <div className="flex items-center gap-2 mb-0.5">
+                <h3 className="font-bold text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                  {app.title}
+                </h3>
+                <span className={cn(
+                  "text-[10px] font-medium px-2 py-0.5 rounded-full",
+                  app.badge === "Coming Soon"
+                    ? "bg-amber-100 text-amber-700"
+                    : "bg-[#3a9ca5]/10 text-[#3a9ca5]"
+                )}>
+                  {app.badge}
+                </span>
+              </div>
+              <p className="text-xs text-[#3a9ca5] font-medium mb-1.5">{app.subtitle}</p>
+              <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                {app.description}
+              </p>
+              <div className="flex items-center gap-4">
+                <span className="flex items-center text-xs font-medium text-[#3a9ca5]">
+                  {app.external ? (
+                    <>
+                      <ExternalLink className="mr-1 w-3 h-3" />
+                      Visit Site
+                    </>
+                  ) : (
+                    <>Learn More</>
+                  )}
+                  <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Wrapper>
+    </motion.div>
+  );
+}
+
 export default function Shop() {
+  const [activeSection, setActiveSection] = useState<ShopSection>("all");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
   const { data: products, isLoading, error } = useShopProducts(selectedCategory || undefined);
   const { data: categories } = useShopCategories();
 
   const visibleCategories = categories?.filter((c) => c.count > 0) || [];
+  const visibleProducts = products?.filter(p => p.name !== "Assessify Plan") ?? [];
+
+  const sections: { key: ShopSection; label: string; count?: string }[] = [
+    { key: "all", label: "Everything" },
+    { key: "apps", label: "Standalone Apps", count: String(STANDALONE_APPS.length) },
+    { key: "resources", label: "Teaching Portal Resources", count: isLoading ? "…" : String(visibleProducts.length) },
+  ];
+
+  const showApps = activeSection === "all" || activeSection === "apps";
+  const showResources = activeSection === "all" || activeSection === "resources";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       <main className="flex-grow pt-24 pb-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mb-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="mb-10">
             <EditableText
               contentKey="shop.heading"
               fallback="Shop"
@@ -331,161 +414,156 @@ export default function Shop() {
               contentKey="shop.subheading"
               fallback="Apps, resources, and tools for music education."
               as="p"
-              className="text-lg text-muted-foreground"
+              className="text-lg text-muted-foreground mb-8"
             />
-          </div>
 
-          <div className="mb-10">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Our Apps</h2>
-            <p className="text-muted-foreground mb-6">
-              Purpose-built tools for education — explore each app to find out more.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
-            {APP_FEATURES.map((app, index) => (
-              <motion.div
-                key={app.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08 }}
-              >
-                {(app as any).external ? (
-                  <a
-                    href={app.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group block bg-card rounded-xl p-5 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 h-full"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br ${app.color} shadow-sm`}>
-                        <app.icon className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-grow min-w-0">
-                        <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                          {app.title}
-                        </h3>
-                        <p className="text-xs text-[#3a9ca5] font-medium mb-1.5">{app.subtitle}</p>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                          {app.description}
-                        </p>
-                        <div className="flex items-center text-xs font-medium text-[#3a9ca5]">
-                          Visit Site
-                          <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                ) : (
-                  <Link
-                    href={app.link}
-                    className="group block bg-card rounded-xl p-5 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 h-full"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br ${app.color} shadow-sm`}>
-                        <app.icon className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-grow min-w-0">
-                        <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                          {app.title}
-                        </h3>
-                        <p className="text-xs text-[#3a9ca5] font-medium mb-1.5">{app.subtitle}</p>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                          {app.description}
-                        </p>
-                        <div className="flex items-center text-xs font-medium text-[#3a9ca5]">
-                          Learn More
-                          <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                )}
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Products & Resources</h2>
-            <p className="text-muted-foreground mb-4">
-              Browse and purchase resources, licenses, and downloadable materials.
-            </p>
-          </div>
-
-          {visibleCategories.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-8">
-              <button
-                onClick={() => setSelectedCategory("")}
-                className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium transition-all",
-                  !selectedCategory
-                    ? "bg-[#3a9ca5] text-white shadow-sm"
-                    : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-                )}
-              >
-                All Products
-              </button>
-              {visibleCategories.map((cat) => (
+            <div className="flex flex-wrap gap-2">
+              {sections.map((s) => (
                 <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(String(cat.id))}
+                  key={s.key}
+                  onClick={() => { setActiveSection(s.key); setSelectedCategory(""); }}
                   className={cn(
                     "px-4 py-2 rounded-full text-sm font-medium transition-all",
-                    selectedCategory === String(cat.id)
+                    activeSection === s.key
                       ? "bg-[#3a9ca5] text-white shadow-sm"
                       : "bg-secondary text-muted-foreground hover:bg-secondary/80"
                   )}
                 >
-                  {CATEGORY_LABELS[cat.slug] || cat.name}
-                  <span className="ml-1.5 opacity-60">({cat.count})</span>
+                  {s.label}
+                  {s.count && (
+                    <span className="ml-1.5 opacity-70">({s.count})</span>
+                  )}
                 </button>
               ))}
             </div>
-          )}
+          </div>
 
-          {isLoading && (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-[#3a9ca5]" />
-            </div>
-          )}
-
-          {error && (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground mb-4">Unable to load products. Please try again later.</p>
-              <Button variant="outline" onClick={() => window.location.reload()}>
-                Retry
-              </Button>
-            </div>
-          )}
-
-          {(() => {
-            const visibleProducts = products?.filter(p => p.name !== "Assessify Plan") ?? [];
-            if (products && visibleProducts.length === 0) return (
-              <div className="text-center py-20">
-                <Package className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
-                <p className="text-muted-foreground">No products found in this category.</p>
+          {showApps && (
+            <section className="mb-16">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#3a9ca5]/10">
+                  <Layers className="w-4 h-4 text-[#3a9ca5]" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-foreground">Standalone Apps</h2>
+                </div>
               </div>
-            );
-            if (visibleProducts.length > 0) return (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {visibleProducts.map((product, i) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="h-full"
-                >
-                  <ProductCard product={product} onClick={() => setSelectedProduct(product)} />
-                </motion.div>
-              ))}
-            </div>
-            );
-            return null;
-          })()}
+              <p className="text-muted-foreground mb-6 ml-11">
+                Purpose-built tools for teaching, assessment, and curriculum planning.
+              </p>
 
-          <div className="mt-12 text-center">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {STANDALONE_APPS.map((app, index) => (
+                  <AppCard key={app.id} app={app} index={index} />
+                ))}
+              </div>
+
+              <div className="mt-4 ml-11">
+                <Link
+                  href="/elearning"
+                  className="group inline-flex items-center gap-3 bg-card rounded-xl border border-border hover:border-[#3a9ca5]/30 hover:shadow-lg hover:shadow-[#3a9ca5]/5 transition-all duration-300 p-4 pr-6"
+                >
+                  <div className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br from-[#3a9ca5] to-[#4cb5bd] shadow-sm">
+                    <GraduationCap className="w-4.5 h-4.5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                      Teaching Portal
+                    </h3>
+                    <p className="text-xs text-muted-foreground">Digital courses, resources, and interactive modules</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-[#3a9ca5] ml-auto group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </section>
+          )}
+
+          {showResources && (
+            <section>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#3a9ca5]/10">
+                  <Package className="w-4 h-4 text-[#3a9ca5]" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-foreground">Teaching Portal Resources</h2>
+                </div>
+              </div>
+              <p className="text-muted-foreground mb-6 ml-11">
+                Downloadable resources, lesson packs, and licences for the Teaching Portal.
+              </p>
+
+              {visibleCategories.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-6 ml-11">
+                  <button
+                    onClick={() => setSelectedCategory("")}
+                    className={cn(
+                      "px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+                      !selectedCategory
+                        ? "bg-[#3a9ca5] text-white shadow-sm"
+                        : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                    )}
+                  >
+                    All
+                  </button>
+                  {visibleCategories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setSelectedCategory(String(cat.id))}
+                      className={cn(
+                        "px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+                        selectedCategory === String(cat.id)
+                          ? "bg-[#3a9ca5] text-white shadow-sm"
+                          : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                      )}
+                    >
+                      {CATEGORY_LABELS[cat.slug] || cat.name}
+                      <span className="ml-1 opacity-60">({cat.count})</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {isLoading && (
+                <div className="flex items-center justify-center py-16">
+                  <Loader2 className="w-8 h-8 animate-spin text-[#3a9ca5]" />
+                </div>
+              )}
+
+              {error && (
+                <div className="text-center py-16">
+                  <p className="text-muted-foreground mb-4">Unable to load products. Please try again later.</p>
+                  <Button variant="outline" onClick={() => window.location.reload()}>
+                    Retry
+                  </Button>
+                </div>
+              )}
+
+              {!isLoading && !error && visibleProducts.length === 0 && (
+                <div className="text-center py-16">
+                  <Package className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
+                  <p className="text-muted-foreground">No products found in this category.</p>
+                </div>
+              )}
+
+              {visibleProducts.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 ml-11">
+                  {visibleProducts.map((product, i) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.04 }}
+                      className="h-full"
+                    >
+                      <ResourceCard product={product} onClick={() => setSelectedProduct(product)} />
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          <div className="mt-16 text-center">
             <p className="text-sm text-muted-foreground mb-3">
               Can't find what you're looking for? Get in touch and we'll help.
             </p>
