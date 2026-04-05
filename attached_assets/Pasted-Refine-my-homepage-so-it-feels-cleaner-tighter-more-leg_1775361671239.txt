@@ -1,0 +1,56 @@
+Refine my homepage so it feels cleaner, tighter, more legible, and more focused on helping users access the apps quickly.
+
+Context:
+- This homepage is a hub linking to multiple apps and tools for educators
+- It is not a sales landing page, so keep it simple, functional, and polished
+- Preserve the existing Rhythmtix branding and overall structure, but improve hierarchy, spacing, consistency, and readability
+
+Please make these updates:
+
+1. Logo
+- Improve the legibility of the Rhythmtix logo
+- The “tix” portion is currently too light and lacks contrast on the pale background
+- Keep the two-tone look, but darken “tix” to a stronger teal so the full logo is easy to read at both navbar and hero sizes
+
+2. Hero section
+- Reduce the vertical height of the hero section
+- Decrease top and bottom padding so the apps section appears higher on the page
+- Tighten spacing between the logo, headline, and subheading
+- Keep the headline: “Creative tools for educators.”
+- Update the supporting text to: “From performing arts to AI-powered assessment and planning.”
+- Make the hero feel like a brief introduction rather than the main focus of the page
+
+3. Apps section
+- Keep the heading “Our Apps & Tools”
+- Replace the supporting text with: “Choose a tool to plan, teach, or assess.”
+- Make the apps grid the main focal point of the homepage
+- Make each app card fully clickable
+- Add subtle hover effects such as a small lift, slightly stronger shadow, and clearer border emphasis
+- Keep card heights consistent
+- Strengthen title typography and slightly tighten the body copy for easier scanning
+
+4. Layout consistency
+- The long horizontal “Teaching Portal” card feels inconsistent with the other cards
+- Redesign it so it matches the same visual style and grid logic as the other app cards, or place it in a clearly separate section below
+
+5. Testimonials
+- Reduce the prominence of the “What People Say” section
+- Decrease its vertical padding and make it feel more secondary than the apps section
+- Keep the design clean and unobtrusive
+
+6. Footer
+- Improve spacing, alignment, and visual balance in the footer
+- Make the columns feel more structured and intentional
+- Keep it simple, readable, and consistent with the rest of the page
+
+7. Overall design direction
+- Modern SaaS-style education platform
+- Clean typography
+- Better contrast
+- Rounded corners
+- Soft shadows
+- Consistent spacing system
+- Less empty space overall
+- Maintain responsiveness and accessibility
+
+Please refine the existing homepage code directly rather than rebuilding it from scratch unless necessary.

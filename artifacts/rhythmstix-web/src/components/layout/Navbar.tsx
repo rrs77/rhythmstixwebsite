@@ -45,7 +45,7 @@ export function Navbar() {
         <div className="flex items-center">
           <Link href="/" className="flex items-center group mr-8">
             <span className="font-extrabold text-xl tracking-tight">
-              <span className="text-[rgb(52,154,167)]">r</span><span className="text-foreground">hythm</span><span className="text-[rgb(52,154,167)]">tix</span>
+              <span className="text-[#3a9ca5]">r</span><span className="text-foreground">hythm</span><span className="text-[#3a9ca5]/50">tix</span>
             </span>
           </Link>
 

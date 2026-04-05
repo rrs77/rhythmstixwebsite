@@ -6,7 +6,6 @@ import {
   Palette,
   ClipboardCheck,
   ArrowRight,
-  LogIn
 } from "lucide-react";
 import { Link } from "wouter";
 import { EditableText } from "@/components/EditableText";
@@ -59,7 +58,7 @@ const PRODUCTS = [
   },
 ];
 
-function ProductCard({ product }: { product: typeof PRODUCTS[number] }) {
+function ProductCard({ product, index }: { product: typeof PRODUCTS[number]; index: number }) {
   const desc = useContentValue(`product.${product.id}.desc`, product.description);
   const Wrapper = product.external ? "a" : Link;
   const wrapperProps = product.external
@@ -67,107 +66,69 @@ function ProductCard({ product }: { product: typeof PRODUCTS[number] }) {
     : { href: product.link };
 
   return (
-    <Wrapper
-      {...(wrapperProps as any)}
-      className="group block bg-card rounded-xl p-4 border border-border hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-md hover:shadow-[#3a9ca5]/8 h-full"
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.05 }}
     >
-      <div className={`w-9 h-9 rounded-lg mb-3 flex items-center justify-center bg-gradient-to-br ${product.color} shadow-sm`}>
-        <product.icon className="w-4.5 h-4.5 text-white" />
-      </div>
-      <h3 className="text-sm font-bold mb-1 text-foreground group-hover:text-[#3a9ca5] transition-colors">
-        {product.title}
-      </h3>
-      <EditableText
-        contentKey={`product.${product.id}.desc`}
-        fallback={product.description}
-        as="p"
-        className="text-muted-foreground text-xs leading-relaxed mb-3 line-clamp-2"
-      />
-      <div className="flex items-center text-[#3a9ca5] text-xs font-medium">
-        {product.external ? "Visit Site" : "Learn More"}
-        <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-      </div>
-    </Wrapper>
+      <Wrapper
+        {...(wrapperProps as any)}
+        className="group block bg-card rounded-xl p-4 border border-border hover:border-[#3a9ca5]/30 hover:shadow-lg hover:shadow-[#3a9ca5]/8 hover:-translate-y-0.5 transition-all duration-200 h-full"
+      >
+        <div className={`w-9 h-9 rounded-lg mb-3 flex items-center justify-center bg-gradient-to-br ${product.color} shadow-sm`}>
+          <product.icon className="w-4 h-4 text-white" />
+        </div>
+        <h3 className="text-sm font-bold mb-1 text-foreground group-hover:text-[#3a9ca5] transition-colors">
+          {product.title}
+        </h3>
+        <EditableText
+          contentKey={`product.${product.id}.desc`}
+          fallback={product.description}
+          as="p"
+          className="text-muted-foreground text-xs leading-relaxed mb-3 line-clamp-2"
+        />
+        <div className="flex items-center text-[#3a9ca5] text-xs font-medium">
+          {product.external ? "Visit Site" : "Learn More"}
+          <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+        </div>
+      </Wrapper>
+    </motion.div>
   );
 }
 
 export function ProductGrid() {
   return (
-    <section id="products" className="py-6 relative">
+    <section id="products" className="pt-4 pb-8 relative">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-8"
+          className="mb-5"
         >
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-1 h-8 rounded-full bg-gradient-to-b from-[#3a9ca5] to-[#4cb5bd]" />
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-1 h-7 rounded-full bg-gradient-to-b from-[#3a9ca5] to-[#4cb5bd]" />
             <EditableText
               contentKey="products.heading"
               fallback="Our Apps & Tools"
               as="h2"
-              className="text-2xl md:text-3xl font-bold"
+              className="text-xl md:text-2xl font-bold"
             />
           </div>
           <EditableText
             contentKey="products.subheading"
-            fallback="Choose a tool to get started."
+            fallback="Choose a tool to plan, teach, or assess."
             as="p"
-            className="text-muted-foreground text-sm max-w-xl ml-4"
+            className="text-muted-foreground text-sm ml-4"
           />
         </motion.div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {PRODUCTS.slice(0, 4).map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.06 }}
-            >
-              <ProductCard product={product} />
-            </motion.div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {PRODUCTS.map((product, index) => (
+            <ProductCard key={product.id} product={product} index={index} />
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-3"
-        >
-          <a
-            href="https://app.rhythmstix.co.uk/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group block bg-card rounded-xl p-4 border border-border hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-md hover:shadow-[#3a9ca5]/8"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br from-[#3a9ca5] to-[#4cb5bd] shadow-sm">
-                <GraduationCap className="w-4.5 h-4.5 text-white" />
-              </div>
-              <div className="flex-grow min-w-0">
-                <h3 className="text-sm font-bold text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                  Teaching Portal
-                </h3>
-                <EditableText
-                  contentKey="product.elearning.desc"
-                  fallback="Digital courses, resources, and interactive modules for modern education."
-                  as="p"
-                  className="text-muted-foreground text-xs"
-                />
-              </div>
-              <div className="flex items-center gap-1.5 shrink-0 text-xs font-medium text-[#3a9ca5]">
-                <LogIn className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Open Portal</span>
-                <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </div>
-          </a>
-        </motion.div>
-
       </div>
     </section>
   );

@@ -35,60 +35,60 @@ const TESTIMONIALS = [
 
 export function Testimonials() {
   return (
-    <section className="py-12 bg-gradient-to-br from-[#3a9ca5]/[0.03] via-secondary/20 to-[#4cb5bd]/[0.03] relative">
+    <section className="py-8 bg-gradient-to-br from-[#3a9ca5]/[0.02] via-secondary/10 to-[#4cb5bd]/[0.02] relative">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-8"
+          className="text-center mb-5"
         >
           <EditableText
             contentKey="testimonials.heading"
             fallback="What People Say"
             as="h2"
-            className="text-2xl font-bold mb-2"
+            className="text-lg font-bold mb-1.5 text-muted-foreground"
           />
-          <div className="w-12 h-0.5 bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd] mx-auto rounded-full" />
+          <div className="w-10 h-0.5 bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd] mx-auto rounded-full" />
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 max-w-5xl mx-auto">
           {TESTIMONIALS.map((testimonial, index) => (
             <motion.div
               key={testimonial.id}
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.08 }}
-              className="bg-card rounded-xl p-5 border border-[#3a9ca5]/10 hover:border-[#3a9ca5]/25 transition-colors duration-300 flex flex-col"
+              transition={{ delay: index * 0.06 }}
+              className="bg-card rounded-lg p-4 border border-[#3a9ca5]/8 hover:border-[#3a9ca5]/20 transition-colors duration-300 flex flex-col"
             >
-              <Quote className="w-5 h-5 text-[#3a9ca5]/20 mb-3 rotate-180 shrink-0" />
-              <div className="text-sm text-foreground leading-relaxed mb-4 flex-grow">
+              <Quote className="w-4 h-4 text-[#3a9ca5]/15 mb-2 rotate-180 shrink-0" />
+              <div className="text-xs text-foreground leading-relaxed mb-3 flex-grow">
                 <EditableText
                   contentKey={`testimonial.${testimonial.id}.quote`}
                   fallback={testimonial.quote}
                   as="p"
-                  className="text-sm text-foreground leading-relaxed"
+                  className="text-xs text-foreground leading-relaxed"
                   multiline
                 >
                   {(value) => <span>"{value}"</span>}
                 </EditableText>
               </div>
-              <div className="border-t border-border/50 pt-3">
+              <div className="border-t border-border/40 pt-2">
                 <EditableText
                   contentKey={`testimonial.${testimonial.id}.author`}
                   fallback={testimonial.author}
                   as="p"
-                  className="text-xs font-semibold text-[#3a9ca5]"
+                  className="text-[11px] font-semibold text-[#3a9ca5]"
                 />
                 <EditableText
                   contentKey={`testimonial.${testimonial.id}.org`}
                   fallback={testimonial.organization}
                   as="p"
-                  className="text-[11px] text-muted-foreground"
+                  className="text-[10px] text-muted-foreground"
                 />
                 {testimonial.app && (
-                  <span className="inline-block mt-1.5 text-[10px] font-medium text-[#3a9ca5]/70 bg-[#3a9ca5]/8 px-2 py-0.5 rounded-full">
+                  <span className="inline-block mt-1 text-[9px] font-medium text-[#3a9ca5]/60 bg-[#3a9ca5]/6 px-1.5 py-0.5 rounded-full">
                     {testimonial.app}
                   </span>
                 )}
