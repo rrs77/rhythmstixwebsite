@@ -38,7 +38,7 @@ export default function PeriFeedback() {
       ]}
       ctaHeading="Better feedback, less admin"
       ctaText="PeriFeedback connects peripatetic teachers with schools and parents — so feedback doesn't get lost between visits."
-      externalUrl="http://perifeedback.co.uk/"
+      externalUrl="https://www.perifeedback.co.uk/"
       externalLabel="Visit PeriFeedback"
     />
   );
