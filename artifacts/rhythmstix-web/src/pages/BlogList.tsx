@@ -315,7 +315,7 @@ export default function BlogList() {
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-4xl font-bold text-[#3a9ca5]">Blog</h1>
+              <h1 className="text-4xl font-bold text-[#3a9ca5]">Latest Content</h1>
               <div className="w-16 h-1 rounded-full bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd] mt-2" />
             </div>
             <Button
