@@ -76,7 +76,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const CARD_WIDTH = 280;
 const CARD_GAP = 16;
 
 export function Testimonials() {
@@ -106,7 +105,8 @@ export function Testimonials() {
   const scroll = (direction: "left" | "right") => {
     const el = scrollRef.current;
     if (!el) return;
-    const step = (CARD_WIDTH + CARD_GAP) * 2;
+    const containerWidth = el.clientWidth;
+    const step = containerWidth * 0.75;
     el.scrollBy({ left: direction === "left" ? -step : step, behavior: "smooth" });
   };
 
@@ -153,7 +153,7 @@ export function Testimonials() {
           </div>
         </motion.div>
 
-        <div className="relative">
+        <div className="relative overflow-hidden">
           {canScrollLeft && (
             <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
           )}
@@ -163,7 +163,7 @@ export function Testimonials() {
 
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1 snap-x snap-mandatory"
+            className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {TESTIMONIALS.map((testimonial, index) => (
@@ -173,8 +173,7 @@ export function Testimonials() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: Math.min(index * 0.06, 0.3) }}
-                className="snap-start shrink-0"
-                style={{ width: CARD_WIDTH }}
+                className="snap-start shrink-0 w-[calc(100%-16px)] sm:w-[calc(50%-8px)] lg:w-[calc(25%-12px)]"
               >
                 <div className="bg-white rounded-xl p-5 border border-slate-100 hover:border-[#3a9ca5]/20 hover:shadow-md transition-all duration-300 flex flex-col h-full">
                   <Quote className="w-5 h-5 text-[#3a9ca5]/12 mb-2 rotate-180 shrink-0" />
