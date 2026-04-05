@@ -121,14 +121,14 @@ export function ProductGrid() {
             <div className="w-1 h-6 rounded-full bg-gradient-to-b from-[#3a9ca5] to-[#4cb5bd]" />
             <EditableText
               contentKey="products.heading"
-              fallback="Our Apps & Tools"
+              fallback="Apps, Tools & Teaching Portal"
               as="h2"
               className="text-lg md:text-xl font-bold"
             />
           </div>
           <EditableText
             contentKey="products.subheading"
-            fallback="Choose a tool to get started."
+            fallback="From curriculum planning to ready-to-teach courses — choose where to start."
             as="p"
             className="text-muted-foreground text-sm ml-4"
           />
