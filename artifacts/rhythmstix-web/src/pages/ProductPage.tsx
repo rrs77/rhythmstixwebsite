@@ -31,6 +31,8 @@ interface ProductPageProps {
   ctaButtonLabel?: string;
   ctaButtonHref?: string;
   shopUrl?: string;
+  externalUrl?: string;
+  externalLabel?: string;
 }
 
 export default function ProductPage({
@@ -49,6 +51,8 @@ export default function ProductPage({
   ctaButtonLabel,
   ctaButtonHref,
   shopUrl,
+  externalUrl,
+  externalLabel,
 }: ProductPageProps) {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -245,21 +249,32 @@ export default function ProductPage({
               className="text-muted-foreground mb-6 max-w-2xl mx-auto"
               multiline
             />
-            {shopUrl ? (
-              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
-                <a href={shopUrl} target="_blank" rel="noopener noreferrer">
-                  {ctaButtonLabel || "Start Free Trial"}
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </a>
-              </Button>
-            ) : (
-              <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
-                <Link href="/contact">
-                  Get In Touch
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            )}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {externalUrl && (
+                <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
+                  <a href={externalUrl} target="_blank" rel="noopener noreferrer">
+                    {externalLabel || "Visit Site"}
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </Button>
+              )}
+              {shopUrl && (
+                <Button size="lg" className={externalUrl ? "group" : "group bg-[#3a9ca5] hover:bg-[#4cb5bd]"} variant={externalUrl ? "outline" : "default"} asChild>
+                  <a href={shopUrl} target="_blank" rel="noopener noreferrer">
+                    {ctaButtonLabel || "Start Free Trial"}
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </Button>
+              )}
+              {!externalUrl && !shopUrl && (
+                <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
+                  <Link href={ctaButtonHref || "/contact"}>
+                    {ctaButtonLabel || "Get In Touch"}
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+              )}
+            </div>
           </motion.div>
         </section>
       </main>

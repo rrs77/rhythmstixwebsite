@@ -47,6 +47,8 @@ export default function Assessify() {
       ctaButtonLabel="Start Your Free Trial"
       ctaHeading="Ready to transform your assessments?"
       ctaText="Try Assessify free — no commitment, no card required. See how it transforms the way you assess, track, and report on student progress with AI-powered insights that actually sound like you wrote them."
+      externalUrl="https://assessify.rhythmstix.co.uk/"
+      externalLabel="Visit Assessify"
     />
   );
 }

@@ -40,6 +40,8 @@ export default function CCDesigner() {
       ]}
       ctaHeading="Ready to streamline your curriculum planning?"
       ctaText="Stop scattering lesson plans across documents and spreadsheets. CCDesigner gives you one coherent system to design, store, and reuse your best creative curriculum content."
+      externalUrl="https://www.ccdesigner.co.uk/"
+      externalLabel="Visit CCDesigner"
     />
   );
 }

@@ -112,7 +112,7 @@ React + Vite frontend for the Rhythmstix music education platform. Dynamically p
 - `src/pages/BlogPost.tsx` — Individual blog post (route: `/post/:slug`)
 - `src/components/layout/Navbar.tsx` — Navigation with internal links
 - `src/components/layout/Footer.tsx` — Footer with contact info and links
-- `src/components/home/ProductGrid.tsx` — Product cards (CCDesigner, PeriFeedback, ProgressPath, E-Learning)
+- `src/components/home/ProductGrid.tsx` — Product cards linking to internal product pages (all say "Learn More")
 
 #### WordPress Page Slugs
 about, assessify, periplanner, blog, community, contact-us, learning-platform, shop, policy, cookies
@@ -164,9 +164,10 @@ Each app has a dedicated page using the shared `ProductPage` component (`src/pag
 - `src/pages/ProgressPath.tsx` — `/progresspath`
 - `src/pages/RhythmstixApp.tsx` — `/rhythmstix-app`
 - `src/pages/ELearning.tsx` — `/elearning`
-- No external product URLs — all CTAs link to `/contact`
+- External "Visit Site" buttons at bottom of each product page (CCDesigner, Assessify, PeriFeedback, Teaching Portal)
+- ProgressPath has no external URL (links to /contact instead)
 
-Each page includes: hero image placeholder, description text, key features grid, pros/considerations, and CTA section.
+Each page includes: hero image placeholder, description text, key features grid, pros/considerations, and CTA section with "Visit Site" button.
 
 #### Routes
 - `/` — Homepage (Hero, ProductGrid, Testimonials)

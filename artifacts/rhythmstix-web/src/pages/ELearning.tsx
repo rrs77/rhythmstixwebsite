@@ -38,6 +38,8 @@ export default function ELearning() {
       ]}
       ctaHeading="Quality music education for every classroom"
       ctaText="The Teaching Portal gives schools comprehensive, ready-to-teach music resources that work for specialists and non-specialists alike."
+      externalUrl="https://app.rhythmstix.co.uk/"
+      externalLabel="Visit Teaching Portal"
     />
   );
 }
