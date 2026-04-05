@@ -3,7 +3,7 @@ import { Palette, ClipboardCheck, CalendarDays, TrendingUp, GraduationCap } from
 import { Link } from "wouter";
 
 const APPS = [
-  { icon: Palette, label: "CCDesigner", href: "/ccdesigner" },
+  { icon: Palette, label: "CCDesigner", href: "https://www.ccdesigner.co.uk/", external: true },
   { icon: ClipboardCheck, label: "Assessify", href: "/assessify" },
   { icon: CalendarDays, label: "PeriFeedback", href: "/perifeedback" },
   { icon: TrendingUp, label: "ProgressPath", href: "/progresspath" },
@@ -130,17 +130,33 @@ export function Hero() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1.0 + i * 0.1, type: "spring", stiffness: 200 }}
               >
-                <Link
-                  href={app.href}
-                  className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/80 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/10 transition-all duration-300"
-                >
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-[#3a9ca5] to-[#4cb5bd] shadow-sm">
-                    <app.icon className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="text-sm font-medium text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                    {app.label}
-                  </span>
-                </Link>
+                {(app as any).external ? (
+                  <a
+                    href={app.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/80 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/10 transition-all duration-300"
+                  >
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-[#3a9ca5] to-[#4cb5bd] shadow-sm">
+                      <app.icon className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-sm font-medium text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                      {app.label}
+                    </span>
+                  </a>
+                ) : (
+                  <Link
+                    href={app.href}
+                    className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/80 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/10 transition-all duration-300"
+                  >
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-[#3a9ca5] to-[#4cb5bd] shadow-sm">
+                      <app.icon className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-sm font-medium text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                      {app.label}
+                    </span>
+                  </Link>
+                )}
               </motion.div>
             ))}
           </motion.div>

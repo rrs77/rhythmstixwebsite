@@ -17,7 +17,8 @@ const PRODUCTS = [
     description: "Plan, organise, and reuse curriculum content across EYFS, KS1, and KS2.",
     icon: Palette,
     color: "from-[#3a9ca5] to-[#2d8890]",
-    link: "/ccdesigner",
+    link: "https://www.ccdesigner.co.uk/",
+    external: true,
   },
   {
     id: "assessify",
@@ -82,24 +83,47 @@ export function ProductGrid() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.06 }}
             >
-              <Link
-                href={product.link}
-                className="group block bg-card rounded-xl p-4 border border-border hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-md hover:shadow-[#3a9ca5]/8 h-full"
-              >
-                <div className={`w-9 h-9 rounded-lg mb-3 flex items-center justify-center bg-gradient-to-br ${product.color} shadow-sm`}>
-                  <product.icon className="w-4.5 h-4.5 text-white" />
-                </div>
-                <h3 className="text-sm font-bold mb-1 text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                  {product.title}
-                </h3>
-                <p className="text-muted-foreground text-xs leading-relaxed mb-3 line-clamp-2">
-                  {product.description}
-                </p>
-                <div className="flex items-center text-[#3a9ca5] text-xs font-medium">
-                  Learn More
-                  <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                </div>
-              </Link>
+              {product.external ? (
+                <a
+                  href={product.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block bg-card rounded-xl p-4 border border-border hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-md hover:shadow-[#3a9ca5]/8 h-full"
+                >
+                  <div className={`w-9 h-9 rounded-lg mb-3 flex items-center justify-center bg-gradient-to-br ${product.color} shadow-sm`}>
+                    <product.icon className="w-4.5 h-4.5 text-white" />
+                  </div>
+                  <h3 className="text-sm font-bold mb-1 text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                    {product.title}
+                  </h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed mb-3 line-clamp-2">
+                    {product.description}
+                  </p>
+                  <div className="flex items-center text-[#3a9ca5] text-xs font-medium">
+                    Visit Site
+                    <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </a>
+              ) : (
+                <Link
+                  href={product.link}
+                  className="group block bg-card rounded-xl p-4 border border-border hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-md hover:shadow-[#3a9ca5]/8 h-full"
+                >
+                  <div className={`w-9 h-9 rounded-lg mb-3 flex items-center justify-center bg-gradient-to-br ${product.color} shadow-sm`}>
+                    <product.icon className="w-4.5 h-4.5 text-white" />
+                  </div>
+                  <h3 className="text-sm font-bold mb-1 text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                    {product.title}
+                  </h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed mb-3 line-clamp-2">
+                    {product.description}
+                  </p>
+                  <div className="flex items-center text-[#3a9ca5] text-xs font-medium">
+                    Learn More
+                    <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </Link>
+              )}
             </motion.div>
           ))}
         </div>

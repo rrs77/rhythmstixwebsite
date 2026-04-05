@@ -18,7 +18,8 @@ const APP_FEATURES = [
     description: "Plan, organise, and reuse curriculum content across EYFS, KS1, and KS2. A single place to design, store, and share lessons and activities.",
     icon: Palette,
     color: "from-[#3a9ca5] to-[#2d8890]",
-    link: "/ccdesigner",
+    link: "https://www.ccdesigner.co.uk/",
+    external: true,
   },
   {
     id: "assessify",
@@ -339,29 +340,57 @@ export default function Shop() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08 }}
               >
-                <Link
-                  href={app.link}
-                  className="group block bg-card rounded-xl p-5 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 h-full"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br ${app.color} shadow-sm`}>
-                      <app.icon className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-grow min-w-0">
-                      <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                        {app.title}
-                      </h3>
-                      <p className="text-xs text-[#3a9ca5] font-medium mb-1.5">{app.subtitle}</p>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                        {app.description}
-                      </p>
-                      <div className="flex items-center text-xs font-medium text-[#3a9ca5]">
-                        Learn More
-                        <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                {(app as any).external ? (
+                  <a
+                    href={app.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block bg-card rounded-xl p-5 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 h-full"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br ${app.color} shadow-sm`}>
+                        <app.icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="flex-grow min-w-0">
+                        <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                          {app.title}
+                        </h3>
+                        <p className="text-xs text-[#3a9ca5] font-medium mb-1.5">{app.subtitle}</p>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                          {app.description}
+                        </p>
+                        <div className="flex items-center text-xs font-medium text-[#3a9ca5]">
+                          Visit Site
+                          <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
+                  </a>
+                ) : (
+                  <Link
+                    href={app.link}
+                    className="group block bg-card rounded-xl p-5 border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 h-full"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br ${app.color} shadow-sm`}>
+                        <app.icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="flex-grow min-w-0">
+                        <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors">
+                          {app.title}
+                        </h3>
+                        <p className="text-xs text-[#3a9ca5] font-medium mb-1.5">{app.subtitle}</p>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                          {app.description}
+                        </p>
+                        <div className="flex items-center text-xs font-medium text-[#3a9ca5]">
+                          Learn More
+                          <ArrowRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                )}
               </motion.div>
             ))}
           </div>

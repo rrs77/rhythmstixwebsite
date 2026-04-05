@@ -79,8 +79,8 @@ export function decodeHtml(html: string): string {
 
 const KNOWN_ROUTES: Record<string, string> = {
   assessify: "/assessify",
-  ccdesigner: "/ccdesigner",
-  "creative-curriculum-designer": "/ccdesigner",
+  ccdesigner: "https://www.ccdesigner.co.uk/",
+  "creative-curriculum-designer": "https://www.ccdesigner.co.uk/",
   perifeedback: "/perifeedback",
   periplanner: "/perifeedback",
   progresspath: "/progresspath",
