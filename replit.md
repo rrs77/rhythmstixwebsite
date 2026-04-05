@@ -132,6 +132,7 @@ about, assessify, periplanner, blog, community, contact-us, learning-platform, s
 - `public/images/rhythmstix-logo-new.png` — New logo with updated branding
 - `public/images/rhythmstix-logo-white.png` — White logo (dark backgrounds)
 - Navbar/footer use text-only "rhythmstix" wordmark (no monogram box)
+- Main nav: Home, About, Teaching Portal, Community, Contact, Login (Shop & Blog moved to footer + mobile menu only)
 
 #### User Authentication & Account
 - `src/hooks/use-auth.ts` — Auth hooks (useAuth, useOrders, forgotPassword)

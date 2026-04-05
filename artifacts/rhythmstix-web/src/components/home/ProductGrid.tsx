@@ -99,26 +99,26 @@ function ProductCard({ product, index }: { product: typeof PRODUCTS[number]; ind
 
 export function ProductGrid() {
   return (
-    <section id="products" className="pt-4 pb-8 relative">
+    <section id="products" className="pt-2 pb-6 relative">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-5"
+          className="mb-4"
         >
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-1 h-7 rounded-full bg-gradient-to-b from-[#3a9ca5] to-[#4cb5bd]" />
+          <div className="flex items-center gap-3 mb-0.5">
+            <div className="w-1 h-6 rounded-full bg-gradient-to-b from-[#3a9ca5] to-[#4cb5bd]" />
             <EditableText
               contentKey="products.heading"
               fallback="Our Apps & Tools"
               as="h2"
-              className="text-xl md:text-2xl font-bold"
+              className="text-lg md:text-xl font-bold"
             />
           </div>
           <EditableText
             contentKey="products.subheading"
-            fallback="Choose a tool to plan, teach, or assess."
+            fallback="Choose a tool to get started."
             as="p"
             className="text-muted-foreground text-sm ml-4"
           />

@@ -11,7 +11,6 @@ const NAV_LINKS = [
   { label: "About", href: "/page/about" },
   { label: "Teaching Portal", href: "https://app.rhythmstix.co.uk/", external: true },
   { label: "Community", href: "/community" },
-  { label: "Shop", href: "/shop" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -49,7 +48,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-5 mr-auto">
+          <nav className="hidden md:flex items-center gap-6 mr-auto">
             {NAV_LINKS.map((link) => {
               const active = !(link as any).external && isActive(link.href, location);
               const cls = cn(
@@ -67,7 +66,7 @@ export function Navbar() {
               );
             })}
 
-            <div className="ml-2 pl-2 border-l border-border">
+            <div className="ml-1 pl-3 border-l border-border">
               {isAuthenticated ? (
                 <Link href="/account" className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-[rgb(52,154,167)] transition-colors" title="Account">
                   <div className="w-7 h-7 rounded-full bg-[rgb(52,154,167)]/10 flex items-center justify-center">
