@@ -11,9 +11,7 @@ const NAV_LINKS = [
   { label: "About", href: "/page/about" },
   { label: "Teaching Portal", href: "https://app.rhythmstix.co.uk/", external: true },
   { label: "Community", href: "/community" },
-  { label: "Blog", href: "/blog" },
-  { label: "Shop", href: "/shop" },
-  { label: "Contact Us", href: "/contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 function isActive(linkHref: string, pathname: string): boolean {
@@ -39,7 +37,7 @@ export function Navbar() {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
           ? "py-2 bg-background/90 backdrop-blur-xl border-b border-border shadow-sm"
-          : "py-4 bg-transparent"
+          : "py-3 bg-transparent"
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,7 +48,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 mr-auto">
+          <nav className="hidden md:flex items-center gap-5 mr-auto">
             {NAV_LINKS.map((link) => {
               const active = !(link as any).external && isActive(link.href, location);
               const cls = cn(
@@ -68,18 +66,18 @@ export function Navbar() {
               );
             })}
 
-            <div className="ml-3 pl-3 border-l border-border">
+            <div className="ml-2 pl-2 border-l border-border">
               {isAuthenticated ? (
                 <Link href="/account" className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-[rgb(52,154,167)] transition-colors" title="Account">
-                  <div className="w-8 h-8 rounded-full bg-[rgb(52,154,167)]/10 flex items-center justify-center">
-                    <User className="w-4 h-4 text-[rgb(52,154,167)]" />
+                  <div className="w-7 h-7 rounded-full bg-[rgb(52,154,167)]/10 flex items-center justify-center">
+                    <User className="w-3.5 h-3.5 text-[rgb(52,154,167)]" />
                   </div>
                   {user?.firstName || "Account"}
                 </Link>
               ) : (
                 <Link href="/login" className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-[rgb(52,154,167)] transition-colors" title="Login">
-                  <div className="w-8 h-8 rounded-full bg-[rgb(52,154,167)]/10 flex items-center justify-center">
-                    <LogIn className="w-4 h-4 text-[rgb(52,154,167)]" />
+                  <div className="w-7 h-7 rounded-full bg-[rgb(52,154,167)]/10 flex items-center justify-center">
+                    <LogIn className="w-3.5 h-3.5 text-[rgb(52,154,167)]" />
                   </div>
                   Login
                 </Link>
@@ -129,6 +127,23 @@ export function Navbar() {
                   </Link>
                 )
               )}
+
+              <div className="border-t border-border mt-2 pt-2 flex flex-col gap-2">
+                <Link
+                  href="/blog"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block text-base font-medium text-foreground py-3 px-2"
+                >
+                  Blog
+                </Link>
+                <Link
+                  href="/shop"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block text-base font-medium text-foreground py-3 px-2"
+                >
+                  Shop
+                </Link>
+              </div>
 
               {isAuthenticated ? (
                 <Button className="mt-4 w-full" asChild>

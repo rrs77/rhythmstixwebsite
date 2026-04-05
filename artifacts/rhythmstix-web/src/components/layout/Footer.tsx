@@ -36,11 +36,12 @@ export function Footer() {
             <div className="w-full md:w-auto">
               <h3 className="text-lg font-semibold text-foreground mb-4"><span className="border-b-2 border-[#3a9ca5]/40 pb-1">Useful Links</span></h3>
               <ul className="flex flex-col gap-3">
-                <li><Link href="/page/policy" className="text-muted-foreground hover:text-primary transition-colors text-sm">App Privacy Notice</Link></li>
-                <li><Link href="/cookies" className="text-muted-foreground hover:text-primary transition-colors text-sm">Cookies</Link></li>
+                <li><Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors text-sm">Blog</Link></li>
                 <li><Link href="/shop" className="text-muted-foreground hover:text-primary transition-colors text-sm">Shop</Link></li>
                 <li><Link href="/page/about" className="text-muted-foreground hover:text-primary transition-colors text-sm">About Us</Link></li>
                 <li><Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors text-sm">Contact Us</Link></li>
+                <li><Link href="/page/policy" className="text-muted-foreground hover:text-primary transition-colors text-sm">App Privacy Notice</Link></li>
+                <li><Link href="/cookies" className="text-muted-foreground hover:text-primary transition-colors text-sm">Cookies</Link></li>
                 <li><Link href="/page/copyright-and-licenses" className="text-muted-foreground hover:text-primary transition-colors text-sm">Copyright & Licenses</Link></li>
               </ul>
             </div>

@@ -93,7 +93,7 @@ function ProductCard({ product }: { product: typeof PRODUCTS[number] }) {
 
 export function ProductGrid() {
   return (
-    <section id="products" className="py-12 relative">
+    <section id="products" className="py-6 relative">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -112,7 +112,7 @@ export function ProductGrid() {
           </div>
           <EditableText
             contentKey="products.subheading"
-            fallback="A cohesive suite built to make teaching, assessing, and learning easier."
+            fallback="Choose a tool to get started."
             as="p"
             className="text-muted-foreground text-sm max-w-xl ml-4"
           />
