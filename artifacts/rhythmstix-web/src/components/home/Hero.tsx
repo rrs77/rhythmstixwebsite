@@ -96,7 +96,7 @@ export function Hero() {
           >
             <EditableText
               contentKey="hero.description"
-              fallback="A suite of apps and tools built specifically for music education — helping teachers"
+              fallback="Creative tools for educators — from performing arts to AI-powered assessment and planning."
               as="span"
               className="text-base sm:text-lg text-muted-foreground/70"
             />
