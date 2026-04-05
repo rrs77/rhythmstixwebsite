@@ -270,12 +270,12 @@ function ResourceCard({ product, onClick }: { product: ShopProduct; onClick: () 
   return (
     <motion.button
       onClick={onClick}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group bg-card rounded-xl border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 overflow-hidden flex flex-col h-full text-left cursor-pointer"
+      className="group bg-card rounded-lg border border-border hover:border-[#3a9ca5]/40 hover:shadow-md hover:shadow-[#3a9ca5]/5 transition-all duration-300 overflow-hidden flex h-full text-left cursor-pointer"
     >
       {hasImage ? (
-        <div className="aspect-[4/3] bg-secondary overflow-hidden">
+        <div className="w-20 h-20 shrink-0 bg-secondary overflow-hidden">
           <img
             src={product.images[0].src}
             alt={product.images[0].alt || product.name}
@@ -283,14 +283,14 @@ function ResourceCard({ product, onClick }: { product: ShopProduct; onClick: () 
           />
         </div>
       ) : (
-        <div className="aspect-[4/3] bg-gradient-to-br from-[#3a9ca5]/10 to-[#3a9ca5]/5 flex items-center justify-center">
-          <Package className="w-5 h-5 text-[#3a9ca5]/30" />
+        <div className="w-20 h-20 shrink-0 bg-gradient-to-br from-[#3a9ca5]/8 to-[#3a9ca5]/3 flex items-center justify-center">
+          <Package className="w-4 h-4 text-[#3a9ca5]/25" />
         </div>
       )}
 
-      <div className="p-3 flex flex-col flex-grow">
-        <div className="flex items-start justify-between gap-1 mb-1">
-          <h3 className="font-semibold text-sm text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-1">
+      <div className="p-2.5 flex flex-col flex-grow min-w-0">
+        <div className="flex items-start justify-between gap-1.5 mb-0.5">
+          <h3 className="font-semibold text-xs text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-1">
             {product.name}
           </h3>
           <span className={cn(
@@ -304,13 +304,13 @@ function ResourceCard({ product, onClick }: { product: ShopProduct; onClick: () 
         </div>
 
         {product.description && (
-          <p className="text-xs text-muted-foreground mb-2 line-clamp-2 flex-grow">
+          <p className="text-[11px] text-muted-foreground line-clamp-2 flex-grow leading-relaxed">
             {stripHtml(product.description)}
           </p>
         )}
 
-        <div className="flex items-center gap-1 text-xs font-medium text-[#3a9ca5] mt-auto">
-          <ShoppingCart className="w-3 h-3" />
+        <div className="flex items-center gap-1 text-[10px] font-medium text-[#3a9ca5] mt-1">
+          <ShoppingCart className="w-2.5 h-2.5" />
           View Details
         </div>
       </div>
@@ -546,7 +546,7 @@ export default function Shop() {
               )}
 
               {visibleProducts.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 ml-11">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ml-11">
                   {visibleProducts.map((product, i) => (
                     <motion.div
                       key={product.id}
