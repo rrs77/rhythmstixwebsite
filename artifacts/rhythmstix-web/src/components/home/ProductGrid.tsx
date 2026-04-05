@@ -168,17 +168,6 @@ export function ProductGrid() {
           </a>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="mt-4 text-center"
-        >
-          <p className="text-muted-foreground text-xs">
-            All apps work together — giving schools a{" "}
-            <span className="text-[#3a9ca5] font-semibold">complete toolkit</span> for music education.
-          </p>
-        </motion.div>
       </div>
     </section>
   );
