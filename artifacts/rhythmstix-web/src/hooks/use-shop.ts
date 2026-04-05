@@ -1,12 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 
+export interface ShopProduct {
+  id: number;
+  name: string;
+  slug: string;
+  price: string;
+  regularPrice: string;
+  salePrice: string;
+  onSale: boolean;
+  downloadable: boolean;
+  description: string;
+  images: { src: string; alt: string }[];
+}
+
 export interface ProductFamily {
   id: string;
   title: string;
   description: string;
   priceLabel: string;
   image: { src: string; alt: string } | null;
-  permalink: string | null;
+  products: ShopProduct[];
 }
 
 export interface OrderResult {

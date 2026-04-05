@@ -17,6 +17,7 @@ import Community from "@/pages/Community";
 import ContactUs from "@/pages/ContactUs";
 import Cookies from "@/pages/Cookies";
 import Shop from "@/pages/Shop";
+import ShopProduct from "@/pages/ShopProduct";
 import Login from "@/pages/Login";
 import ForgotPassword from "@/pages/ForgotPassword";
 import Account from "@/pages/Account";
@@ -41,6 +42,7 @@ function Router() {
       <Route path="/contact" component={ContactUs} />
       <Route path="/cookies" component={Cookies} />
       <Route path="/shop" component={Shop} />
+      <Route path="/shop/:familyId" component={ShopProduct} />
       <Route path="/login" component={Login} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/account" component={Account} />

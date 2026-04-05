@@ -45,6 +45,7 @@ interface ProductFamily {
   title: string;
   description: string;
   categorySlugs: string[];
+  productSlugs?: string[];
   representativeSlug: string;
   priceLabel: string;
 }
@@ -71,6 +72,7 @@ const PRODUCT_FAMILIES: ProductFamily[] = [
     title: "Sneaky Creatures",
     description: "A free, fun song resource for early years and KS1. Includes vocal and backing track versions ready to download.",
     categorySlugs: [],
+    productSlugs: ["sneaky-creatures", "sneaky-creatures-backing-track", "sneaky-creatures-with-vocals"],
     representativeSlug: "sneaky-creatures",
     priceLabel: "Free",
   },
@@ -96,13 +98,35 @@ router.get("/shop/products", async (req: Request, res: Response) => {
       const families = PRODUCT_FAMILIES.map((family) => {
         const rep = allProducts.find((p: any) => p.slug === family.representativeSlug);
 
+        const familyProducts = family.categorySlugs.length > 0
+          ? allProducts.filter((p: any) =>
+              p.categories.some((c: any) => family.categorySlugs.includes(c.slug))
+            )
+          : allProducts.filter((p: any) =>
+              family.productSlugs?.includes(p.slug)
+            );
+
         return {
           id: family.id,
           title: family.title,
           description: family.description,
           priceLabel: family.priceLabel,
           image: rep?.images?.[0] ? { src: rep.images[0].src, alt: rep.images[0].alt } : null,
-          permalink: rep?.permalink || null,
+          products: familyProducts.map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            slug: p.slug,
+            price: p.price,
+            regularPrice: p.regular_price,
+            salePrice: p.sale_price,
+            onSale: p.on_sale,
+            downloadable: p.downloadable || false,
+            description: p.short_description || p.description || "",
+            images: (p.images || []).map((img: any) => ({
+              src: img.src,
+              alt: img.alt,
+            })),
+          })),
         };
       });
 
