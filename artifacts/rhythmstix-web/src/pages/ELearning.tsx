@@ -4,11 +4,11 @@ import { GraduationCap, Monitor, BookOpen, Award, Users, Layers } from "lucide-r
 export default function ELearning() {
   return (
     <ProductPage
-      name="E-Learning"
+      name="Teaching Portal"
       subtitle="Comprehensive Digital Courses & Resources"
       icon={GraduationCap}
       description={[
-        "The Rhythmstix E-Learning platform delivers comprehensive digital courses, resources, and interactive modules designed for modern music education. It provides schools with structured, curriculum-aligned content that teachers can use directly or adapt to their own schemes of work.",
+        "The Rhythmstix Teaching Portal delivers comprehensive digital courses, resources, and interactive modules designed for modern music education. It provides schools with structured, curriculum-aligned content that teachers can use directly or adapt to their own schemes of work.",
         "The platform includes differentiated music lessons complete with multimedia content — video demonstrations, audio examples, quizzes, and straightforward assessments. Lessons are designed to support both specialist music teachers and non-specialists who need high-quality, ready-to-teach resources.",
         "Content is delivered through the Rhythmstix Learning Platform, accessible through a browser-based app on any device. Schools get a year's access for an unlimited number of users, making it excellent value for whole-school music provision.",
       ]}
@@ -37,7 +37,7 @@ export default function ELearning() {
         "Works best when integrated into existing schemes of work",
       ]}
       ctaHeading="Quality music education for every classroom"
-      ctaText="The E-Learning platform gives schools comprehensive, ready-to-teach music resources that work for specialists and non-specialists alike."
+      ctaText="The Teaching Portal gives schools comprehensive, ready-to-teach music resources that work for specialists and non-specialists alike."
     />
   );
 }

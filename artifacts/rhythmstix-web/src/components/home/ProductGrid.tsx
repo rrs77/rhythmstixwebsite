@@ -48,7 +48,7 @@ const PRODUCTS = [
   },
   {
     id: "elearning",
-    title: "E-Learning",
+    title: "Teaching Portal",
     description: "Digital courses, resources, and interactive modules for modern education.",
     icon: GraduationCap,
     color: "from-[#3a9ca5] to-[#4cb5bd]",
@@ -148,7 +148,7 @@ export function ProductGrid() {
               </div>
               <div className="flex-grow min-w-0">
                 <h3 className="text-sm font-bold text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                  E-Learning Platform
+                  Teaching Portal
                 </h3>
                 <p className="text-muted-foreground text-xs">
                   Digital courses, resources, and interactive modules for modern education.

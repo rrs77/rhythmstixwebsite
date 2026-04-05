@@ -10,7 +10,7 @@ const ELEARNING_RESOURCES = [
     subtitle: "Music Production",
     description: "Dive into music production with our comprehensive starter guide for BandLab. Perfect for classroom integration or independent student learning. Master the basics of recording, mixing, and creating loops.",
     image: "images/bandlab-cover.png",
-    tag: "E-Learning",
+    tag: "Teaching Portal",
     tagColor: "bg-[#3a9ca5] text-white",
     features: [
       "Step-by-step video tutorials",
@@ -96,7 +96,7 @@ export function ELearningSection() {
     <section id="elearning" className="py-12 relative">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-[#3a9ca5]">E-Learning</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-[#3a9ca5]">Teaching Portal</h2>
           <div className="w-16 h-1 bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd] mx-auto rounded-full mb-3" />
           <p className="text-muted-foreground max-w-xl mx-auto">
             Digital courses and interactive modules for modern music education.

@@ -7,7 +7,7 @@ const APPS = [
   { icon: ClipboardCheck, label: "Assessify", href: "https://assessify.rhythmstix.co.uk/", external: true },
   { icon: CalendarDays, label: "PeriFeedback", href: "http://perifeedback.co.uk/", external: true },
   { icon: TrendingUp, label: "ProgressPath", href: "/progresspath" },
-  { icon: GraduationCap, label: "E-Learning", href: "/elearning" },
+  { icon: GraduationCap, label: "Teaching Portal", href: "/elearning" },
 ];
 
 const WORDS = ["plan", "assess", "track", "teach", "inspire"];

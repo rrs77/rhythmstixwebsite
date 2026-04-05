@@ -16,7 +16,7 @@ const PRODUCT_NAMES = [
   "ProgressPath",
   "Rhythmstix App",
   "Rhythmstix",
-  "E-Learning",
+  "Teaching Portal",
 ];
 
 function highlightProducts(html: string): string {

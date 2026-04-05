@@ -43,7 +43,7 @@ const APP_FEATURES = [
   },
   {
     id: "elearning",
-    title: "Learning Platform",
+    title: "Teaching Portal",
     subtitle: "Digital Courses & Resources",
     description: "Ready-to-teach differentiated lessons with video, audio, quizzes, and built-in assessment. Curriculum-aligned, unlimited users, works on any device.",
     icon: GraduationCap,
