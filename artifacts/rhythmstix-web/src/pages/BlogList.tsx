@@ -366,7 +366,7 @@ export default function BlogList() {
             <div className="mb-4 space-y-3">
               <div className="bg-[#3a9ca5]/5 border border-[#3a9ca5]/20 rounded-xl px-4 py-3 text-sm text-[#3a9ca5]">
                 <strong>Admin mode:</strong> Click the eye icon on any post to show/hide it from visitors. You can also add LinkedIn posts from{" "}
-                <a href="https://uk.linkedin.com/in/robert-reich-storer-974449144" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-[#2d8890]">your LinkedIn profile</a>.
+                <a href="https://www.linkedin.com/in/robert-reich-storer-974449144/" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-[#2d8890]">your LinkedIn profile</a>.
               </div>
               <Button
                 onClick={() => setShowAddLinkedin(!showAddLinkedin)}

@@ -53,7 +53,7 @@ export function Footer() {
                 <a href="https://www.youtube.com/@RhythmstixMusicForEducation" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
                   <Youtube size={20} />
                 </a>
-                <a href="https://uk.linkedin.com/in/robert-reich-storer-974449144" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
+                <a href="https://www.linkedin.com/in/robert-reich-storer-974449144/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
                   <Linkedin size={18} />
                 </a>
                 <a href="https://www.facebook.com/rhythmstix" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
