@@ -4,7 +4,7 @@ import { Link } from "wouter";
 
 const APPS = [
   { icon: Palette, label: "CCDesigner", href: "https://www.ccdesigner.co.uk/", external: true },
-  { icon: ClipboardCheck, label: "Assessify", href: "/assessify" },
+  { icon: ClipboardCheck, label: "Assessify", href: "https://assessify.rhythmstix.co.uk/", external: true },
   { icon: CalendarDays, label: "PeriFeedback", href: "/perifeedback" },
   { icon: TrendingUp, label: "ProgressPath", href: "/progresspath" },
   { icon: GraduationCap, label: "E-Learning", href: "/elearning" },

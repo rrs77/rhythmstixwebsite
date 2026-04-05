@@ -26,7 +26,8 @@ const PRODUCTS = [
     description: "AI-powered reports, customisable rubrics, and detailed analytics for any subject.",
     icon: ClipboardCheck,
     color: "from-[#2d8890] to-[#3a9ca5]",
-    link: "/assessify",
+    link: "https://assessify.rhythmstix.co.uk/",
+    external: true,
   },
   {
     id: "perifeedback",

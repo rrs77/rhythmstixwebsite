@@ -28,7 +28,8 @@ const APP_FEATURES = [
     description: "Fair and personalised assessment for Performing Arts. AI-powered reports, customisable rubrics, and detailed analytics — built for teachers, not IT departments.",
     icon: ClipboardCheck,
     color: "from-[#2d8890] to-[#3a9ca5]",
-    link: "/assessify",
+    link: "https://assessify.rhythmstix.co.uk/",
+    external: true,
   },
   {
     id: "perifeedback",
