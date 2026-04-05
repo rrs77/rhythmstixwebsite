@@ -3,9 +3,9 @@ import { useLocation } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { useAuth, useOrders, type Order } from "@/hooks/use-auth";
+import { useAuth, useOrders, useSubscription, type Order } from "@/hooks/use-auth";
 import { motion } from "framer-motion";
-import { User, Package, LogOut, Loader2, ShoppingBag, Receipt, Calendar, ChevronDown, ChevronUp } from "lucide-react";
+import { User, Package, LogOut, Loader2, ShoppingBag, Receipt, Calendar, ChevronDown, ChevronUp, Mail, Bell } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -107,6 +107,69 @@ function OrderCard({ order }: { order: Order }) {
   );
 }
 
+function SubscriptionSection() {
+  const { configured, subscribed, isLoading, toggleSubscription, isToggling } = useSubscription();
+  const [error, setError] = useState<string | null>(null);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-4">
+        <Loader2 className="w-5 h-5 animate-spin text-[#3a9ca5]" />
+      </div>
+    );
+  }
+
+  const handleToggle = async () => {
+    setError(null);
+    try {
+      await toggleSubscription(!subscribed);
+    } catch (err: any) {
+      setError(err.message || "Failed to update preferences");
+    }
+  };
+
+  return (
+    <div className="bg-card rounded-xl border border-border p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-lg bg-[#3a9ca5]/10 flex items-center justify-center shrink-0 mt-0.5">
+            <Mail className="w-5 h-5 text-[#3a9ca5]" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-sm text-foreground">Email Updates</h3>
+            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+              Receive news, community updates, new resources, and admin announcements from Rhythmstix.
+            </p>
+            {!configured && (
+              <p className="text-xs text-amber-600 mt-1">
+                Email subscription service is being set up.
+              </p>
+            )}
+            {error && (
+              <p className="text-xs text-red-500 mt-1">{error}</p>
+            )}
+          </div>
+        </div>
+        <button
+          onClick={handleToggle}
+          disabled={isToggling || !configured}
+          className={cn(
+            "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
+            subscribed ? "bg-[#3a9ca5]" : "bg-gray-200"
+          )}
+        >
+          <span
+            className={cn(
+              "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
+              subscribed ? "translate-x-5" : "translate-x-0"
+            )}
+          />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Account() {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
   const { data: orders, isLoading: ordersLoading } = useOrders();
@@ -163,8 +226,16 @@ export default function Account() {
               </Button>
             </div>
 
+            <div className="mb-8">
+              <h2 className="text-lg font-bold flex items-center gap-2 mb-3">
+                <Bell className="w-5 h-5 text-[#3a9ca5]" />
+                Notifications & Updates
+              </h2>
+              <SubscriptionSection />
+            </div>
+
             <div className="mb-6">
-              <h2 className="text-xl font-bold flex items-center gap-2">
+              <h2 className="text-lg font-bold flex items-center gap-2">
                 <Package className="w-5 h-5 text-[#3a9ca5]" />
                 Your Orders
               </h2>

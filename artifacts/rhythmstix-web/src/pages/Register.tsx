@@ -5,15 +5,19 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { motion } from "framer-motion";
-import { LogIn, Loader2, Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Loader2, Eye, EyeOff, Mail, Lock, User, CheckSquare } from "lucide-react";
 import { Link } from "wouter";
 
-export default function Login() {
+export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [subscribe, setSubscribe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const { login, isLoggingIn, isAuthenticated } = useAuth();
+  const { register, isRegistering, isAuthenticated } = useAuth();
   const [, navigate] = useLocation();
 
   useEffect(() => {
@@ -23,11 +27,21 @@ export default function Login() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
     try {
-      await login({ email, password });
+      await register({ email, password, firstName, lastName, subscribe });
       navigate("/account");
     } catch (err: any) {
-      setError(err.message || "Login failed. Please try again.");
+      setError(err.message || "Registration failed. Please try again.");
     }
   }
 
@@ -47,9 +61,9 @@ export default function Login() {
                 alt="Rhythmstix"
                 className="h-16 w-auto mx-auto mb-2"
               />
-              <h1 className="text-2xl font-bold">Welcome Back</h1>
+              <h1 className="text-2xl font-bold">Create Your Account</h1>
               <p className="text-muted-foreground text-sm mt-1">
-                Sign in to your Rhythmstix account
+                Join the Rhythmstix community
               </p>
             </div>
 
@@ -59,6 +73,32 @@ export default function Login() {
                   {error}
                 </div>
               )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">First Name</label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <input
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      placeholder="First"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Last Name</label>
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Last"
+                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                  />
+                </div>
+              </div>
 
               <div>
                 <label className="text-sm font-medium text-foreground mb-1.5 block">Email</label>
@@ -84,7 +124,7 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    placeholder="Enter your password"
+                    placeholder="At least 6 characters"
                     className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
                   />
                   <button
@@ -97,32 +137,58 @@ export default function Login() {
                 </div>
               </div>
 
-              <div className="flex justify-end">
-                <Link href="/forgot-password" className="text-xs text-[#3a9ca5] hover:underline">
-                  Forgot your password?
-                </Link>
+              <div>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">Confirm Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    placeholder="Confirm your password"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                  />
+                </div>
               </div>
+
+              <label className="flex items-start gap-3 cursor-pointer group py-1">
+                <div className="relative mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={subscribe}
+                    onChange={(e) => setSubscribe(e.target.checked)}
+                    className="sr-only"
+                  />
+                  <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${subscribe ? "bg-[#3a9ca5] border-[#3a9ca5]" : "border-border group-hover:border-[#3a9ca5]/50"}`}>
+                    {subscribe && <CheckSquare className="w-3.5 h-3.5 text-white" />}
+                  </div>
+                </div>
+                <span className="text-sm text-muted-foreground leading-snug">
+                  Keep me updated with news, resources, and community updates from Rhythmstix
+                </span>
+              </label>
 
               <Button
                 type="submit"
-                disabled={isLoggingIn}
+                disabled={isRegistering}
                 className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white"
               >
-                {isLoggingIn ? (
+                {isRegistering ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Signing in...
+                    Creating account...
                   </>
                 ) : (
-                  "Sign In"
+                  "Create Account"
                 )}
               </Button>
             </form>
 
             <p className="text-center text-sm text-muted-foreground mt-6">
-              Don't have an account?{" "}
-              <Link href="/register" className="text-[#3a9ca5] hover:underline">
-                Create one
+              Already have an account?{" "}
+              <Link href="/login" className="text-[#3a9ca5] hover:underline">
+                Sign in
               </Link>
             </p>
           </motion.div>

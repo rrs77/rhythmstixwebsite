@@ -119,13 +119,13 @@ about, assessify, periplanner, blog, community, contact-us, learning-platform, s
 
 #### Shop
 - `src/pages/Shop.tsx` — Clean shop overview showing 3 curated product families
-- `src/hooks/use-shop.ts` — `useGroupedProducts()` hook fetches grouped product data
+- `src/pages/ShopProduct.tsx` — Inline product detail page (`/shop/:familyId`) showing all sub-products with prices and "Add to Basket" buttons
+- `src/hooks/use-shop.ts` — `useGroupedProducts()` hook fetches grouped product data with sub-products
 - Products fetched via API server proxy at `/api/shop/products?grouped=true`
-- API groups products into 3 families: Guide The Way, BandLab Let's Get Started, Sneaky Creatures
+- API groups products into 3 families: Guide The Way (6 products), BandLab Let's Get Started (1 product), Sneaky Creatures (3 free products)
 - Server-side in-memory cache (5-minute TTL) for WooCommerce responses
 - WooCommerce API keys stored as secrets: `WC_CONSUMER_KEY`, `WC_CONSUMER_SECRET`
-- Clicking a card opens a detail modal with description + "View on Shop" link to WooCommerce
-- No variant/child product display — shop is an entry-point overview only
+- All product browsing is fully inline — no links to rhythmstix.co.uk product pages
 
 #### Logos
 - `public/images/rhythmstix-logo-colour.png` — Colour logo (hero, light backgrounds)
@@ -135,15 +135,25 @@ about, assessify, periplanner, blog, community, contact-us, learning-platform, s
 - Main nav: Home, About, Teaching Portal, Community, Contact, Login (Shop & Blog moved to footer + mobile menu only)
 
 #### User Authentication & Account
-- `src/hooks/use-auth.ts` — Auth hooks (useAuth, useOrders, forgotPassword)
+- `src/hooks/use-auth.ts` — Auth hooks (useAuth, useOrders, useSubscription, forgotPassword)
 - `src/pages/Login.tsx` — Login page (`/login`) authenticates via WordPress wp-login.php
+- `src/pages/Register.tsx` — Registration page (`/register`) creates WooCommerce customer with optional Mailchimp subscription
 - `src/pages/ForgotPassword.tsx` — Password reset (`/forgot-password`) triggers WordPress reset email
-- `src/pages/Account.tsx` — Account dashboard (`/account`) with expandable order history from WooCommerce
+- `src/pages/Account.tsx` — Account dashboard (`/account`) with order history + Mailchimp subscription toggle
 - Navbar dynamically shows "Login" or user's first name + "Account" based on auth state
-- Backend: `api-server/src/routes/auth.ts` — `/auth/login`, `/auth/logout`, `/auth/me`, `/auth/forgot-password`, `/account/orders`, `/account/orders/:id`
+- Backend: `api-server/src/routes/auth.ts` — `/auth/login`, `/auth/logout`, `/auth/me`, `/auth/register`, `/auth/forgot-password`, `/account/orders`, `/account/orders/:id`, `/account/subscription`
 - Authentication flow: email → WooCommerce customer lookup → WordPress wp-login.php validation → session creation
+- Registration flow: creates WooCommerce customer → optional Mailchimp subscribe → auto-login
 - WooCommerce API uses Basic Auth headers (not query string credentials)
 - CORS restricted to trusted Replit origins only; cookies use sameSite: "lax"
+
+#### Mailchimp Integration
+- `api-server/src/lib/mailchimp.ts` — Mailchimp Marketing API helper (subscribe, unsubscribe, check status)
+- Uses `PUT /lists/{list_id}/members/{hash}` with `status_if_new` for idempotent subscribe (works for new and existing/unsubscribed contacts)
+- Secrets: `MAILCHIMP_API_KEY` (includes server prefix after dash), `MAILCHIMP_LIST_ID` (audience ID)
+- Tags users with "website-signup" on registration
+- Account page has toggle to subscribe/unsubscribe from email updates
+- Gracefully degrades if Mailchimp not configured (shows "being set up" message)
 
 #### Inline CMS (Editable Content)
 - `src/components/EditableText.tsx` — `EditableText` and `EditableList` components; renders text normally for visitors, shows pencil icon on hover for admin to edit inline

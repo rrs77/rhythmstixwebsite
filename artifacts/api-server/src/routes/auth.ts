@@ -1,4 +1,10 @@
 import { Router, type Request, type Response, type NextFunction } from "express";
+import {
+  subscribeToMailchimp,
+  unsubscribeFromMailchimp,
+  getSubscriptionStatus,
+  isMailchimpConfigured,
+} from "../lib/mailchimp";
 
 const router = Router();
 const WP_BASE = "https://www.rhythmstix.co.uk";
@@ -102,6 +108,117 @@ router.get("/auth/me", (req: Request, res: Response) => {
     res.json({ authenticated: true, user: sess.user });
   } else {
     res.json({ authenticated: false, user: null });
+  }
+});
+
+router.post("/auth/register", async (req: Request, res: Response) => {
+  try {
+    const { email, password, firstName, lastName, subscribe } = req.body;
+    if (!email || !password) {
+      res.status(400).json({ error: "Email and password are required" });
+      return;
+    }
+    if (password.length < 6) {
+      res.status(400).json({ error: "Password must be at least 6 characters" });
+      return;
+    }
+
+    const existing = await findWcCustomer(email);
+    if (existing) {
+      res.status(409).json({ error: "An account with that email already exists. Please sign in instead." });
+      return;
+    }
+
+    const createRes = await fetch(wcUrl("customers"), {
+      method: "POST",
+      headers: {
+        Authorization: WC_AUTH_HEADER,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        first_name: firstName || "",
+        last_name: lastName || "",
+        username: email.split("@")[0] + Math.floor(Math.random() * 1000),
+      }),
+    });
+
+    if (!createRes.ok) {
+      const errData = (await createRes.json().catch(() => ({}))) as any;
+      const msg = errData?.message || "Failed to create account";
+      res.status(createRes.status).json({ error: msg });
+      return;
+    }
+
+    const customer = (await createRes.json()) as any;
+
+    if (subscribe) {
+      await subscribeToMailchimp(email, firstName, lastName, ["website-signup"]);
+    }
+
+    const sess = req.session as any;
+    sess.user = {
+      id: customer.id,
+      email: customer.email,
+      firstName: customer.first_name,
+      lastName: customer.last_name,
+      username: customer.username,
+      avatar: customer.avatar_url,
+    };
+
+    res.json({ success: true, user: sess.user });
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ error: "An error occurred during registration" });
+  }
+});
+
+router.get("/account/subscription", async (req: Request, res: Response) => {
+  const sess = req.session as any;
+  if (!sess?.user) {
+    res.status(401).json({ error: "Not authenticated" });
+    return;
+  }
+
+  const configured = isMailchimpConfigured();
+  if (!configured) {
+    res.json({ configured: false, subscribed: false });
+    return;
+  }
+
+  const status = await getSubscriptionStatus(sess.user.email);
+  res.json({ configured: true, subscribed: status.subscribed });
+});
+
+router.post("/account/subscription", async (req: Request, res: Response) => {
+  const sess = req.session as any;
+  if (!sess?.user) {
+    res.status(401).json({ error: "Not authenticated" });
+    return;
+  }
+
+  const { subscribe } = req.body;
+
+  if (subscribe) {
+    const result = await subscribeToMailchimp(
+      sess.user.email,
+      sess.user.firstName,
+      sess.user.lastName,
+      ["website-signup"]
+    );
+    if (!result.success) {
+      res.status(502).json({ error: result.error || "Failed to subscribe" });
+      return;
+    }
+    res.json({ success: true, subscribed: true });
+  } else {
+    const result = await unsubscribeFromMailchimp(sess.user.email);
+    if (!result.success) {
+      res.status(502).json({ error: result.error || "Failed to unsubscribe" });
+      return;
+    }
+    res.json({ success: true, subscribed: false });
   }
 });
 

@@ -64,6 +64,29 @@ export function useAuth() {
     },
   });
 
+  const registerMutation = useMutation({
+    mutationFn: async (params: {
+      email: string;
+      password: string;
+      firstName: string;
+      lastName: string;
+      subscribe: boolean;
+    }) => {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(params),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Registration failed");
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auth"] });
+    },
+  });
+
   const logoutMutation = useMutation({
     mutationFn: async () => {
       await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
@@ -80,6 +103,8 @@ export function useAuth() {
     login: loginMutation.mutateAsync,
     loginError: loginMutation.error?.message ?? null,
     isLoggingIn: loginMutation.isPending,
+    register: registerMutation.mutateAsync,
+    isRegistering: registerMutation.isPending,
     logout: logoutMutation.mutateAsync,
   };
 }
@@ -94,6 +119,45 @@ export function useOrders() {
     },
     staleTime: 2 * 60 * 1000,
   });
+}
+
+export function useSubscription() {
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["subscription"],
+    queryFn: async () => {
+      const res = await fetch("/api/account/subscription", { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to check subscription");
+      return res.json() as Promise<{ configured: boolean; subscribed: boolean }>;
+    },
+    staleTime: 60 * 1000,
+  });
+
+  const toggleMutation = useMutation({
+    mutationFn: async (subscribe: boolean) => {
+      const res = await fetch("/api/account/subscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ subscribe }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update subscription");
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["subscription"] });
+    },
+  });
+
+  return {
+    configured: data?.configured ?? false,
+    subscribed: data?.subscribed ?? false,
+    isLoading,
+    toggleSubscription: toggleMutation.mutateAsync,
+    isToggling: toggleMutation.isPending,
+  };
 }
 
 export async function forgotPassword(email: string) {
