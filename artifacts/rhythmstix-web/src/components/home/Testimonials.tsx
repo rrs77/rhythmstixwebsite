@@ -1,5 +1,6 @@
 import { Quote } from "lucide-react";
 import { motion } from "framer-motion";
+import { EditableText } from "@/components/EditableText";
 
 const TESTIMONIALS = [
   {
@@ -42,7 +43,12 @@ export function Testimonials() {
           viewport={{ once: true }}
           className="text-center mb-8"
         >
-          <h2 className="text-2xl font-bold mb-2">What People Say</h2>
+          <EditableText
+            contentKey="testimonials.heading"
+            fallback="What People Say"
+            as="h2"
+            className="text-2xl font-bold mb-2"
+          />
           <div className="w-12 h-0.5 bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd] mx-auto rounded-full" />
         </motion.div>
 
@@ -57,12 +63,30 @@ export function Testimonials() {
               className="bg-card rounded-xl p-5 border border-[#3a9ca5]/10 hover:border-[#3a9ca5]/25 transition-colors duration-300 flex flex-col"
             >
               <Quote className="w-5 h-5 text-[#3a9ca5]/20 mb-3 rotate-180 shrink-0" />
-              <p className="text-sm text-foreground leading-relaxed mb-4 flex-grow">
-                "{testimonial.quote}"
-              </p>
+              <div className="text-sm text-foreground leading-relaxed mb-4 flex-grow">
+                <EditableText
+                  contentKey={`testimonial.${testimonial.id}.quote`}
+                  fallback={testimonial.quote}
+                  as="p"
+                  className="text-sm text-foreground leading-relaxed"
+                  multiline
+                >
+                  {(value) => <span>"{value}"</span>}
+                </EditableText>
+              </div>
               <div className="border-t border-border/50 pt-3">
-                <p className="text-xs font-semibold text-[#3a9ca5]">{testimonial.author}</p>
-                <p className="text-[11px] text-muted-foreground">{testimonial.organization}</p>
+                <EditableText
+                  contentKey={`testimonial.${testimonial.id}.author`}
+                  fallback={testimonial.author}
+                  as="p"
+                  className="text-xs font-semibold text-[#3a9ca5]"
+                />
+                <EditableText
+                  contentKey={`testimonial.${testimonial.id}.org`}
+                  fallback={testimonial.organization}
+                  as="p"
+                  className="text-[11px] text-muted-foreground"
+                />
                 {testimonial.app && (
                   <span className="inline-block mt-1.5 text-[10px] font-medium text-[#3a9ca5]/70 bg-[#3a9ca5]/8 px-2 py-0.5 rounded-full">
                     {testimonial.app}

@@ -7,6 +7,7 @@ import { ArrowLeft, CheckCircle2, AlertCircle, ImageIcon, ArrowRight } from "luc
 import { Link } from "wouter";
 import type { LucideIcon } from "lucide-react";
 import { YouTubeThumbnail } from "@/components/YouTubeModal";
+import { EditableText } from "@/components/EditableText";
 
 interface Feature {
   icon: LucideIcon;
@@ -78,9 +79,12 @@ export default function ProductPage({
                 <h1 className="text-4xl md:text-5xl font-bold text-foreground">
                   {name}
                 </h1>
-                <p className="text-xl text-muted-foreground mt-1">
-                  {subtitle}
-                </p>
+                <EditableText
+                  contentKey={`page.${name.toLowerCase().replace(/\s+/g, "")}.subtitle`}
+                  fallback={subtitle}
+                  as="p"
+                  className="text-xl text-muted-foreground mt-1"
+                />
               </div>
             </div>
 
@@ -100,9 +104,14 @@ export default function ProductPage({
             )}
 
             {description.map((para, i) => (
-              <p key={i} className="text-lg text-foreground leading-relaxed mb-6 max-w-3xl">
-                {para}
-              </p>
+              <EditableText
+                key={i}
+                contentKey={`page.${name.toLowerCase().replace(/\s+/g, "")}.desc.${i}`}
+                fallback={para}
+                as="p"
+                className="text-lg text-foreground leading-relaxed mb-6 max-w-3xl"
+                multiline
+              />
             ))}
 
             <div className="mb-12 flex flex-wrap gap-3">
@@ -163,7 +172,13 @@ export default function ProductPage({
                     <feature.icon className="w-5 h-5 text-[#3a9ca5]" />
                   </div>
                   <h3 className="text-lg font-semibold mb-2 text-foreground">{feature.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+                  <EditableText
+                    contentKey={`page.${name.toLowerCase().replace(/\s+/g, "")}.feature.${i}.desc`}
+                    fallback={feature.description}
+                    as="p"
+                    className="text-muted-foreground text-sm leading-relaxed"
+                    multiline
+                  />
                 </motion.div>
               ))}
             </div>
@@ -217,12 +232,19 @@ export default function ProductPage({
             viewport={{ once: true }}
             className="bg-gradient-to-br from-[#3a9ca5]/5 to-[#4cb5bd]/10 rounded-2xl p-8 md:p-12 border border-[#3a9ca5]/20 text-center mb-8"
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
-              {ctaHeading}
-            </h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              {ctaText}
-            </p>
+            <EditableText
+              contentKey={`page.${name.toLowerCase().replace(/\s+/g, "")}.cta.heading`}
+              fallback={ctaHeading}
+              as="h2"
+              className="text-2xl md:text-3xl font-bold mb-4 text-foreground"
+            />
+            <EditableText
+              contentKey={`page.${name.toLowerCase().replace(/\s+/g, "")}.cta.text`}
+              fallback={ctaText}
+              as="p"
+              className="text-muted-foreground mb-6 max-w-2xl mx-auto"
+              multiline
+            />
             {shopUrl ? (
               <Button size="lg" className="group bg-[#3a9ca5] hover:bg-[#4cb5bd]" asChild>
                 <a href={shopUrl} target="_blank" rel="noopener noreferrer">

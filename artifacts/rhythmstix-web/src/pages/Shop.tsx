@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { EditableText } from "@/components/EditableText";
 
 const APP_FEATURES = [
   {
@@ -320,10 +321,18 @@ export default function Shop() {
       <main className="flex-grow pt-24 pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mb-10">
-            <h1 className="text-4xl font-bold text-foreground mb-3">Shop</h1>
-            <p className="text-lg text-muted-foreground">
-              Apps, resources, and tools for music education.
-            </p>
+            <EditableText
+              contentKey="shop.heading"
+              fallback="Shop"
+              as="h1"
+              className="text-4xl font-bold text-foreground mb-3"
+            />
+            <EditableText
+              contentKey="shop.subheading"
+              fallback="Apps, resources, and tools for music education."
+              as="p"
+              className="text-lg text-muted-foreground"
+            />
           </div>
 
           <div className="mb-10">

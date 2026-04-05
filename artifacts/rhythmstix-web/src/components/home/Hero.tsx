@@ -1,18 +1,16 @@
 import { motion } from "framer-motion";
-import { Palette, ClipboardCheck, CalendarDays, TrendingUp, GraduationCap } from "lucide-react";
-import { Link } from "wouter";
-
-const APPS = [
-  { icon: Palette, label: "CCDesigner", href: "https://www.ccdesigner.co.uk/", external: true },
-  { icon: ClipboardCheck, label: "Assessify", href: "https://assessify.rhythmstix.co.uk/", external: true },
-  { icon: CalendarDays, label: "PeriFeedback", href: "http://perifeedback.co.uk/", external: true },
-  { icon: TrendingUp, label: "ProgressPath", href: "/progresspath" },
-  { icon: GraduationCap, label: "Teaching Portal", href: "/elearning" },
-];
-
-const WORDS = ["plan", "assess", "track", "teach", "inspire"];
+import { EditableText } from "@/components/EditableText";
+import { useContentValue } from "@/hooks/use-content";
 
 export function Hero() {
+  const subtitle = useContentValue("hero.subtitle", "education solutions.");
+  const descriptionText = useContentValue(
+    "hero.description",
+    "A suite of apps and tools built specifically for music education — helping teachers"
+  );
+  const wordsRaw = useContentValue("hero.words", "plan, assess, track, teach, inspire");
+  const words = wordsRaw.split(",").map((w) => w.trim()).filter(Boolean);
+
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-slate-100" />
@@ -74,14 +72,18 @@ export function Hero() {
                 tix
               </motion.span>
             </div>
-            <motion.span
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.9 }}
-              className="text-sm sm:text-base md:text-lg tracking-[0.25em] text-muted-foreground font-medium mt-1"
             >
-              education solutions.
-            </motion.span>
+              <EditableText
+                contentKey="hero.subtitle"
+                fallback="education solutions."
+                as="span"
+                className="text-sm sm:text-base md:text-lg tracking-[0.25em] text-muted-foreground font-medium mt-1"
+              />
+            </motion.div>
           </div>
 
           <motion.h1
@@ -90,8 +92,21 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2"
           >
-            <span className="text-foreground">Making classrooms </span>
-            <span className="text-[rgb(52,154,167)]">work</span>
+            <EditableText
+              contentKey="hero.heading"
+              fallback="Making classrooms work"
+            >
+              {(value) => {
+                const parts = value.split(" ");
+                const lastWord = parts.pop();
+                return (
+                  <>
+                    <span className="text-foreground">{parts.join(" ")} </span>
+                    <span className="text-[rgb(52,154,167)]">{lastWord}</span>
+                  </>
+                );
+              }}
+            </EditableText>
           </motion.h1>
 
           <motion.p
@@ -100,10 +115,14 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-5"
           >
-            A suite of apps and tools built specifically for music education —
-            helping teachers{" "}
+            <EditableText
+              contentKey="hero.description"
+              fallback="A suite of apps and tools built specifically for music education — helping teachers"
+              as="span"
+              className="text-base sm:text-lg text-muted-foreground"
+            />{" "}
             <span className="inline-flex items-center gap-1">
-              {WORDS.map((word, i) => (
+              {words.map((word, i) => (
                 <motion.span
                   key={word}
                   initial={{ opacity: 0, y: 10 }}
@@ -111,12 +130,17 @@ export function Hero() {
                   transition={{ delay: 0.8 + i * 0.15, duration: 0.4 }}
                   className="text-[rgb(52,154,167)] font-semibold"
                 >
-                  {word}{i < WORDS.length - 1 ? ", " : "."}
+                  {word}{i < words.length - 1 ? ", " : "."}
                 </motion.span>
               ))}
             </span>
+            <EditableText
+              contentKey="hero.words"
+              fallback="plan, assess, track, teach, inspire"
+              as="span"
+              className="hidden"
+            />
           </motion.p>
-
 
         </div>
       </div>

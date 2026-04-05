@@ -22,6 +22,7 @@ import ForgotPassword from "@/pages/ForgotPassword";
 import Account from "@/pages/Account";
 import NotFound from "@/pages/not-found";
 import { CookieConsent } from "@/components/CookieConsent";
+import { AdminBar } from "@/components/AdminBar";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ function App() {
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <Router />
           <CookieConsent />
+          <AdminBar />
         </WouterRouter>
         <Toaster />
       </TooltipProvider>

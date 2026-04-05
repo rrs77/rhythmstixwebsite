@@ -241,9 +241,13 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "rhythmstix2024";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 router.post("/auth/admin-login", (req: Request, res: Response) => {
+  if (!ADMIN_PASSWORD) {
+    res.status(503).json({ error: "Admin login not configured" });
+    return;
+  }
   const { password } = req.body;
   if (password === ADMIN_PASSWORD) {
     (req.session as any).isAdmin = true;

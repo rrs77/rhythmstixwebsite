@@ -142,6 +142,17 @@ about, assessify, periplanner, blog, community, contact-us, learning-platform, s
 - WooCommerce API uses Basic Auth headers (not query string credentials)
 - CORS restricted to trusted Replit origins only; cookies use sameSite: "lax"
 
+#### Inline CMS (Editable Content)
+- `src/components/EditableText.tsx` — `EditableText` and `EditableList` components; renders text normally for visitors, shows pencil icon on hover for admin to edit inline
+- `src/components/AdminBar.tsx` — Global admin login button (shield icon, bottom-right) + admin mode bar (bottom strip when logged in)
+- `src/hooks/use-content.ts` — `useContent()` hook fetches all content from `/api/content`; `useSaveContent()` mutation PUTs updated values
+- `src/hooks/use-admin.ts` — `useAdminMode()` hook checks admin session via `/api/auth/admin-check`
+- Backend: `api-server/src/routes/content.ts` — `GET /api/content` (all key-value pairs), `PUT /api/content/:key` (admin-only upsert)
+- Database: `site_content` table (id, key unique, value, updatedAt)
+- Content key convention: `hero.heading`, `products.heading`, `product.{id}.desc`, `testimonial.{id}.quote`, `page.{name}.subtitle`, `page.{name}.desc.{i}`, `shop.heading`, etc.
+- Admin auth: `ADMIN_PASSWORD` env secret required; no fallback password; session-based via `/api/auth/admin-login`
+- Wired into: Hero.tsx, ProductGrid.tsx, Testimonials.tsx, ProductPage.tsx (all product pages), Shop.tsx
+
 #### Product Pages
 Each app has a dedicated page using the shared `ProductPage` component (`src/pages/ProductPage.tsx`):
 - `src/pages/Assessify.tsx` — `/assessify`
