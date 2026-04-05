@@ -5,8 +5,8 @@ import { useWPPosts } from "@/hooks/use-wp";
 import { decodeHtml } from "@/lib/wordpress";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Loader2, ArrowRight, Shield, Eye, EyeOff, Lock, X,
-  Youtube, Linkedin, FileText, Play, Plus, Trash2, ExternalLink
+  Loader2, ArrowRight, Shield, Lock, X, Check,
+  Youtube, Linkedin, FileText, Play, Plus, Trash2, ExternalLink, Square, CheckSquare
 } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -308,6 +308,10 @@ export default function BlogList() {
     return counts;
   }, [unifiedPosts, adminMode, hiddenWpPosts, hiddenSocial]);
 
+  const hiddenCount = useMemo(() => {
+    return unifiedPosts.filter((p) => isHidden(p)).length;
+  }, [unifiedPosts, hiddenWpPosts, hiddenSocial]);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
@@ -365,8 +369,10 @@ export default function BlogList() {
           {adminMode && (
             <div className="mb-4 space-y-3">
               <div className="bg-[#3a9ca5]/5 border border-[#3a9ca5]/20 rounded-xl px-4 py-3 text-sm text-[#3a9ca5]">
-                <strong>Admin mode:</strong> Click the eye icon on any post to show/hide it from visitors. You can also add LinkedIn posts from{" "}
-                <a href="https://www.linkedin.com/in/robert-reich-storer-974449144/" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-[#2d8890]">your LinkedIn profile</a>.
+                <strong>Admin mode:</strong> Tick the checkbox on any post to hide it from visitors. Untick to show it again.
+                {hiddenCount > 0 && (
+                  <span className="ml-1 font-medium">({hiddenCount} post{hiddenCount !== 1 ? "s" : ""} currently hidden)</span>
+                )}
               </div>
               <Button
                 onClick={() => setShowAddLinkedin(!showAddLinkedin)}
@@ -398,6 +404,9 @@ export default function BlogList() {
                       <X className="w-4 h-4" />
                     </button>
                   </div>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    Copy the title, description and URL from your LinkedIn post to add it to your blog feed.
+                  </p>
                   <div className="space-y-3">
                     <input
                       type="text"
@@ -417,7 +426,7 @@ export default function BlogList() {
                       type="url"
                       value={liUrl}
                       onChange={(e) => setLiUrl(e.target.value)}
-                      placeholder="LinkedIn post URL"
+                      placeholder="LinkedIn post URL (e.g. https://www.linkedin.com/posts/...)"
                       className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#0077b5]/30"
                     />
                     <div className="flex gap-2">
@@ -497,9 +506,49 @@ export default function BlogList() {
                     <div
                       className={cn(
                         "bg-card rounded-2xl border border-[#3a9ca5]/10 hover:border-[#3a9ca5]/40 transition-all duration-300 hover:shadow-lg hover:shadow-[#3a9ca5]/10 overflow-hidden",
-                        hidden && adminMode && "opacity-50 border-dashed"
+                        hidden && adminMode && "opacity-50 border-dashed border-red-300"
                       )}
                     >
+                      {adminMode && (
+                        <div className="flex items-center gap-3 px-5 pt-4 pb-0">
+                          <button
+                            onClick={() => handleToggleHide(post)}
+                            disabled={toggleWpMutation.isPending || toggleSocialMutation.isPending}
+                            className={cn(
+                              "flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border",
+                              hidden
+                                ? "bg-red-50 border-red-200 text-red-600 hover:bg-red-100"
+                                : "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100"
+                            )}
+                          >
+                            {hidden ? (
+                              <>
+                                <Square className="w-3.5 h-3.5" />
+                                Hidden — click to show
+                              </>
+                            ) : (
+                              <>
+                                <CheckSquare className="w-3.5 h-3.5" />
+                                Visible — click to hide
+                              </>
+                            )}
+                          </button>
+                          {post.source === "linkedin" && (
+                            <button
+                              onClick={() => {
+                                const liId = parseInt(post.id.replace("li:", ""));
+                                if (confirm("Delete this LinkedIn post?")) deleteLinkedinMutation.mutate(liId);
+                              }}
+                              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 transition-all"
+                              title="Delete permanently"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              Delete
+                            </button>
+                          )}
+                        </div>
+                      )}
+
                       {post.source === "youtube" ? (
                         <div className="flex gap-4 p-4">
                           <button
@@ -586,36 +635,6 @@ export default function BlogList() {
                         </div>
                       )}
                     </div>
-
-                    {adminMode && (
-                      <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
-                        {post.source === "linkedin" && (
-                          <button
-                            onClick={() => {
-                              const liId = parseInt(post.id.replace("li:", ""));
-                              if (confirm("Delete this LinkedIn post?")) deleteLinkedinMutation.mutate(liId);
-                            }}
-                            className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-all shadow-sm"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        )}
-                        <button
-                          onClick={() => handleToggleHide(post)}
-                          disabled={toggleWpMutation.isPending || toggleSocialMutation.isPending}
-                          className={cn(
-                            "p-2 rounded-lg transition-all shadow-sm",
-                            hidden
-                              ? "bg-red-100 text-red-600 hover:bg-red-200"
-                              : "bg-emerald-100 text-emerald-600 hover:bg-emerald-200"
-                          )}
-                          title={hidden ? "Show this post" : "Hide this post"}
-                        >
-                          {hidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-                      </div>
-                    )}
                   </motion.div>
                 );
               })}
