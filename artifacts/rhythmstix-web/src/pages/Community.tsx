@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Loader2, MessageSquare, Plus, ArrowLeft, Pin, Lock, Trash2,
-  Send, X, Shield, ChevronRight, Users
+  Send, X, Shield, ChevronRight, Users, Pencil, Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -143,6 +143,9 @@ function AdminCategoryPanel({ onClose }: { onClose: () => void }) {
 function CategoryList({ onSelect, isAdmin }: { onSelect: (id: number) => void; isAdmin: boolean }) {
   const { data: categories, isLoading } = useCategories();
   const [showCreate, setShowCreate] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editDesc, setEditDesc] = useState("");
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
@@ -155,6 +158,34 @@ function CategoryList({ onSelect, isAdmin }: { onSelect: (id: number) => void; i
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["forum-categories"] }),
   });
+
+  const renameMutation = useMutation({
+    mutationFn: async ({ id, name, description }: { id: number; name: string; description: string }) => {
+      const res = await fetch(`${API}/categories/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ name, description }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forum-categories"] });
+      setEditingId(null);
+    },
+  });
+
+  function startEditing(cat: any) {
+    setEditingId(cat.id);
+    setEditName(cat.name);
+    setEditDesc(cat.description || "");
+  }
+
+  function saveEdit() {
+    if (!editingId || !editName.trim()) return;
+    renameMutation.mutate({ id: editingId, name: editName.trim(), description: editDesc.trim() });
+  }
 
   if (isLoading) {
     return (
@@ -205,46 +236,102 @@ function CategoryList({ onSelect, isAdmin }: { onSelect: (id: number) => void; i
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <button
-                onClick={() => onSelect(cat.id)}
-                className="group w-full text-left bg-card rounded-xl border border-[#3a9ca5]/10 hover:border-[#3a9ca5]/30 p-5 transition-all hover:shadow-md hover:shadow-[#3a9ca5]/5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-grow min-w-0">
-                    <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors mb-1">
-                      {cat.name}
-                    </h3>
-                    {cat.description && (
-                      <p className="text-sm text-muted-foreground line-clamp-1">{cat.description}</p>
-                    )}
-                    <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <MessageSquare className="w-3 h-3" />
-                        {cat.topicCount} {cat.topicCount === 1 ? "topic" : "topics"}
-                      </span>
-                      {cat.lastActivity && (
-                        <span>Last active: {timeAgo(cat.lastActivity)}</span>
-                      )}
+              {editingId === cat.id ? (
+                <div className="bg-card rounded-xl border-2 border-[#3a9ca5]/40 p-5">
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground mb-1 block">Category Name</label>
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") saveEdit(); if (e.key === "Escape") setEditingId(null); }}
+                        autoFocus
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground mb-1 block">Description</label>
+                      <input
+                        type="text"
+                        value={editDesc}
+                        onChange={(e) => setEditDesc(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") saveEdit(); if (e.key === "Escape") setEditingId(null); }}
+                        placeholder="Optional description"
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={saveEdit}
+                        disabled={!editName.trim() || renameMutation.isPending}
+                        className="bg-[#3a9ca5] hover:bg-[#2d8890] text-white"
+                        size="sm"
+                      >
+                        {renameMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : <Check className="w-3.5 h-3.5 mr-1" />}
+                        Save
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => setEditingId(null)}>
+                        Cancel
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {isAdmin && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (confirm("Delete this category and all its topics?")) {
-                            deleteMutation.mutate(cat.id);
-                          }
-                        }}
-                        className="p-1.5 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                    <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-[#3a9ca5] transition-colors" />
-                  </div>
                 </div>
-              </button>
+              ) : (
+                <button
+                  onClick={() => onSelect(cat.id)}
+                  className="group w-full text-left bg-card rounded-xl border border-[#3a9ca5]/10 hover:border-[#3a9ca5]/30 p-5 transition-all hover:shadow-md hover:shadow-[#3a9ca5]/5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-grow min-w-0">
+                      <h3 className="font-semibold text-foreground group-hover:text-[#3a9ca5] transition-colors mb-1">
+                        {cat.name}
+                      </h3>
+                      {cat.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-1">{cat.description}</p>
+                      )}
+                      <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <MessageSquare className="w-3 h-3" />
+                          {cat.topicCount} {cat.topicCount === 1 ? "topic" : "topics"}
+                        </span>
+                        {cat.lastActivity && (
+                          <span>Last active: {timeAgo(cat.lastActivity)}</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {isAdmin && (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              startEditing(cat);
+                            }}
+                            className="p-1.5 rounded-lg text-muted-foreground hover:text-[#3a9ca5] hover:bg-[#3a9ca5]/10 transition-colors"
+                            title="Edit category"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm("Delete this category and all its topics?")) {
+                                deleteMutation.mutate(cat.id);
+                              }
+                            }}
+                            className="p-1.5 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors"
+                            title="Delete category"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </>
+                      )}
+                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-[#3a9ca5] transition-colors" />
+                    </div>
+                  </div>
+                </button>
+              )}
             </motion.div>
           ))}
         </div>
