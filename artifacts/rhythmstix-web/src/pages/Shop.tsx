@@ -81,10 +81,15 @@ export default function Shop() {
             />
             <EditableText
               contentKey="shop.subheading"
-              fallback="Resources and tools for music education."
+              fallback="Resources, productions, and downloadable tools to support your teaching."
               as="p"
               className="text-base text-muted-foreground"
             />
+            <p className="text-sm text-muted-foreground/70 mt-1">
+              Looking for our apps? Head to{" "}
+              <a href="/" className="text-[#3a9ca5] hover:underline">Apps, Tools &amp; Teaching Portal</a>{" "}
+              on the homepage.
+            </p>
           </div>
 
           {isLoading && (
