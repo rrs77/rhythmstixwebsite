@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { Quote, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { EditableText } from "@/components/EditableText";
 
 const TESTIMONIALS = [
@@ -76,12 +76,70 @@ const TESTIMONIALS = [
   },
 ];
 
-const CARD_GAP = 16;
+type Testimonial = typeof TESTIMONIALS[number];
+
+function TestimonialModal({ testimonial, onClose }: { testimonial: Testimonial; onClose: () => void }) {
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+        transition={{ duration: 0.25 }}
+        className="relative bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Close"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        <Quote className="w-8 h-8 text-[#3a9ca5]/15 mb-4 rotate-180" />
+        <p className="text-base text-foreground leading-relaxed italic mb-6">
+          "{testimonial.quote}"
+        </p>
+        <div className="border-t border-slate-100 pt-4">
+          <p className="text-sm font-semibold text-foreground">{testimonial.author}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{testimonial.organization}</p>
+          {testimonial.app && (
+            <span className="inline-block mt-2 text-xs font-medium text-[#3a9ca5] bg-[#3a9ca5]/8 px-3 py-1 rounded-full">
+              {testimonial.app}
+            </span>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 export function Testimonials() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
 
   const checkScroll = useCallback(() => {
     const el = scrollRef.current;
@@ -175,7 +233,10 @@ export function Testimonials() {
                 transition={{ delay: Math.min(index * 0.06, 0.3) }}
                 className="snap-start shrink-0 w-[calc(100%-16px)] sm:w-[calc(50%-8px)] lg:w-[calc(25%-12px)]"
               >
-                <div className="bg-white rounded-xl p-5 border border-slate-100 hover:border-[#3a9ca5]/20 hover:shadow-md transition-all duration-300 flex flex-col h-full">
+                <button
+                  onClick={() => setSelectedTestimonial(testimonial)}
+                  className="w-full text-left bg-white rounded-xl p-5 border border-slate-100 hover:border-[#3a9ca5]/20 hover:shadow-md transition-all duration-300 flex flex-col h-full cursor-pointer"
+                >
                   <Quote className="w-5 h-5 text-[#3a9ca5]/12 mb-2 rotate-180 shrink-0" />
                   <div className="text-xs text-foreground/90 leading-relaxed mb-4 flex-grow italic">
                     <EditableText
@@ -207,12 +268,21 @@ export function Testimonials() {
                       </span>
                     )}
                   </div>
-                </div>
+                </button>
               </motion.div>
             ))}
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {selectedTestimonial && (
+          <TestimonialModal
+            testimonial={selectedTestimonial}
+            onClose={() => setSelectedTestimonial(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
