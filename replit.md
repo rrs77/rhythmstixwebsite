@@ -15,6 +15,8 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
+- **Auth**: JWT tokens in httpOnly cookies (via `jsonwebtoken`)
+- **Deployment**: Vercel-compatible (serverless API + static frontend)
 
 ## Structure
 
@@ -202,3 +204,34 @@ Each page includes: hero image placeholder, description text, key features grid,
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
+
+## Vercel Deployment
+
+The project is structured to deploy to Vercel from the GitHub repo at `https://github.com/rrs77/rhythmstixwebsite`.
+
+### Configuration
+- `vercel.json` at root configures build, output directory, and API routing
+- Frontend builds from `artifacts/rhythmstix-web` via Vite
+- API routes served as a single Vercel serverless function (`api/index.ts`) wrapping the Express app
+- All `/api/*` requests are rewritten to the serverless function
+- SPA fallback routes all other paths to `index.html`
+
+### Required Environment Variables (set in Vercel dashboard)
+- `DATABASE_URL` — PostgreSQL connection string (use Neon, Supabase, or similar)
+- `WC_CONSUMER_KEY` — WooCommerce REST API consumer key
+- `WC_CONSUMER_SECRET` — WooCommerce REST API consumer secret
+- `SESSION_SECRET` — Used as JWT signing secret
+- `ADMIN_PASSWORD` — Admin login password for CMS
+
+### Optional Environment Variables
+- `MAILCHIMP_API_KEY` — Mailchimp Marketing API key (includes server prefix)
+- `MAILCHIMP_LIST_ID` — Mailchimp audience/list ID
+
+### Auth System
+- JWT tokens stored in httpOnly cookies (`rx_token` for users, `rx_admin` for admin)
+- No server-side session state — fully stateless, works with serverless functions
+- JWT signed with `SESSION_SECRET` env var
+
+### Database
+- Requires an external PostgreSQL database (Neon recommended for Vercel)
+- Run Drizzle schema push against the external DB: `DATABASE_URL=... pnpm --filter @workspace/db run push`

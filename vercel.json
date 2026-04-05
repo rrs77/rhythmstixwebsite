@@ -1,0 +1,18 @@
+{
+  "buildCommand": "pnpm --filter @workspace/rhythmstix-web run build",
+  "outputDirectory": "artifacts/rhythmstix-web/dist/public",
+  "framework": "vite",
+  "installCommand": "pnpm install",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/:path*" },
+    { "source": "/((?!api).*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ]
+}

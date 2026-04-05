@@ -96,9 +96,9 @@ router.get("/forum/topics/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/forum/topics", async (req: Request, res: Response) => {
-  const session = req.session as any;
-  const isAdmin = session?.isAdmin;
-  const user = session?.user;
+  const { getUserFromRequest, isAdminRequest } = await import("../lib/jwt");
+  const isAdmin = isAdminRequest(req);
+  const user = getUserFromRequest(req);
 
   const { categoryId, title, content, authorName } = req.body;
   if (!categoryId || !title || !content) {
@@ -143,9 +143,9 @@ router.delete("/forum/topics/:id", requireAdmin, async (req: Request, res: Respo
 });
 
 router.post("/forum/replies", async (req: Request, res: Response) => {
-  const session = req.session as any;
-  const isAdmin = session?.isAdmin;
-  const user = session?.user;
+  const { getUserFromRequest, isAdminRequest } = await import("../lib/jwt");
+  const isAdmin = isAdminRequest(req);
+  const user = getUserFromRequest(req);
 
   const { topicId, content, authorName } = req.body;
   if (!topicId || !content) {

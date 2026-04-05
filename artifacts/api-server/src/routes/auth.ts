@@ -5,6 +5,15 @@ import {
   getSubscriptionStatus,
   isMailchimpConfigured,
 } from "../lib/mailchimp";
+import {
+  getUserFromRequest,
+  isAdminRequest,
+  setUserCookie,
+  setAdminCookie,
+  clearUserCookie,
+  clearAdminCookie,
+  type UserPayload,
+} from "../lib/jwt";
 
 const router = Router();
 const WP_BASE = "https://www.rhythmstix.co.uk";
@@ -76,8 +85,7 @@ router.post("/auth/login", async (req: Request, res: Response) => {
       return;
     }
 
-    const sess = req.session as any;
-    sess.user = {
+    const user: UserPayload = {
       id: customer.id,
       email: customer.email,
       firstName: customer.first_name,
@@ -86,9 +94,11 @@ router.post("/auth/login", async (req: Request, res: Response) => {
       avatar: customer.avatar_url,
     };
 
+    setUserCookie(res, user);
+
     res.json({
       success: true,
-      user: sess.user,
+      user,
     });
   } catch (err) {
     console.error("Login error:", err);
@@ -96,16 +106,16 @@ router.post("/auth/login", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/auth/logout", (req: Request, res: Response) => {
-  req.session.destroy(() => {
-    res.json({ success: true });
-  });
+router.post("/auth/logout", (_req: Request, res: Response) => {
+  clearUserCookie(res);
+  clearAdminCookie(res);
+  res.json({ success: true });
 });
 
 router.get("/auth/me", (req: Request, res: Response) => {
-  const sess = req.session as any;
-  if (sess?.user) {
-    res.json({ authenticated: true, user: sess.user });
+  const user = getUserFromRequest(req);
+  if (user) {
+    res.json({ authenticated: true, user });
   } else {
     res.json({ authenticated: false, user: null });
   }
@@ -157,8 +167,7 @@ router.post("/auth/register", async (req: Request, res: Response) => {
       await subscribeToMailchimp(email, firstName, lastName, ["website-signup"]);
     }
 
-    const sess = req.session as any;
-    sess.user = {
+    const user: UserPayload = {
       id: customer.id,
       email: customer.email,
       firstName: customer.first_name,
@@ -167,7 +176,9 @@ router.post("/auth/register", async (req: Request, res: Response) => {
       avatar: customer.avatar_url,
     };
 
-    res.json({ success: true, user: sess.user });
+    setUserCookie(res, user);
+
+    res.json({ success: true, user });
   } catch (err) {
     console.error("Registration error:", err);
     res.status(500).json({ error: "An error occurred during registration" });
@@ -175,8 +186,8 @@ router.post("/auth/register", async (req: Request, res: Response) => {
 });
 
 router.get("/account/subscription", async (req: Request, res: Response) => {
-  const sess = req.session as any;
-  if (!sess?.user) {
+  const user = getUserFromRequest(req);
+  if (!user) {
     res.status(401).json({ error: "Not authenticated" });
     return;
   }
@@ -187,13 +198,13 @@ router.get("/account/subscription", async (req: Request, res: Response) => {
     return;
   }
 
-  const status = await getSubscriptionStatus(sess.user.email);
+  const status = await getSubscriptionStatus(user.email);
   res.json({ configured: true, subscribed: status.subscribed });
 });
 
 router.post("/account/subscription", async (req: Request, res: Response) => {
-  const sess = req.session as any;
-  if (!sess?.user) {
+  const user = getUserFromRequest(req);
+  if (!user) {
     res.status(401).json({ error: "Not authenticated" });
     return;
   }
@@ -202,9 +213,9 @@ router.post("/account/subscription", async (req: Request, res: Response) => {
 
   if (subscribe) {
     const result = await subscribeToMailchimp(
-      sess.user.email,
-      sess.user.firstName,
-      sess.user.lastName,
+      user.email,
+      user.firstName,
+      user.lastName,
       ["website-signup"]
     );
     if (!result.success) {
@@ -213,7 +224,7 @@ router.post("/account/subscription", async (req: Request, res: Response) => {
     }
     res.json({ success: true, subscribed: true });
   } else {
-    const result = await unsubscribeFromMailchimp(sess.user.email);
+    const result = await unsubscribeFromMailchimp(user.email);
     if (!result.success) {
       res.status(502).json({ error: result.error || "Failed to unsubscribe" });
       return;
@@ -257,14 +268,14 @@ router.post("/auth/forgot-password", async (req: Request, res: Response) => {
 
 router.get("/account/orders", async (req: Request, res: Response) => {
   try {
-    const sess = req.session as any;
-    if (!sess?.user) {
+    const user = getUserFromRequest(req);
+    if (!user) {
       res.status(401).json({ error: "Not authenticated" });
       return;
     }
 
     const response = await wcFetch("orders", {
-      customer: String(sess.user.id),
+      customer: String(user.id),
       per_page: "50",
       orderby: "date",
       order: "desc",
@@ -307,8 +318,8 @@ router.get("/account/orders", async (req: Request, res: Response) => {
 
 router.get("/account/orders/:id", async (req: Request, res: Response) => {
   try {
-    const sess = req.session as any;
-    if (!sess?.user) {
+    const user = getUserFromRequest(req);
+    if (!user) {
       res.status(401).json({ error: "Not authenticated" });
       return;
     }
@@ -320,7 +331,7 @@ router.get("/account/orders/:id", async (req: Request, res: Response) => {
     }
 
     const o = await response.json() as any;
-    if (o.customer_id !== sess.user.id) {
+    if (o.customer_id !== user.id) {
       res.status(403).json({ error: "Access denied" });
       return;
     }
@@ -351,7 +362,8 @@ router.get("/account/orders/:id", async (req: Request, res: Response) => {
 });
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
-  if ((req.session as any)?.user) {
+  const user = getUserFromRequest(req);
+  if (user) {
     next();
   } else {
     res.status(401).json({ error: "Unauthorized" });
@@ -367,7 +379,7 @@ router.post("/auth/admin-login", (req: Request, res: Response) => {
   }
   const { password } = req.body;
   if (password === ADMIN_PASSWORD) {
-    (req.session as any).isAdmin = true;
+    setAdminCookie(res);
     res.json({ success: true });
   } else {
     res.status(401).json({ error: "Invalid password" });
@@ -375,11 +387,11 @@ router.post("/auth/admin-login", (req: Request, res: Response) => {
 });
 
 router.get("/auth/admin-check", (req: Request, res: Response) => {
-  res.json({ authenticated: !!(req.session as any)?.isAdmin });
+  res.json({ authenticated: isAdminRequest(req) });
 });
 
 export function requireAdmin(req: Request, res: Response, next: NextFunction) {
-  if ((req.session as any)?.isAdmin) {
+  if (isAdminRequest(req)) {
     next();
   } else {
     res.status(401).json({ error: "Unauthorized" });

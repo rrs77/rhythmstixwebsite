@@ -1,6 +1,6 @@
 import express, { type Express } from "express";
 import cors from "cors";
-import session from "express-session";
+import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
@@ -26,19 +26,33 @@ app.use(
     },
   }),
 );
-const isProduction = process.env.NODE_ENV === "production";
-const trustedOrigins = process.env.REPLIT_DEV_DOMAIN
-  ? [`https://${process.env.REPLIT_DEV_DOMAIN}`]
-  : ["http://localhost:3000"];
+
+const allowedOrigins: string[] = [];
+
+if (process.env.REPLIT_DEV_DOMAIN) {
+  allowedOrigins.push(`https://${process.env.REPLIT_DEV_DOMAIN}`);
+}
 if (process.env.REPLIT_DOMAINS) {
   for (const d of process.env.REPLIT_DOMAINS.split(",")) {
-    trustedOrigins.push(`https://${d.trim()}`);
+    allowedOrigins.push(`https://${d.trim()}`);
   }
+}
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+if (process.env.VERCEL_URL) {
+  allowedOrigins.push(`https://${process.env.VERCEL_URL}`);
+}
+if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+  allowedOrigins.push(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`);
+}
+if (allowedOrigins.length === 0) {
+  allowedOrigins.push("http://localhost:3000", "http://localhost:5173");
 }
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || trustedOrigins.some((o) => origin.startsWith(o))) {
+    if (!origin || allowedOrigins.some((o) => origin === o)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -48,17 +62,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-  secret: process.env.SESSION_SECRET || "rhythmstix-session-secret",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: isProduction,
-    httpOnly: true,
-    sameSite: "lax",
-    maxAge: 24 * 60 * 60 * 1000,
-  },
-}));
+app.use(cookieParser());
 
 app.use("/api", router);
 

@@ -200,8 +200,9 @@ router.get("/shop/categories", async (_req: Request, res: Response) => {
 
 router.post("/shop/orders", async (req: Request, res: Response) => {
   try {
-    const session = (req as any).session;
-    if (!session?.user) {
+    const { getUserFromRequest } = await import("../lib/jwt");
+    const user = getUserFromRequest(req);
+    if (!user) {
       res.status(401).json({ error: "You must be logged in to place an order" });
       return;
     }
@@ -217,9 +218,9 @@ router.post("/shop/orders", async (req: Request, res: Response) => {
       payment_method_title: "Direct",
       set_paid: false,
       billing: {
-        first_name: session.user.first_name || "",
-        last_name: session.user.last_name || "",
-        email: session.user.email,
+        first_name: user.firstName || "",
+        last_name: user.lastName || "",
+        email: user.email,
       },
       line_items: [
         {
@@ -227,7 +228,7 @@ router.post("/shop/orders", async (req: Request, res: Response) => {
           quantity,
         },
       ],
-      customer_id: session.user.id || 0,
+      customer_id: user.id || 0,
     };
 
     const productRes = await wcFetch(`products/${productId}`);
@@ -275,13 +276,14 @@ router.post("/shop/orders", async (req: Request, res: Response) => {
 
 router.get("/shop/orders", async (req: Request, res: Response) => {
   try {
-    const session = (req as any).session;
-    if (!session?.user) {
+    const { getUserFromRequest } = await import("../lib/jwt");
+    const user = getUserFromRequest(req);
+    if (!user) {
       res.status(401).json({ error: "You must be logged in" });
       return;
     }
 
-    const customerId = session.user.id;
+    const customerId = user.id;
     if (!customerId) {
       res.json([]);
       return;
