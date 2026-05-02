@@ -23,6 +23,7 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import ForgotPassword from "@/pages/ForgotPassword";
 import Account from "@/pages/Account";
+import Admin from "@/pages/Admin";
 import NotFound from "@/pages/not-found";
 import { CookieConsent } from "@/components/CookieConsent";
 import { AdminBar } from "@/components/AdminBar";
@@ -50,6 +51,7 @@ function Router() {
       <Route path="/register" component={Register} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/account" component={Account} />
+      <Route path="/admin" component={Admin} />
       <Route path="/blog" component={BlogList} />
       <Route path="/post/:slug" component={BlogPost} />
       <Route path="/page/:slug" component={WPPage} />
