@@ -94,6 +94,7 @@ const KNOWN_ROUTES: Record<string, string> = {
   "e-learning": "/elearning",
   elearning: "/elearning",
   "rhythmstix-app": "/rhythmstix-app",
+  app: "/app",
   shop: "/shop",
   blog: "/blog",
   community: "/community",

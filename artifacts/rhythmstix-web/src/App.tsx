@@ -38,6 +38,7 @@ function Router() {
       <Route path="/perifeedback" component={PeriFeedback} />
       <Route path="/progresspath" component={ProgressPath} />
       <Route path="/rhythmstix-app" component={RhythmstixApp} />
+      <Route path="/app" component={RhythmstixApp} />
       <Route path="/elearning" component={ELearning} />
 
       <Route path="/community" component={Community} />
