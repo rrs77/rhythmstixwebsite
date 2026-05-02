@@ -12,3 +12,39 @@ id = "FFTld0QRM-PKVVkkFkbcb"
 uri = "file://rhythmstix-project.zip"
 type = "unspecified"
 title = "Rhythmstix Project (ZIP)"
+
+[[outputs]]
+id = "Av9lDL6sbNK5VtwqrcHHN"
+uri = "file://batch1-root-and-libs.zip"
+type = "unspecified"
+title = "Batch 1: Root config + lib + api + scripts (UPLOAD FIRST)"
+
+[[outputs]]
+id = "Ytv5DNHWIMgQ4ZR0M2Jj3"
+uri = "file://batch2-api-server.zip"
+type = "unspecified"
+title = "Batch 2: API Server"
+
+[[outputs]]
+id = "__FA6D7z0B9Pm_X0xQuTh"
+uri = "file://batch3-mockup-sandbox.zip"
+type = "unspecified"
+title = "Batch 3: Mockup Sandbox"
+
+[[outputs]]
+id = "qUma7dUlMY-6LMjmaiNaz"
+uri = "file://batch4-web-shell.zip"
+type = "unspecified"
+title = "Batch 4: Web App Config + Public Assets"
+
+[[outputs]]
+id = "xinsKkwzAGRQ0d8d8p2ve"
+uri = "file://batch5-web-components.zip"
+type = "unspecified"
+title = "Batch 5: Web Components"
+
+[[outputs]]
+id = "1V1RTrNQzN8nWx0ND7h2F"
+uri = "file://batch6-web-pages.zip"
+type = "unspecified"
+title = "Batch 6: Web Pages (UPLOAD LAST)"
