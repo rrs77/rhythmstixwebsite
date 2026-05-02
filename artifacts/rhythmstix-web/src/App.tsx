@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/Home";
 import WPPage from "@/pages/WPPage";
+import WPSlug from "@/pages/WPSlug";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
 import CCDesigner from "@/pages/CCDesigner";
@@ -51,6 +52,7 @@ function Router() {
       <Route path="/blog" component={BlogList} />
       <Route path="/post/:slug" component={BlogPost} />
       <Route path="/page/:slug" component={WPPage} />
+      <Route path="/:slug" component={WPSlug} />
       <Route component={NotFound} />
     </Switch>
   );

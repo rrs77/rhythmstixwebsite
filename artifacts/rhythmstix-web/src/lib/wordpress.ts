@@ -1,4 +1,10 @@
-const WP_BASE = "https://www.rhythmstix.co.uk/wp-json/wp/v2";
+const WP_SITE = (import.meta.env.VITE_WP_BASE_URL || "https://www.rhythmstix.co.uk").replace(/\/$/, "");
+const WP_BASE = `${WP_SITE}/wp-json/wp/v2`;
+const WP_HOST_PATTERN = new RegExp(
+  `^https?:\\/\\/(?:www\\.)?(?:${new URL(WP_SITE).hostname.replace(/^www\./, "").replace(/\./g, "\\.")}|rhythmstix\\.co\\.uk)`,
+  "i"
+);
+export const WP_LINK_PATTERN = WP_HOST_PATTERN;
 
 export interface WPPage {
   id: number;
@@ -102,7 +108,7 @@ export function rewriteWPLinks(html: string): string {
   );
 
   return html.replace(
-    /href=["'](https?:\/\/(?:www\.)?rhythmstix\.co\.uk)\/?([^"'#?]*)([^"']*)["']/gi,
+    /href=["'](https?:\/\/(?:www\.|cms\.)?rhythmstix\.co\.uk)\/?([^"'#?]*)([^"']*)["']/gi,
     (_match, _domain, path, extra) => {
       const cleanPath = path.replace(/\/$/, "").toLowerCase();
 
@@ -121,7 +127,7 @@ export function rewriteWPLinks(html: string): string {
         return `href="${fullRoute}${extra}"`;
       }
 
-      return `href="/page/${cleanPath}${extra}"`;
+      return `href="/${cleanPath}${extra}"`;
     }
   );
 }

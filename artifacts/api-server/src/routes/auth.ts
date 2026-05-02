@@ -16,7 +16,7 @@ import {
 } from "../lib/jwt";
 
 const router = Router();
-const WP_BASE = "https://www.rhythmstix.co.uk";
+const WP_BASE = (process.env.WP_BASE_URL || "https://www.rhythmstix.co.uk").replace(/\/$/, "");
 const WC_BASE = `${WP_BASE}/wp-json/wc/v3`;
 const WC_KEY = process.env.WC_CONSUMER_KEY || "";
 const WC_SECRET = process.env.WC_CONSUMER_SECRET || "";

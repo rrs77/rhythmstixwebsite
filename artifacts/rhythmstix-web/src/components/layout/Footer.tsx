@@ -36,11 +36,11 @@ export function Footer() {
               <ul className="grid grid-cols-2 gap-x-6 gap-y-1.5">
                 <li><Link href="/blog" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">Blog</Link></li>
                 <li><Link href="/shop" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">Shop</Link></li>
-                <li><Link href="/page/about" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">About Us</Link></li>
+                <li><Link href="/about" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">About Us</Link></li>
                 <li><Link href="/contact" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">Contact Us</Link></li>
-                <li><Link href="/page/policy" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">Privacy Notice</Link></li>
+                <li><Link href="/policy" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">Privacy Notice</Link></li>
                 <li><Link href="/cookies" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">Cookies</Link></li>
-                <li><Link href="/page/copyright-and-licenses" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">Copyright</Link></li>
+                <li><Link href="/copyright-and-licenses" className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">Copyright</Link></li>
               </ul>
             </div>
           </div>

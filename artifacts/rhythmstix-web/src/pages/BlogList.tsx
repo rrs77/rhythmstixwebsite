@@ -603,7 +603,7 @@ export default function BlogList() {
 
                           {post.source === "wordpress" ? (
                             <Link
-                              href={`/post/${post.slug}`}
+                              href={`/${post.slug}`}
                               className="group block"
                             >
                               <h2 className="text-lg font-semibold mb-1.5 text-foreground group-hover:text-[#3a9ca5] transition-colors">

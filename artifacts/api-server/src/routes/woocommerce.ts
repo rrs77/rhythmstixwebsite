@@ -2,7 +2,8 @@ import { Router, type Request, type Response } from "express";
 
 const router = Router();
 
-const WC_BASE = "https://www.rhythmstix.co.uk/wp-json/wc/v3";
+const WP_SITE = (process.env.WP_BASE_URL || "https://www.rhythmstix.co.uk").replace(/\/$/, "");
+const WC_BASE = `${WP_SITE}/wp-json/wc/v3`;
 const WC_KEY = process.env.WC_CONSUMER_KEY;
 const WC_SECRET = process.env.WC_CONSUMER_SECRET;
 
