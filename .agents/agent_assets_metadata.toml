@@ -48,3 +48,21 @@ id = "1V1RTrNQzN8nWx0ND7h2F"
 uri = "file://batch6-web-pages.zip"
 type = "unspecified"
 title = "Batch 6: Web Pages (UPLOAD LAST)"
+
+[[outputs]]
+id = "9iMxS220kw1wGaRHtal6E"
+uri = "file://batch4a-web-config.zip"
+type = "unspecified"
+title = "Batch 4a: Web App Config (15KB)"
+
+[[outputs]]
+id = "yOFnZPESh3mIgdqThCWXY"
+uri = "file://batch4b-web-public-1.zip"
+type = "unspecified"
+title = "Batch 4b: Web Public Images Part 1 (4.7MB)"
+
+[[outputs]]
+id = "fQBPt7IZd3855veXU85_Q"
+uri = "file://batch4c-web-public-2.zip"
+type = "unspecified"
+title = "Batch 4c: Web Public Images Part 2 (1.9MB)"
