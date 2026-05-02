@@ -6,3 +6,9 @@ id = "i6n8vQ5OSnE2gOS0YQhwy"
 uri = "file://rhythmstix-project.tar.gz"
 type = "unspecified"
 title = "Rhythmstix Project (Ready for Vercel)"
+
+[[outputs]]
+id = "FFTld0QRM-PKVVkkFkbcb"
+uri = "file://rhythmstix-project.zip"
+type = "unspecified"
+title = "Rhythmstix Project (ZIP)"
