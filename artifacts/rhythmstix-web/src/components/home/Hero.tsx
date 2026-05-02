@@ -36,6 +36,19 @@ export function Hero() {
             </span>
           </motion.div>
 
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3a9ca5]/80 mb-3"
+          >
+            <EditableText
+              contentKey="hero.eyebrow"
+              fallback="Music · Drama · Performing Arts"
+              as="span"
+            />
+          </motion.p>
+
           <motion.h1
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}

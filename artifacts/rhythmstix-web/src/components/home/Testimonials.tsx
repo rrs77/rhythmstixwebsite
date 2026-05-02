@@ -235,7 +235,7 @@ export function Testimonials() {
               >
                 <button
                   onClick={() => setSelectedTestimonial(testimonial)}
-                  className="w-full text-left bg-white rounded-xl p-5 border border-slate-100 hover:border-[#3a9ca5]/20 hover:shadow-md transition-all duration-300 flex flex-col h-full cursor-pointer"
+                  className="w-full text-left bg-white rounded-xl p-5 border border-slate-100 hover:border-[#3a9ca5]/30 hover:shadow-sm transition-colors duration-200 flex flex-col h-full cursor-pointer"
                 >
                   <Quote className="w-5 h-5 text-[#3a9ca5]/12 mb-2 rotate-180 shrink-0" />
                   <div className="text-xs text-foreground/90 leading-relaxed mb-4 flex-grow italic">

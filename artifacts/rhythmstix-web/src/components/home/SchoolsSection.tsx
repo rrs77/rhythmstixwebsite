@@ -27,7 +27,7 @@ const FREE_RESOURCES = [
     description: "A fun, interactive song for early years students to develop rhythm, coordination, and listening skills. Perfect for Reception and Year 1 classes, with actions and movement built in to keep young learners engaged.",
     image: "images/sneaky-creatures.png",
     tag: "Free Resource",
-    tagColor: "bg-emerald-500 text-white",
+    tagColor: "bg-[#4cb5bd] text-white",
     features: [
       "Rhythm and coordination activities",
       "Perfect for Reception & Year 1",
@@ -172,7 +172,7 @@ export function SchoolsSection() {
 
         <div className="text-center mt-12 mb-8">
           <h3 className="text-xl md:text-2xl font-bold mb-2 text-[#3a9ca5]">Free Resources</h3>
-          <div className="w-12 h-1 bg-gradient-to-r from-emerald-400 to-emerald-500 mx-auto rounded-full mb-3" />
+          <div className="w-12 h-1 bg-gradient-to-r from-[#4cb5bd] to-[#3a9ca5] mx-auto rounded-full mb-3" />
           <p className="text-muted-foreground max-w-xl mx-auto text-sm">
             Free music resources for your classroom — no purchase required.
           </p>

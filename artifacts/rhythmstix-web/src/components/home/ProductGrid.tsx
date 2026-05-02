@@ -26,8 +26,8 @@ const PRODUCTS = [
     title: "Assessify",
     description: "AI-powered reports, customisable rubrics, and detailed analytics for any subject.",
     icon: ClipboardCheck,
-    accentFrom: "#6366f1",
-    accentTo: "#4f46e5",
+    accentFrom: "#1e7a85",
+    accentTo: "#155a64",
     link: "/assessify",
   },
   {
@@ -35,8 +35,8 @@ const PRODUCTS = [
     title: "PeriFeedback",
     description: "Feedback and scheduling for peripatetic teachers and school departments.",
     icon: CalendarDays,
-    accentFrom: "#f59e0b",
-    accentTo: "#d97706",
+    accentFrom: "#4cb5bd",
+    accentTo: "#3a9ca5",
     link: "/perifeedback",
   },
   {
@@ -44,8 +44,8 @@ const PRODUCTS = [
     title: "ProgressPath",
     description: "Visualise student journeys and map clear progression routes.",
     icon: TrendingUp,
-    accentFrom: "#10b981",
-    accentTo: "#059669",
+    accentFrom: "#2d8890",
+    accentTo: "#1e7a85",
     link: "/progresspath",
   },
   {
@@ -53,8 +53,8 @@ const PRODUCTS = [
     title: "Teaching Portal",
     description: "Digital courses, resources, and interactive modules for modern education.",
     icon: GraduationCap,
-    accentFrom: "#ec4899",
-    accentTo: "#db2777",
+    accentFrom: "#5dc4cc",
+    accentTo: "#4cb5bd",
     link: "/elearning",
   },
 ];
@@ -71,7 +71,7 @@ function ProductCard({ product, index }: { product: typeof PRODUCTS[number]; ind
     >
       <Link
         href={product.link}
-        className="group block bg-card rounded-xl p-5 border border-border hover:border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full relative overflow-hidden"
+        className="group block bg-card rounded-xl p-5 border border-border hover:border-[#3a9ca5]/30 hover:shadow-md transition-all duration-200 h-full relative overflow-hidden"
       >
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
