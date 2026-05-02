@@ -40,6 +40,7 @@ An Express 5 server handling all API requests.
 A React application for the Rhythmstix platform.
 - **UI/UX:** Teal color scheme (`#3a9ca5`) matching the Rhythmstix brand. Utilizes Tailwind CSS and shadcn/ui components for a modern, responsive design. Framer Motion is used for animations.
 - **Content Integration:** Dynamically pulls content from `www.rhythmstix.co.uk` via the WordPress REST API.
+- **Custom Pages System:** Admins can create their own pages from `/admin → Pages` tab. Pages live in the `custom_pages` table (slug, title, template, jsonb data, published). Five templates available: Standard, Card Grid, Hero+Features, About/Bio, Contact. The `/:slug` route checks `/api/pages/by-slug/:slug` first (only returns published pages publicly), then falls back to WordPress. Admin GET `/api/pages` is `requireAdmin`-gated. Reserved slugs guard prevents shadowing app routes.
 - **Key Pages:**
     - **Homepage:** Features hero section, product grid, and testimonials.
     - **Shop:** Displays curated product families from WooCommerce with inline product details and "Add to Basket" functionality.

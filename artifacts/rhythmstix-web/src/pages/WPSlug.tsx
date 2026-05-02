@@ -4,6 +4,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { getPage, getPost, decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
 import { WPContent } from "@/components/WPContent";
+import { CustomPageRenderer, type PageTemplate, type PageData } from "@/components/CustomPageRenderer";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
@@ -35,6 +36,11 @@ export default function WPSlug() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["wp-slug", cleanSlug],
     queryFn: async () => {
+      const customRes = await fetch(`/api/pages/by-slug/${encodeURIComponent(cleanSlug)}`);
+      if (customRes.ok) {
+        const custom = await customRes.json();
+        return { type: "custom" as const, item: custom };
+      }
       const page = await getPage(cleanSlug);
       if (page) return { type: "page" as const, item: page };
       const post = await getPost(cleanSlug);
@@ -44,12 +50,27 @@ export default function WPSlug() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const item = data?.item;
+  const item = data && data.type !== "custom" ? (data.item as any) : undefined;
 
   const processedContent = useMemo(() => {
     if (!item?.content?.rendered) return "";
     return rewriteWPLinks(highlightProducts(item.content.rendered));
   }, [item]);
+
+  if (data?.type === "custom") {
+    const custom = data.item as { title: string; template: PageTemplate; data: PageData };
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navbar />
+        <main className="flex-grow pt-24 pb-16">
+          <div className="container mx-auto px-4">
+            <CustomPageRenderer template={custom.template} data={{ heading: custom.title, ...custom.data }} />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

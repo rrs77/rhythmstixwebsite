@@ -9,6 +9,7 @@ import woocommerceRouter from "./woocommerce";
 import contactRouter from "./contact";
 import forumRouter from "./forum";
 import socialRouter from "./social";
+import pagesRouter from "./pages";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(woocommerceRouter);
 router.use(contactRouter);
 router.use(forumRouter);
 router.use(socialRouter);
+router.use(pagesRouter);
 
 export default router;

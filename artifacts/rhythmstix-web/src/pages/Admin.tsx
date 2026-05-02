@@ -7,14 +7,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   FileText, MessageSquareQuote, Linkedin, Twitter, Youtube, Settings as SettingsIcon,
   Loader2, Lock, Plus, Trash2, Pencil, Save, X, Search, ExternalLink, Shield, Eye, EyeOff,
+  LayoutTemplate, Globe,
 } from "lucide-react";
+import { TEMPLATE_LABELS, type PageTemplate, type PageData, CustomPageRenderer } from "@/components/CustomPageRenderer";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-type TabKey = "copy" | "testimonials" | "linkedin" | "twitter" | "youtube" | "visibility" | "settings";
+type TabKey = "copy" | "pages" | "testimonials" | "linkedin" | "twitter" | "youtube" | "visibility" | "settings";
 
 const TABS: { key: TabKey; label: string; icon: any }[] = [
   { key: "copy", label: "Site Copy", icon: FileText },
+  { key: "pages", label: "Pages", icon: LayoutTemplate },
   { key: "testimonials", label: "Testimonials", icon: MessageSquareQuote },
   { key: "linkedin", label: "LinkedIn", icon: Linkedin },
   { key: "twitter", label: "Twitter / X", icon: Twitter },
@@ -75,6 +78,7 @@ export default function Admin() {
 
             <div className="bg-card rounded-2xl border border-border p-6 min-h-[400px]">
               {tab === "copy" && <CopyTab />}
+              {tab === "pages" && <PagesTab />}
               {tab === "testimonials" && <TestimonialsTab />}
               {tab === "linkedin" && <LinkedInTab />}
               {tab === "twitter" && <TwitterTab />}
@@ -876,6 +880,323 @@ function SettingsTab() {
           Logout
         </Button>
       </div>
+    </div>
+  );
+}
+
+/* ========== PAGES TAB ========== */
+interface CustomPage {
+  id: number;
+  slug: string;
+  title: string;
+  template: PageTemplate;
+  data: PageData;
+  published: boolean;
+  updatedAt: string;
+}
+
+const TEMPLATE_DEFAULTS: Record<PageTemplate, PageData> = {
+  standard: { eyebrow: "", intro: "", body: "" },
+  cards:    { eyebrow: "", intro: "", cards: [{ title: "Card title", description: "Card description.", href: "" }] },
+  features: { eyebrow: "", intro: "", features: [{ title: "Feature", description: "Feature detail." }], ctaLabel: "", ctaHref: "" },
+  about:    { eyebrow: "", intro: "", body: "", imageUrl: "", ctaLabel: "", ctaHref: "" },
+  contact:  { eyebrow: "", intro: "", email: "", phone: "", address: "", body: "" },
+};
+
+function PagesTab() {
+  const queryClient = useQueryClient();
+  const { data: pages = [], isLoading } = useQuery<CustomPage[]>({
+    queryKey: ["admin-pages"],
+    queryFn: async () => {
+      const res = await fetch("/api/pages");
+      return res.json();
+    },
+  });
+
+  const [editing, setEditing] = useState<CustomPage | "new" | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [form, setForm] = useState<{ slug: string; title: string; template: PageTemplate; data: PageData; published: boolean }>({
+    slug: "", title: "", template: "standard", data: TEMPLATE_DEFAULTS.standard, published: true,
+  });
+  const [error, setError] = useState("");
+
+  function startNew() {
+    setForm({ slug: "", title: "", template: "standard", data: { ...TEMPLATE_DEFAULTS.standard }, published: true });
+    setError("");
+    setEditing("new");
+  }
+
+  function startEdit(p: CustomPage) {
+    setForm({ slug: p.slug, title: p.title, template: p.template, data: { ...TEMPLATE_DEFAULTS[p.template], ...p.data }, published: p.published });
+    setError("");
+    setEditing(p);
+  }
+
+  function changeTemplate(t: PageTemplate) {
+    setForm((f) => ({ ...f, template: t, data: { ...TEMPLATE_DEFAULTS[t], ...f.data } }));
+  }
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const isNew = editing === "new";
+      const url = isNew ? "/api/pages" : `/api/pages/${(editing as CustomPage).id}`;
+      const res = await fetch(url, {
+        method: isNew ? "POST" : "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(form),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Save failed");
+      return json;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-pages"] });
+      queryClient.invalidateQueries({ queryKey: ["wp-slug"] });
+      setEditing(null);
+      setError("");
+    },
+    onError: (e: any) => setError(e.message || "Save failed"),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await fetch(`/api/pages/${id}`, { method: "DELETE", credentials: "include" });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-pages"] }),
+  });
+
+  if (editing !== null) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold">{editing === "new" ? "New Page" : `Edit: ${(editing as CustomPage).title}`}</h2>
+            <p className="text-sm text-muted-foreground">Choose a template, fill in the fields, then save. The page will appear at <code className="text-[#3a9ca5]">/{form.slug || "your-slug"}</code>.</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setPreviewOpen((v) => !v)}>
+              <Eye className="w-4 h-4 mr-1" /> {previewOpen ? "Hide" : "Preview"}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => { setEditing(null); setPreviewOpen(false); }}>Cancel</Button>
+            <Button size="sm" disabled={saveMutation.isPending || !form.title.trim()} onClick={() => saveMutation.mutate()} className="bg-[#3a9ca5] hover:bg-[#2d8890] text-white">
+              {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : (<><Save className="w-4 h-4 mr-1" /> Save</>)}
+            </Button>
+          </div>
+        </div>
+
+        {error && <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2">{error}</div>}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs font-semibold uppercase text-muted-foreground">Title</label>
+            <input
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value, slug: form.slug || e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") })}
+              placeholder="About our team"
+              className="w-full mt-1 px-3 py-2 rounded border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold uppercase text-muted-foreground">URL slug</label>
+            <div className="flex items-center gap-1 mt-1">
+              <span className="text-xs text-muted-foreground">/</span>
+              <input
+                value={form.slug}
+                onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                placeholder="about-our-team"
+                className="flex-grow px-3 py-2 rounded border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 font-mono"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="text-xs font-semibold uppercase text-muted-foreground mb-2 block">Template</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            {(Object.keys(TEMPLATE_LABELS) as PageTemplate[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => changeTemplate(t)}
+                className={cn(
+                  "text-left border rounded-lg p-3 transition-colors",
+                  form.template === t ? "border-[#3a9ca5] bg-[#3a9ca5]/5" : "border-border hover:border-[#3a9ca5]/50"
+                )}
+              >
+                <div className="text-sm font-semibold mb-0.5">{TEMPLATE_LABELS[t].label}</div>
+                <div className="text-xs text-muted-foreground">{TEMPLATE_LABELS[t].description}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <PageFieldsEditor template={form.template} data={form.data} onChange={(d) => setForm({ ...form, data: d })} />
+
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} className="rounded" />
+          <span>Published (visible to visitors)</span>
+        </label>
+
+        {previewOpen && (
+          <div className="border-2 border-dashed border-[#3a9ca5]/30 rounded-lg p-4 bg-background">
+            <div className="text-xs font-semibold uppercase text-muted-foreground mb-3">Live preview</div>
+            <CustomPageRenderer template={form.template} data={{ heading: form.title, ...form.data }} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold">Pages</h2>
+          <p className="text-sm text-muted-foreground">Create custom pages from templates. Each page gets its own URL on the site.</p>
+        </div>
+        <Button onClick={startNew} className="bg-[#3a9ca5] hover:bg-[#2d8890] text-white">
+          <Plus className="w-4 h-4 mr-1" /> New Page
+        </Button>
+      </div>
+
+      {isLoading && <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-[#3a9ca5]" /></div>}
+
+      {!isLoading && pages.length === 0 && (
+        <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+          <LayoutTemplate className="w-10 h-10 text-muted-foreground/40 mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">No custom pages yet. Click <strong>New Page</strong> to create one.</p>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        {pages.map((p) => (
+          <div key={p.id} className="border border-border rounded-lg p-3 flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-grow">
+              <div className="flex items-center gap-2 mb-0.5">
+                <h3 className="font-medium text-sm truncate">{p.title}</h3>
+                {!p.published && <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 font-medium">Draft</span>}
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#3a9ca5]/10 text-[#3a9ca5] font-medium">{TEMPLATE_LABELS[p.template]?.label || p.template}</span>
+              </div>
+              <code className="text-xs text-muted-foreground">/{p.slug}</code>
+            </div>
+            <div className="flex gap-1 shrink-0">
+              <a href={`/${p.slug}`} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded hover:bg-secondary text-muted-foreground" title="View"><Globe className="w-4 h-4" /></a>
+              <button onClick={() => startEdit(p)} className="p-1.5 rounded hover:bg-[#3a9ca5]/10 text-muted-foreground hover:text-[#3a9ca5]" title="Edit"><Pencil className="w-4 h-4" /></button>
+              <button onClick={() => { if (confirm(`Delete the "${p.title}" page? This cannot be undone.`)) deleteMutation.mutate(p.id); }} className="p-1.5 rounded hover:bg-red-50 text-muted-foreground hover:text-red-600" title="Delete"><Trash2 className="w-4 h-4" /></button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PageFieldsEditor({ template, data, onChange }: { template: PageTemplate; data: PageData; onChange: (d: PageData) => void }) {
+  function set<K extends keyof PageData>(key: K, value: PageData[K]) {
+    onChange({ ...data, [key]: value });
+  }
+  const inputCls = "w-full px-3 py-2 rounded border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30";
+  const labelCls = "text-xs font-semibold uppercase text-muted-foreground mb-1 block";
+
+  return (
+    <div className="border border-border rounded-lg p-4 space-y-3 bg-secondary/30">
+      <div className="text-xs font-semibold uppercase text-muted-foreground">Page content</div>
+
+      <div>
+        <label className={labelCls}>Eyebrow (small label above the title)</label>
+        <input value={data.eyebrow || ""} onChange={(e) => set("eyebrow", e.target.value)} placeholder="OUR STORY" className={inputCls} />
+      </div>
+      <div>
+        <label className={labelCls}>Intro paragraph</label>
+        <textarea value={data.intro || ""} onChange={(e) => set("intro", e.target.value)} rows={2} placeholder="A short summary that appears below the title." className={inputCls} />
+      </div>
+
+      {(template === "standard" || template === "about" || template === "contact") && (
+        <div>
+          <label className={labelCls}>Body text</label>
+          <textarea value={data.body || ""} onChange={(e) => set("body", e.target.value)} rows={8} placeholder="Write your page content here. Line breaks are preserved." className={inputCls} />
+        </div>
+      )}
+
+      {template === "about" && (
+        <div>
+          <label className={labelCls}>Image URL (optional)</label>
+          <input value={data.imageUrl || ""} onChange={(e) => set("imageUrl", e.target.value)} placeholder="https://..." className={inputCls} />
+        </div>
+      )}
+
+      {(template === "features" || template === "about") && (
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className={labelCls}>CTA button label</label>
+            <input value={data.ctaLabel || ""} onChange={(e) => set("ctaLabel", e.target.value)} placeholder="Get in touch" className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>CTA button link</label>
+            <input value={data.ctaHref || ""} onChange={(e) => set("ctaHref", e.target.value)} placeholder="/contact" className={inputCls} />
+          </div>
+        </div>
+      )}
+
+      {template === "contact" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label className={labelCls}>Email</label>
+            <input value={data.email || ""} onChange={(e) => set("email", e.target.value)} placeholder="info@example.com" className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>Phone</label>
+            <input value={data.phone || ""} onChange={(e) => set("phone", e.target.value)} placeholder="01245 633 231" className={inputCls} />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={labelCls}>Address</label>
+            <textarea value={data.address || ""} onChange={(e) => set("address", e.target.value)} rows={2} className={inputCls} />
+          </div>
+        </div>
+      )}
+
+      {template === "cards" && (
+        <div>
+          <label className={labelCls}>Cards</label>
+          <div className="space-y-2">
+            {(data.cards || []).map((card, i) => (
+              <div key={i} className="border border-border rounded p-3 bg-background space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-muted-foreground">Card {i + 1}</span>
+                  <button onClick={() => set("cards", (data.cards || []).filter((_, j) => j !== i))} className="text-red-600 hover:bg-red-50 p-1 rounded"><Trash2 className="w-3.5 h-3.5" /></button>
+                </div>
+                <input value={card.title} onChange={(e) => set("cards", (data.cards || []).map((c, j) => j === i ? { ...c, title: e.target.value } : c))} placeholder="Card title" className={inputCls} />
+                <textarea value={card.description} onChange={(e) => set("cards", (data.cards || []).map((c, j) => j === i ? { ...c, description: e.target.value } : c))} rows={2} placeholder="Card description" className={inputCls} />
+                <input value={card.href || ""} onChange={(e) => set("cards", (data.cards || []).map((c, j) => j === i ? { ...c, href: e.target.value } : c))} placeholder="Optional link, e.g. /shop" className={inputCls} />
+              </div>
+            ))}
+          </div>
+          <Button size="sm" variant="outline" onClick={() => set("cards", [...(data.cards || []), { title: "", description: "", href: "" }])} className="mt-2">
+            <Plus className="w-3.5 h-3.5 mr-1" /> Add card
+          </Button>
+        </div>
+      )}
+
+      {template === "features" && (
+        <div>
+          <label className={labelCls}>Features</label>
+          <div className="space-y-2">
+            {(data.features || []).map((f, i) => (
+              <div key={i} className="border border-border rounded p-3 bg-background space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-muted-foreground">Feature {i + 1}</span>
+                  <button onClick={() => set("features", (data.features || []).filter((_, j) => j !== i))} className="text-red-600 hover:bg-red-50 p-1 rounded"><Trash2 className="w-3.5 h-3.5" /></button>
+                </div>
+                <input value={f.title} onChange={(e) => set("features", (data.features || []).map((x, j) => j === i ? { ...x, title: e.target.value } : x))} placeholder="Feature title" className={inputCls} />
+                <textarea value={f.description} onChange={(e) => set("features", (data.features || []).map((x, j) => j === i ? { ...x, description: e.target.value } : x))} rows={2} placeholder="Feature description" className={inputCls} />
+              </div>
+            ))}
+          </div>
+          <Button size="sm" variant="outline" onClick={() => set("features", [...(data.features || []), { title: "", description: "" }])} className="mt-2">
+            <Plus className="w-3.5 h-3.5 mr-1" /> Add feature
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
