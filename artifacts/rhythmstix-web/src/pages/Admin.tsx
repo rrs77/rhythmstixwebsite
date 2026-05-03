@@ -7,18 +7,19 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   FileText, MessageSquareQuote, Linkedin, Twitter, Youtube, Settings as SettingsIcon,
   Loader2, Lock, Plus, Trash2, Pencil, Save, X, Search, ExternalLink, Shield, Eye, EyeOff,
-  LayoutTemplate, Globe, AppWindow, ArrowUp, ArrowDown,
+  LayoutTemplate, Globe, AppWindow, ArrowUp, ArrowDown, Menu as MenuIcon,
 } from "lucide-react";
 import { TEMPLATE_LABELS, type PageTemplate, type PageData, CustomPageRenderer } from "@/components/CustomPageRenderer";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-type TabKey = "copy" | "apps" | "pages" | "testimonials" | "linkedin" | "twitter" | "youtube" | "visibility" | "settings";
+type TabKey = "copy" | "apps" | "pages" | "navigation" | "testimonials" | "linkedin" | "twitter" | "youtube" | "visibility" | "settings";
 
 const TABS: { key: TabKey; label: string; icon: any }[] = [
   { key: "copy", label: "Site Copy", icon: FileText },
   { key: "apps", label: "Apps", icon: AppWindow },
   { key: "pages", label: "Pages", icon: LayoutTemplate },
+  { key: "navigation", label: "Navigation & Footer", icon: MenuIcon },
   { key: "testimonials", label: "Testimonials", icon: MessageSquareQuote },
   { key: "linkedin", label: "LinkedIn", icon: Linkedin },
   { key: "twitter", label: "Twitter / X", icon: Twitter },
@@ -81,6 +82,7 @@ export default function Admin() {
               {tab === "copy" && <CopyTab />}
               {tab === "apps" && <AppsTab />}
               {tab === "pages" && <PagesTab />}
+              {tab === "navigation" && <NavigationTab />}
               {tab === "testimonials" && <TestimonialsTab />}
               {tab === "linkedin" && <LinkedInTab />}
               {tab === "twitter" && <TwitterTab />}
@@ -1474,6 +1476,239 @@ function AppsTab() {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+/* ========== NAVIGATION & FOOTER TAB ========== */
+interface NavLinkRow {
+  id: number;
+  label: string;
+  href: string;
+  group: string;
+  sortOrder: number;
+}
+
+const NAV_GROUPS: { key: string; label: string; description: string }[] = [
+  { key: "main", label: "Top navigation menu", description: "The header menu at the top of every page." },
+  { key: "footer", label: "Footer links", description: "The grid of links in the site footer." },
+];
+
+const FALLBACK_NAV_DEFAULTS: Record<string, { label: string; href: string }[]> = {
+  main: [
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Teaching Portal", href: "https://app.rhythmstix.co.uk/" },
+    { label: "Community", href: "/community" },
+    { label: "Shop", href: "/shop" },
+    { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
+  ],
+  footer: [
+    { label: "Blog", href: "/blog" },
+    { label: "Shop", href: "/shop" },
+    { label: "About Us", href: "/about" },
+    { label: "Contact Us", href: "/contact" },
+    { label: "Privacy Notice", href: "/policy" },
+    { label: "Cookies", href: "/cookies" },
+    { label: "Copyright", href: "/copyright-and-licenses" },
+  ],
+};
+
+function NavigationTab() {
+  const queryClient = useQueryClient();
+  const { data: links = [], isLoading } = useQuery<NavLinkRow[]>({
+    queryKey: ["admin-nav-links"],
+    queryFn: async () => {
+      const res = await fetch("/api/nav-links", { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load navigation");
+      const json = await res.json();
+      return Array.isArray(json) ? json : [];
+    },
+  });
+
+  const [error, setError] = useState("");
+
+  const createMutation = useMutation({
+    mutationFn: async (body: { label: string; href: string; group: string; sortOrder: number }) => {
+      const res = await fetch("/api/nav-links", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error("Create failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-nav-links"] });
+      queryClient.invalidateQueries({ queryKey: ["nav-links"] });
+    },
+    onError: (e: any) => setError(e.message),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, ...body }: { id: number; label: string; href: string; group: string; sortOrder: number }) => {
+      const res = await fetch(`/api/nav-links/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error("Update failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-nav-links"] });
+      queryClient.invalidateQueries({ queryKey: ["nav-links"] });
+    },
+    onError: (e: any) => setError(e.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const res = await fetch(`/api/nav-links/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error("Delete failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-nav-links"] });
+      queryClient.invalidateQueries({ queryKey: ["nav-links"] });
+    },
+    onError: (e: any) => setError(e.message),
+  });
+
+  function seedDefaults(group: string) {
+    const defaults = FALLBACK_NAV_DEFAULTS[group] || [];
+    defaults.forEach((d, i) => {
+      createMutation.mutate({ label: d.label, href: d.href, group, sortOrder: (i + 1) * 10 });
+    });
+  }
+
+  const inputCls = "w-full px-3 py-2 rounded border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30";
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold flex items-center gap-2"><MenuIcon className="w-5 h-5" /> Navigation & Footer</h2>
+        <p className="text-sm text-muted-foreground">Manage the links shown in the top menu and the footer. Use full URLs (https://...) for external links, or paths starting with "/" for internal pages.</p>
+      </div>
+
+      {error && <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2">{error}</div>}
+      {isLoading && <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-[#3a9ca5]" /></div>}
+
+      {NAV_GROUPS.map((group) => {
+        const groupLinks = links.filter((l) => l.group === group.key).sort((a, b) => a.sortOrder - b.sortOrder);
+        return (
+          <div key={group.key} className="border border-border rounded-lg p-4 space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold">{group.label}</h3>
+                <p className="text-xs text-muted-foreground">{group.description}</p>
+              </div>
+              {groupLinks.length === 0 && (
+                <button
+                  onClick={() => seedDefaults(group.key)}
+                  className="text-xs px-2 py-1 rounded border border-[#3a9ca5]/30 text-[#3a9ca5] hover:bg-[#3a9ca5]/5"
+                  disabled={createMutation.isPending}
+                >
+                  Add starter links
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              {groupLinks.map((link, i) => (
+                <NavLinkRowEditor
+                  key={link.id}
+                  link={link}
+                  isFirst={i === 0}
+                  isLast={i === groupLinks.length - 1}
+                  onSave={(patch) => updateMutation.mutate({ id: link.id, label: patch.label, href: patch.href, group: link.group, sortOrder: patch.sortOrder })}
+                  onDelete={() => { if (confirm(`Remove "${link.label}"?`)) deleteMutation.mutate(link.id); }}
+                  onMove={(dir) => {
+                    const swap = groupLinks[i + dir];
+                    if (!swap) return;
+                    updateMutation.mutate({ id: link.id, label: link.label, href: link.href, group: link.group, sortOrder: swap.sortOrder });
+                    updateMutation.mutate({ id: swap.id, label: swap.label, href: swap.href, group: swap.group, sortOrder: link.sortOrder });
+                  }}
+                />
+              ))}
+            </div>
+
+            <NewNavLinkRow
+              group={group.key}
+              defaultSort={(groupLinks.at(-1)?.sortOrder ?? 0) + 10}
+              onAdd={(label, href, sortOrder) => createMutation.mutate({ label, href, group: group.key, sortOrder })}
+              isPending={createMutation.isPending}
+              inputCls={inputCls}
+            />
+          </div>
+        );
+      })}
+
+      <div className="border border-dashed border-border rounded-lg p-3 text-xs text-muted-foreground">
+        Tip: footer contact info, address, phone, email and social URLs are editable directly on any public page — log in via the shield icon at the bottom right, then hover the text to reveal the pencil button.
+      </div>
+    </div>
+  );
+}
+
+function NavLinkRowEditor({
+  link, isFirst, isLast, onSave, onDelete, onMove,
+}: {
+  link: NavLinkRow;
+  isFirst: boolean;
+  isLast: boolean;
+  onSave: (patch: { label: string; href: string; sortOrder: number }) => void;
+  onDelete: () => void;
+  onMove: (dir: -1 | 1) => void;
+}) {
+  const [label, setLabel] = useState(link.label);
+  const [href, setHref] = useState(link.href);
+  const dirty = label !== link.label || href !== link.href;
+  const inputCls = "px-2 py-1.5 rounded border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30";
+  return (
+    <div className="grid grid-cols-[1fr_2fr_auto] gap-2 items-center">
+      <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Label" className={inputCls} />
+      <input value={href} onChange={(e) => setHref(e.target.value)} placeholder="/path or https://..." className={cn(inputCls, "font-mono text-xs")} />
+      <div className="flex gap-0.5">
+        <button onClick={() => onMove(-1)} disabled={isFirst} className="p-1.5 rounded hover:bg-secondary text-muted-foreground disabled:opacity-30" title="Move up"><ArrowUp className="w-4 h-4" /></button>
+        <button onClick={() => onMove(1)} disabled={isLast} className="p-1.5 rounded hover:bg-secondary text-muted-foreground disabled:opacity-30" title="Move down"><ArrowDown className="w-4 h-4" /></button>
+        <button
+          onClick={() => dirty && onSave({ label: label.trim(), href: href.trim(), sortOrder: link.sortOrder })}
+          disabled={!dirty || !label.trim() || !href.trim()}
+          className="p-1.5 rounded hover:bg-[#3a9ca5]/10 text-muted-foreground hover:text-[#3a9ca5] disabled:opacity-30"
+          title="Save changes"
+        >
+          <Save className="w-4 h-4" />
+        </button>
+        <button onClick={onDelete} className="p-1.5 rounded hover:bg-red-50 text-muted-foreground hover:text-red-600" title="Remove"><Trash2 className="w-4 h-4" /></button>
+      </div>
+    </div>
+  );
+}
+
+function NewNavLinkRow({
+  group, defaultSort, onAdd, isPending, inputCls,
+}: {
+  group: string;
+  defaultSort: number;
+  onAdd: (label: string, href: string, sortOrder: number) => void;
+  isPending: boolean;
+  inputCls: string;
+}) {
+  const [label, setLabel] = useState("");
+  const [href, setHref] = useState("");
+  const valid = label.trim().length > 0 && href.trim().length > 0;
+  function add() {
+    if (!valid) return;
+    onAdd(label.trim(), href.trim(), defaultSort);
+    setLabel("");
+    setHref("");
+  }
+  return (
+    <div className="grid grid-cols-[1fr_2fr_auto] gap-2 items-center pt-2 border-t border-dashed border-border">
+      <input value={label} onChange={(e) => setLabel(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") add(); }} placeholder={`Add to ${group} (label)`} className={inputCls} />
+      <input value={href} onChange={(e) => setHref(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") add(); }} placeholder="/path or https://..." className={cn(inputCls, "font-mono text-xs")} />
+      <Button size="sm" onClick={add} disabled={!valid || isPending} className="bg-[#3a9ca5] hover:bg-[#2d8890] text-white"><Plus className="w-3.5 h-3.5 mr-1" /> Add</Button>
     </div>
   );
 }

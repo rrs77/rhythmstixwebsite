@@ -1,15 +1,24 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X, User, LogIn } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
 
-const NAV_LINKS = [
+interface NavLink {
+  id: number;
+  label: string;
+  href: string;
+  group: string;
+  sortOrder: number;
+}
+
+const FALLBACK_LINKS: Pick<NavLink, "label" | "href">[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Teaching Portal", href: "https://app.rhythmstix.co.uk/", external: true },
+  { label: "Teaching Portal", href: "https://app.rhythmstix.co.uk/" },
   { label: "Community", href: "/community" },
   { label: "Shop", href: "/shop" },
   { label: "Blog", href: "/blog" },
@@ -21,11 +30,29 @@ function isActive(linkHref: string, pathname: string): boolean {
   return pathname.startsWith(linkHref);
 }
 
+function isExternal(href: string): boolean {
+  return /^https?:\/\//i.test(href);
+}
+
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user } = useAuth();
   const [location] = useLocation();
+
+  const { data: navLinks } = useQuery<NavLink[]>({
+    queryKey: ["nav-links"],
+    queryFn: async () => {
+      const res = await fetch("/api/nav-links");
+      if (!res.ok) throw new Error("nav links fetch failed");
+      const json = await res.json();
+      return Array.isArray(json) ? json : [];
+    },
+    staleTime: 60_000,
+  });
+
+  const mainLinks = (navLinks ?? []).filter((l) => l.group === "main");
+  const links: Pick<NavLink, "label" | "href">[] = mainLinks.length > 0 ? mainLinks : FALLBACK_LINKS;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -51,13 +78,14 @@ export function Navbar() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 mr-auto">
-            {NAV_LINKS.map((link) => {
-              const active = !(link as any).external && isActive(link.href, location);
+            {links.map((link) => {
+              const ext = isExternal(link.href);
+              const active = !ext && isActive(link.href, location);
               const cls = cn(
                 "text-sm font-medium transition-colors",
                 active ? "text-[#3a9ca5] font-semibold" : "text-muted-foreground hover:text-[#3a9ca5]"
               );
-              return (link as any).external ? (
+              return ext ? (
                 <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={cls}>
                   {link.label}
                 </a>
@@ -106,8 +134,9 @@ export function Navbar() {
             className="md:hidden bg-card/98 backdrop-blur-xl border-b border-border overflow-hidden"
           >
             <div className="container mx-auto px-4 py-6 flex flex-col gap-2">
-              {NAV_LINKS.map((link) =>
-                (link as any).external ? (
+              {links.map((link) => {
+                const ext = isExternal(link.href);
+                return ext ? (
                   <a
                     key={link.label}
                     href={link.href}
@@ -127,25 +156,8 @@ export function Navbar() {
                   >
                     {link.label}
                   </Link>
-                )
-              )}
-
-              <div className="border-t border-border mt-2 pt-2 flex flex-col gap-2">
-                <Link
-                  href="/blog"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-base font-medium text-foreground py-3 px-2"
-                >
-                  Blog
-                </Link>
-                <Link
-                  href="/shop"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-base font-medium text-foreground py-3 px-2"
-                >
-                  Shop
-                </Link>
-              </div>
+                );
+              })}
 
               {isAuthenticated ? (
                 <Button className="mt-4 w-full" asChild>
