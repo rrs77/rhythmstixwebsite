@@ -27,6 +27,7 @@ import Admin from "@/pages/Admin";
 import NotFound from "@/pages/not-found";
 import { CookieConsent } from "@/components/CookieConsent";
 import { AdminBar } from "@/components/AdminBar";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -50,7 +51,11 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/forgot-password" component={ForgotPassword} />
-      <Route path="/account" component={Account} />
+      <Route path="/account">
+        <ProtectedRoute require="user">
+          <Account />
+        </ProtectedRoute>
+      </Route>
       <Route path="/admin" component={Admin} />
       <Route path="/blog" component={BlogList} />
       <Route path="/post/:slug" component={BlogPost} />

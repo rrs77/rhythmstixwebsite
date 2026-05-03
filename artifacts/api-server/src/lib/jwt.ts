@@ -1,12 +1,13 @@
 import jwt from "jsonwebtoken";
 import type { Request, Response } from "express";
 
-const JWT_SECRET = process.env.SESSION_SECRET || process.env.JWT_SECRET || (() => {
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("SESSION_SECRET or JWT_SECRET environment variable is required in production");
-  }
-  return "rhythmstix-dev-only-secret";
-})();
+const SECRET_FROM_ENV = process.env.SESSION_SECRET || process.env.JWT_SECRET;
+if (!SECRET_FROM_ENV) {
+  throw new Error(
+    "SESSION_SECRET (or JWT_SECRET) environment variable is required",
+  );
+}
+const JWT_SECRET: string = SECRET_FROM_ENV;
 const COOKIE_NAME = "rx_token";
 const ADMIN_COOKIE = "rx_admin";
 const MAX_AGE = 24 * 60 * 60;

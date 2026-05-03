@@ -3,6 +3,13 @@ import { db } from "@workspace/db";
 import { forumCategoriesTable, forumTopicsTable, forumRepliesTable } from "@workspace/db/schema";
 import { eq, desc, asc, sql } from "drizzle-orm";
 import { requireAdmin } from "./auth";
+import { getUserFromRequest, isAdminRequest } from "../lib/jwt";
+
+function safeAuthorName(input: unknown): string {
+  if (typeof input !== "string") return "Anonymous";
+  const trimmed = input.trim().slice(0, 60);
+  return trimmed.length > 0 ? trimmed : "Anonymous";
+}
 
 const router = Router();
 
@@ -96,23 +103,40 @@ router.get("/forum/topics/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/forum/topics", async (req: Request, res: Response) => {
-  const { getUserFromRequest, isAdminRequest } = await import("../lib/jwt");
   const isAdmin = isAdminRequest(req);
   const user = getUserFromRequest(req);
 
   const { categoryId, title, content, authorName } = req.body;
-  if (!categoryId || !title || !content) {
-    res.status(400).json({ error: "categoryId, title, and content are required" });
+  const catId = Number(categoryId);
+  if (!Number.isInteger(catId) || catId <= 0 || typeof title !== "string" || typeof content !== "string") {
+    res.status(400).json({ error: "categoryId (integer), title, and content are required" });
+    return;
+  }
+  const trimmedTitle = title.trim().slice(0, 200);
+  const trimmedContent = content.trim().slice(0, 20_000);
+  if (!trimmedTitle || !trimmedContent) {
+    res.status(400).json({ error: "title and content cannot be empty" });
     return;
   }
 
-  const name = isAdmin ? "Admin" : (authorName || user?.firstName || "Anonymous");
+  const [category] = await db.select({ id: forumCategoriesTable.id })
+    .from(forumCategoriesTable).where(eq(forumCategoriesTable.id, catId));
+  if (!category) {
+    res.status(400).json({ error: "Invalid categoryId" });
+    return;
+  }
+
+  const name = isAdmin
+    ? "Admin"
+    : user
+      ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.username || "User"
+      : safeAuthorName(authorName);
   const email = user?.email || "";
 
   const [topic] = await db.insert(forumTopicsTable).values({
-    categoryId,
-    title,
-    content,
+    categoryId: catId,
+    title: trimmedTitle,
+    content: trimmedContent,
     authorName: name,
     authorEmail: email,
   }).returning();
@@ -143,17 +167,22 @@ router.delete("/forum/topics/:id", requireAdmin, async (req: Request, res: Respo
 });
 
 router.post("/forum/replies", async (req: Request, res: Response) => {
-  const { getUserFromRequest, isAdminRequest } = await import("../lib/jwt");
   const isAdmin = isAdminRequest(req);
   const user = getUserFromRequest(req);
 
   const { topicId, content, authorName } = req.body;
-  if (!topicId || !content) {
-    res.status(400).json({ error: "topicId and content are required" });
+  const tid = Number(topicId);
+  if (!Number.isInteger(tid) || tid <= 0 || typeof content !== "string") {
+    res.status(400).json({ error: "topicId (integer) and content are required" });
+    return;
+  }
+  const trimmedContent = content.trim().slice(0, 20_000);
+  if (!trimmedContent) {
+    res.status(400).json({ error: "content cannot be empty" });
     return;
   }
 
-  const [topic] = await db.select().from(forumTopicsTable).where(eq(forumTopicsTable.id, topicId));
+  const [topic] = await db.select().from(forumTopicsTable).where(eq(forumTopicsTable.id, tid));
   if (!topic) {
     res.status(404).json({ error: "Topic not found" });
     return;
@@ -163,19 +192,23 @@ router.post("/forum/replies", async (req: Request, res: Response) => {
     return;
   }
 
-  const name = isAdmin ? "Admin" : (authorName || user?.firstName || "Anonymous");
+  const name = isAdmin
+    ? "Admin"
+    : user
+      ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.username || "User"
+      : safeAuthorName(authorName);
   const email = user?.email || "";
 
   const [reply] = await db.insert(forumRepliesTable).values({
-    topicId,
-    content,
+    topicId: tid,
+    content: trimmedContent,
     authorName: name,
     authorEmail: email,
   }).returning();
 
   await db.update(forumTopicsTable)
     .set({ updatedAt: new Date() })
-    .where(eq(forumTopicsTable.id, topicId));
+    .where(eq(forumTopicsTable.id, tid));
 
   res.json(reply);
 });
