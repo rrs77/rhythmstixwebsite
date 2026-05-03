@@ -1,0 +1,22 @@
+# Skip artifacts the production deploy doesn't need.
+# These are dev-only tools that would slow installs and bloat the deploy.
+artifacts/mockup-sandbox
+
+# Local-only tooling and state
+.local
+.replit
+replit.md
+attached_assets
+
+# Test / log output
+**/coverage
+**/*.log
+.cache
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
