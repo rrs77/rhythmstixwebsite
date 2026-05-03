@@ -61,13 +61,13 @@ export default function Register() {
             transition={{ duration: 0.5 }}
           >
             <div className="text-center mb-8">
-              <img
-                src={`${import.meta.env.BASE_URL}images/rhythmstix-logo-colour.png`}
-                alt="Rhythmstix"
-                className="h-16 w-auto mx-auto mb-2"
-              />
-              <h1 className="text-2xl font-bold">Create Your Account</h1>
-              <p className="text-muted-foreground text-sm mt-1">
+              <Link href="/" className="inline-block mb-6">
+                <span className="font-extrabold text-3xl tracking-tight">
+                  <span className="text-[#3a9ca5]">r</span><span className="text-foreground">hythm</span><span className="text-[#3a9ca5]/50">tix</span>
+                </span>
+              </Link>
+              <h1 className="text-2xl font-bold text-foreground">Create your account</h1>
+              <p className="text-muted-foreground text-sm mt-1.5">
                 Join the Rhythmstix community
               </p>
             </div>
@@ -88,8 +88,9 @@ export default function Register() {
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
+                      autoComplete="given-name"
                       placeholder="First"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5] transition-shadow"
                     />
                   </div>
                 </div>
@@ -99,8 +100,9 @@ export default function Register() {
                     type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    autoComplete="family-name"
                     placeholder="Last"
-                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5] transition-shadow"
                   />
                 </div>
               </div>
@@ -114,8 +116,9 @@ export default function Register() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    autoComplete="email"
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5] transition-shadow"
                   />
                 </div>
               </div>
@@ -129,8 +132,9 @@ export default function Register() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    autoComplete="new-password"
                     placeholder="At least 8 characters"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5] transition-shadow"
                   />
                   <button
                     type="button"
@@ -151,8 +155,9 @@ export default function Register() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
+                    autoComplete="new-password"
                     placeholder="Confirm your password"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5] transition-shadow"
                   />
                 </div>
               </div>
