@@ -10,6 +10,7 @@ import contactRouter from "./contact";
 import forumRouter from "./forum";
 import socialRouter from "./social";
 import pagesRouter from "./pages";
+import appsRouter from "./apps";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(contactRouter);
 router.use(forumRouter);
 router.use(socialRouter);
 router.use(pagesRouter);
+router.use(appsRouter);
 
 export default router;

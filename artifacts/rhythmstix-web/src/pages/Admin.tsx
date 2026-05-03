@@ -7,16 +7,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   FileText, MessageSquareQuote, Linkedin, Twitter, Youtube, Settings as SettingsIcon,
   Loader2, Lock, Plus, Trash2, Pencil, Save, X, Search, ExternalLink, Shield, Eye, EyeOff,
-  LayoutTemplate, Globe,
+  LayoutTemplate, Globe, AppWindow, ArrowUp, ArrowDown,
 } from "lucide-react";
 import { TEMPLATE_LABELS, type PageTemplate, type PageData, CustomPageRenderer } from "@/components/CustomPageRenderer";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-type TabKey = "copy" | "pages" | "testimonials" | "linkedin" | "twitter" | "youtube" | "visibility" | "settings";
+type TabKey = "copy" | "apps" | "pages" | "testimonials" | "linkedin" | "twitter" | "youtube" | "visibility" | "settings";
 
 const TABS: { key: TabKey; label: string; icon: any }[] = [
   { key: "copy", label: "Site Copy", icon: FileText },
+  { key: "apps", label: "Apps", icon: AppWindow },
   { key: "pages", label: "Pages", icon: LayoutTemplate },
   { key: "testimonials", label: "Testimonials", icon: MessageSquareQuote },
   { key: "linkedin", label: "LinkedIn", icon: Linkedin },
@@ -78,6 +79,7 @@ export default function Admin() {
 
             <div className="bg-card rounded-2xl border border-border p-6 min-h-[400px]">
               {tab === "copy" && <CopyTab />}
+              {tab === "apps" && <AppsTab />}
               {tab === "pages" && <PagesTab />}
               {tab === "testimonials" && <TestimonialsTab />}
               {tab === "linkedin" && <LinkedInTab />}
@@ -1197,6 +1199,281 @@ function PageFieldsEditor({ template, data, onChange }: { template: PageTemplate
           </Button>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ========== APPS TAB ========== */
+interface AdminApp {
+  id: number;
+  slug: string;
+  title: string;
+  tagline: string;
+  description: string;
+  logoUrl: string | null;
+  infoHref: string | null;
+  appUrl: string | null;
+  accentFrom: string;
+  accentTo: string;
+  badge: string | null;
+  sortOrder: number;
+  published: boolean;
+}
+
+type AppForm = Omit<AdminApp, "id">;
+
+const EMPTY_APP: AppForm = {
+  slug: "", title: "", tagline: "", description: "",
+  logoUrl: "", infoHref: "", appUrl: "",
+  accentFrom: "#3a9ca5", accentTo: "#4cb5bd",
+  badge: "", sortOrder: 0, published: true,
+};
+
+function AppsTab() {
+  const queryClient = useQueryClient();
+  const { data: apps = [], isLoading } = useQuery<AdminApp[]>({
+    queryKey: ["admin-apps"],
+    queryFn: async () => {
+      const res = await fetch("/api/apps/all", { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load apps");
+      const json = await res.json();
+      return Array.isArray(json) ? json : [];
+    },
+  });
+
+  const [editing, setEditing] = useState<AdminApp | "new" | null>(null);
+  const [form, setForm] = useState<AppForm>(EMPTY_APP);
+  const [error, setError] = useState("");
+
+  function startNew() {
+    const nextSort = apps.length ? Math.max(...apps.map((a) => a.sortOrder)) + 10 : 10;
+    setForm({ ...EMPTY_APP, sortOrder: nextSort });
+    setError("");
+    setEditing("new");
+  }
+  function startEdit(a: AdminApp) {
+    setForm({
+      slug: a.slug, title: a.title, tagline: a.tagline, description: a.description,
+      logoUrl: a.logoUrl || "", infoHref: a.infoHref || "", appUrl: a.appUrl || "",
+      accentFrom: a.accentFrom, accentTo: a.accentTo,
+      badge: a.badge || "", sortOrder: a.sortOrder, published: a.published,
+    });
+    setError("");
+    setEditing(a);
+  }
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const isNew = editing === "new";
+      const url = isNew ? "/api/apps" : `/api/apps/${(editing as AdminApp).id}`;
+      const res = await fetch(url, {
+        method: isNew ? "POST" : "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(form),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Save failed");
+      return json;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-apps"] });
+      queryClient.invalidateQueries({ queryKey: ["apps"] });
+      setEditing(null);
+    },
+    onError: (e: any) => setError(e.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const res = await fetch(`/api/apps/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error("Delete failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-apps"] });
+      queryClient.invalidateQueries({ queryKey: ["apps"] });
+    },
+    onError: (e: any) => setError(e.message),
+  });
+
+  const reorderMutation = useMutation({
+    mutationFn: async ({ idA, idB }: { idA: number; idB: number }) => {
+      const res = await fetch("/api/apps/swap-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ idA, idB }),
+      });
+      if (!res.ok) throw new Error("Reorder failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-apps"] });
+      queryClient.invalidateQueries({ queryKey: ["apps"] });
+    },
+    onError: (e: any) => setError(e.message),
+  });
+
+  function move(id: number, dir: -1 | 1) {
+    const sorted = [...apps].sort((a, b) => a.sortOrder - b.sortOrder);
+    const idx = sorted.findIndex((a) => a.id === id);
+    const swap = sorted[idx + dir];
+    if (!swap) return;
+    reorderMutation.mutate({ idA: id, idB: swap.id });
+  }
+
+  const inputCls = "w-full px-3 py-2 rounded border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30";
+  const labelCls = "text-xs font-semibold uppercase text-muted-foreground mb-1 block";
+
+  if (editing !== null) {
+    const initial = (form.title.trim()[0] || "·").toUpperCase();
+    return (
+      <div className="space-y-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold">{editing === "new" ? "New App" : `Edit: ${(editing as AdminApp).title}`}</h2>
+            <p className="text-sm text-muted-foreground">Configure the card shown on the homepage and where its two buttons go.</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setEditing(null)}>Cancel</Button>
+            <Button size="sm" disabled={saveMutation.isPending || !form.title.trim()} onClick={() => saveMutation.mutate()} className="bg-[#3a9ca5] hover:bg-[#2d8890] text-white">
+              {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : (<><Save className="w-4 h-4 mr-1" /> Save</>)}
+            </Button>
+          </div>
+        </div>
+
+        {error && <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2">{error}</div>}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2 space-y-3">
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className={labelCls}>Title</label>
+                <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value, slug: form.slug || e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") })} placeholder="Assessify" className={inputCls} />
+              </div>
+              <div>
+                <label className={labelCls}>Slug</label>
+                <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="assessify" className={cn(inputCls, "font-mono")} />
+              </div>
+            </div>
+            <div>
+              <label className={labelCls}>Tagline (small label)</label>
+              <input value={form.tagline} onChange={(e) => setForm({ ...form, tagline: e.target.value })} placeholder="AI-Powered Assessment" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Description</label>
+              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} placeholder="What this app does in one paragraph." className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Logo URL</label>
+              <input value={form.logoUrl || ""} onChange={(e) => setForm({ ...form, logoUrl: e.target.value })} placeholder="https://example.com/logo.svg" className={inputCls} />
+              <p className="text-[11px] text-muted-foreground mt-0.5">Leave blank to use a coloured initial badge.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className={labelCls}>"Learn more" link</label>
+                <input value={form.infoHref || ""} onChange={(e) => setForm({ ...form, infoHref: e.target.value })} placeholder="/assessify or https://..." className={inputCls} />
+              </div>
+              <div>
+                <label className={labelCls}>"Open app" link</label>
+                <input value={form.appUrl || ""} onChange={(e) => setForm({ ...form, appUrl: e.target.value })} placeholder="https://app.example.com" className={inputCls} />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label className={labelCls}>Accent (from)</label>
+                <div className="flex gap-1">
+                  <input type="color" value={form.accentFrom} onChange={(e) => setForm({ ...form, accentFrom: e.target.value })} className="h-9 w-12 rounded border border-border" />
+                  <input value={form.accentFrom} onChange={(e) => setForm({ ...form, accentFrom: e.target.value })} className={cn(inputCls, "font-mono text-xs")} />
+                </div>
+              </div>
+              <div>
+                <label className={labelCls}>Accent (to)</label>
+                <div className="flex gap-1">
+                  <input type="color" value={form.accentTo} onChange={(e) => setForm({ ...form, accentTo: e.target.value })} className="h-9 w-12 rounded border border-border" />
+                  <input value={form.accentTo} onChange={(e) => setForm({ ...form, accentTo: e.target.value })} className={cn(inputCls, "font-mono text-xs")} />
+                </div>
+              </div>
+              <div>
+                <label className={labelCls}>Badge (optional)</label>
+                <input value={form.badge || ""} onChange={(e) => setForm({ ...form, badge: e.target.value })} placeholder="New / Beta / Free" className={inputCls} />
+              </div>
+            </div>
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} />
+              <span>Published (shown on homepage)</span>
+            </label>
+          </div>
+
+          <div>
+            <label className={labelCls}>Live preview</label>
+            <div className="rounded-2xl border border-border bg-card overflow-hidden">
+              <div className="h-32 flex items-center justify-center relative" style={{ background: `linear-gradient(135deg, ${form.accentFrom}12, ${form.accentTo}1f)` }}>
+                {form.badge && <span className="absolute top-3 right-3 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-white/90 text-[#3a9ca5] shadow-sm">{form.badge}</span>}
+                {form.logoUrl ? (
+                  <img src={form.logoUrl} alt="" className="w-20 h-20 object-contain" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+                ) : (
+                  <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-md" style={{ background: `linear-gradient(135deg, ${form.accentFrom}, ${form.accentTo})` }}>{initial}</div>
+                )}
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-sm">{form.title || "App title"}</h3>
+                {form.tagline && <p className="text-[11px] text-[#3a9ca5]/80 uppercase tracking-wide mb-1">{form.tagline}</p>}
+                <p className="text-xs text-muted-foreground mb-3 line-clamp-3">{form.description || "Short description appears here."}</p>
+                <div className="flex gap-2">
+                  <button className="flex-1 text-xs px-2 py-1.5 rounded border border-[#3a9ca5]/30 text-[#3a9ca5]">Learn more</button>
+                  <button className="flex-1 text-xs px-2 py-1.5 rounded text-white" style={{ background: `linear-gradient(135deg, ${form.accentFrom}, ${form.accentTo})` }}>Open app</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const sorted = [...apps].sort((a, b) => a.sortOrder - b.sortOrder);
+  return (
+    <div className="space-y-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold">Apps</h2>
+          <p className="text-sm text-muted-foreground">Manage the cards shown on the homepage. Each app has a "Learn more" page and an "Open app" link.</p>
+        </div>
+        <Button onClick={startNew} className="bg-[#3a9ca5] hover:bg-[#2d8890] text-white">
+          <Plus className="w-4 h-4 mr-1" /> New App
+        </Button>
+      </div>
+
+      {isLoading && <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-[#3a9ca5]" /></div>}
+
+      <div className="space-y-2">
+        {sorted.map((a, i) => (
+          <div key={a.id} className="border border-border rounded-lg p-3 flex items-center gap-3">
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0 overflow-hidden" style={{ background: `linear-gradient(135deg, ${a.accentFrom}20, ${a.accentTo}30)` }}>
+              {a.logoUrl ? (
+                <img src={a.logoUrl} alt="" className="w-10 h-10 object-contain" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+              ) : (
+                <div className="w-10 h-10 rounded flex items-center justify-center text-white font-black text-lg" style={{ background: `linear-gradient(135deg, ${a.accentFrom}, ${a.accentTo})` }}>{a.title[0]?.toUpperCase()}</div>
+              )}
+            </div>
+            <div className="min-w-0 flex-grow">
+              <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                <h3 className="font-semibold text-sm truncate">{a.title}</h3>
+                {!a.published && <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 font-medium">Hidden</span>}
+                {a.badge && <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#3a9ca5]/10 text-[#3a9ca5] font-medium">{a.badge}</span>}
+              </div>
+              <p className="text-xs text-muted-foreground truncate">{a.tagline || a.description}</p>
+            </div>
+            <div className="flex gap-1 shrink-0">
+              <button onClick={() => move(a.id, -1)} disabled={i === 0 || reorderMutation.isPending} className="p-1.5 rounded hover:bg-secondary text-muted-foreground disabled:opacity-30" title="Move up"><ArrowUp className="w-4 h-4" /></button>
+              <button onClick={() => move(a.id, 1)} disabled={i === sorted.length - 1 || reorderMutation.isPending} className="p-1.5 rounded hover:bg-secondary text-muted-foreground disabled:opacity-30" title="Move down"><ArrowDown className="w-4 h-4" /></button>
+              {a.appUrl && <a href={a.appUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded hover:bg-secondary text-muted-foreground" title="Open app"><ExternalLink className="w-4 h-4" /></a>}
+              <button onClick={() => startEdit(a)} className="p-1.5 rounded hover:bg-[#3a9ca5]/10 text-muted-foreground hover:text-[#3a9ca5]" title="Edit"><Pencil className="w-4 h-4" /></button>
+              <button onClick={() => { if (confirm(`Delete "${a.title}"?`)) deleteMutation.mutate(a.id); }} className="p-1.5 rounded hover:bg-red-50 text-muted-foreground hover:text-red-600" title="Delete"><Trash2 className="w-4 h-4" /></button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
