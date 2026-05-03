@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd ../.. && pnpm --filter @workspace/rhythmstix-web run build",
+  "outputDirectory": "dist/public",
+  "framework": "vite",
+  "installCommand": "cd ../.. && pnpm install",
+  "rewrites": [
+    { "source": "/((?!api).*)", "destination": "/index.html" }
+  ]
+}
