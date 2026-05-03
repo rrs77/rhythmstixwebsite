@@ -1,6 +1,11 @@
 import pino from "pino";
 
 const isProduction = process.env.NODE_ENV === "production";
+const isServerless = Boolean(
+  process.env.VERCEL ||
+    process.env.AWS_LAMBDA_FUNCTION_NAME ||
+    process.env.LAMBDA_TASK_ROOT,
+);
 
 export const logger = pino({
   level: process.env.LOG_LEVEL ?? "info",
@@ -9,7 +14,9 @@ export const logger = pino({
     "req.headers.cookie",
     "res.headers['set-cookie']",
   ],
-  ...(isProduction
+  // Pino's worker-thread transports don't work in serverless / edge runtimes.
+  // Use plain stdout JSON there. Locally in dev we still get pretty output.
+  ...(isProduction || isServerless
     ? {}
     : {
         transport: {

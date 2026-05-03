@@ -59,7 +59,20 @@ Uses Drizzle ORM with PostgreSQL for all data persistence. Exports a Drizzle cli
 - **Codegen:** Orval generates Zod schemas (`lib/api-zod`) for validation and React Query hooks (`lib/api-client-react`) for API interaction from the OpenAPI spec.
 
 **Deployment:**
-Configured for Vercel deployment with `vercel.json` managing build and routing. The frontend builds from `artifacts/rhythmstix-web`, and API routes are served as a single Vercel serverless function.
+Configured for Vercel deployment with root `vercel.json` managing build and routing. The frontend builds from `artifacts/rhythmstix-web`, and the entire Express API is served as a single Vercel serverless function via `api/index.ts` (which re-exports the Express app from `artifacts/api-server`). All `/api/*` paths are rewritten to that one function so we don't have to maintain per-route serverless files.
+
+- **Database driver:** Uses `@neondatabase/serverless` with `drizzle-orm/neon-serverless` so the same code path works in both the long-running Replit dev server and Vercel's stateless functions (no `pg` connection pool exhaustion).
+- **Logger:** Pino auto-disables its worker-thread `pino-pretty` transport when `process.env.VERCEL` is detected, falling back to plain stdout JSON.
+- **Image uploads:** `POST /api/uploads/image` (admin-only) streams to Vercel Blob and returns the public URL. Used by the `EditableImage` component to swap any image without code.
+
+**Required Vercel environment variables:**
+- `DATABASE_URL` — Neon-compatible Postgres connection string
+- `SESSION_SECRET` (or `JWT_SECRET`) — required, server hard-throws if missing
+- `ADMIN_PASSWORD` — gates `/admin`
+- `BLOB_READ_WRITE_TOKEN` — from Vercel Blob storage (image upload endpoint returns 503 without it)
+- `WC_CONSUMER_KEY`, `WC_CONSUMER_SECRET` — WooCommerce REST credentials
+- `WP_REST_URL` (optional) — defaults to `https://www.rhythmstix.co.uk/wp-json`
+- `MAILCHIMP_API_KEY`, `MAILCHIMP_LIST_ID` (optional) — newsletter signups silently no-op without them
 
 # External Dependencies
 
