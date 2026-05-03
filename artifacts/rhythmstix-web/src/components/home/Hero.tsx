@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { EditableText } from "@/components/EditableText";
+import { EditableImage } from "@/components/EditableImage";
 
 export function Hero() {
   return (
@@ -16,24 +17,33 @@ export function Hero() {
             transition={{ duration: 0.5 }}
             className="mb-2 flex items-baseline justify-center"
           >
-            <span
-              className="text-4xl sm:text-5xl font-black text-[#3a9ca5] leading-none"
-              style={{ fontFamily: "'Poppins', sans-serif" }}
-            >
-              r
-            </span>
-            <span
-              className="text-4xl sm:text-5xl font-black text-foreground leading-none"
-              style={{ fontFamily: "'Poppins', sans-serif" }}
-            >
-              hythm
-            </span>
-            <span
-              className="text-4xl sm:text-5xl font-black text-[#3a9ca5]/40 leading-none"
-              style={{ fontFamily: "'Poppins', sans-serif" }}
-            >
-              tix
-            </span>
+            <EditableImage
+              contentKey="brand.logo"
+              alt="Rhythmstix"
+              className="h-12 sm:h-14 mx-auto object-contain"
+              emptyRender={
+                <span className="inline-flex items-baseline">
+                  <span
+                    className="text-4xl sm:text-5xl font-black text-[#3a9ca5] leading-none"
+                    style={{ fontFamily: "'Poppins', sans-serif" }}
+                  >
+                    r
+                  </span>
+                  <span
+                    className="text-4xl sm:text-5xl font-black text-foreground leading-none"
+                    style={{ fontFamily: "'Poppins', sans-serif" }}
+                  >
+                    hythm
+                  </span>
+                  <span
+                    className="text-4xl sm:text-5xl font-black text-[#3a9ca5]/40 leading-none"
+                    style={{ fontFamily: "'Poppins', sans-serif" }}
+                  >
+                    tix
+                  </span>
+                </span>
+              }
+            />
           </motion.div>
 
           <motion.p

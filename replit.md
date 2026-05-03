@@ -48,7 +48,8 @@ A React application for the Rhythmstix platform.
     - **Blog:** Aggregates content from WordPress, YouTube, and LinkedIn, with filtering and individual post views.
     - **Product Pages:** Dedicated pages for various Rhythmstix applications (e.g., Assessify, CCDesigner) using a shared `ProductPage` component.
     - **User Account:** Login, registration, password reset, and account dashboard with order history and Mailchimp subscription management.
-- **Inline CMS:** `EditableText` and `EditableList` components allow administrators to edit content directly on the frontend.
+- **Inline CMS:** `EditableText`, `EditableList`, and `EditableImage` components allow administrators to edit any text, list, or image directly on the page they appear on. The Hero, Login, and Register pages all use `<EditableImage contentKey="brand.logo">` so an admin can drop in a custom logo that overrides the wordmark across the whole site without code changes.
+- **Theme & Design tab (`/admin → Theme & Design`):** A WordPress-style theme customizer. Admins can change the primary colour, accent colour, background tone, corner radius (slider), and heading weight. Values are stored as `theme.*` keys in `siteContentTable`. The `<ThemeProvider>` (mounted in `App.tsx`) reads them via `useContent()` and writes the corresponding CSS custom properties (`--primary`, `--ring`, `--accent`, `--background`, `--radius-*`, `--heading-weight`) to `document.documentElement`, so every shadcn component, button, focus ring, card border and heading updates instantly. A live preview panel inside the tab shows a button, outline, card, and heading rendered with the current draft values before saving.
 - **User Authentication:** Integrates with WordPress's `wp-login.php` for user authentication, creating WooCommerce customers on registration.
 
 **Database Layer (`lib/db`):**

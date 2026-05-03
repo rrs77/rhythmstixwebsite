@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { EditableText } from "@/components/EditableText";
 
 const API = "/api/forum";
 
@@ -199,8 +200,16 @@ function CategoryList({ onSelect, isAdmin }: { onSelect: (id: number) => void; i
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Discussion Forum</h2>
+          <h2 className="text-2xl font-bold text-foreground">
+            <EditableText contentKey="community.heading" fallback="Discussion Forum" as="span" />
+          </h2>
           <div className="w-16 h-1 bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd] rounded-full mt-2" />
+          <EditableText
+            contentKey="community.subheading"
+            fallback="Share ideas, ask questions, and connect with other educators."
+            as="p"
+            className="text-sm text-muted-foreground mt-2 max-w-xl"
+          />
         </div>
         {isAdmin && (
           <Button

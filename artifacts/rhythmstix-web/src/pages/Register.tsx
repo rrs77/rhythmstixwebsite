@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { motion } from "framer-motion";
 import { Loader2, Eye, EyeOff, Mail, Lock, User, CheckSquare } from "lucide-react";
 import { Link } from "wouter";
+import { EditableImage } from "@/components/EditableImage";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -62,9 +63,16 @@ export default function Register() {
           >
             <div className="text-center mb-8">
               <Link href="/" className="inline-block mb-6">
-                <span className="font-extrabold text-3xl tracking-tight">
-                  <span className="text-[#3a9ca5]">r</span><span className="text-foreground">hythm</span><span className="text-[#3a9ca5]/50">tix</span>
-                </span>
+                <EditableImage
+                  contentKey="brand.logo"
+                  alt="Rhythmstix"
+                  className="h-10 mx-auto object-contain"
+                  emptyRender={
+                    <span className="font-extrabold text-3xl tracking-tight">
+                      <span className="text-[#3a9ca5]">r</span><span className="text-foreground">hythm</span><span className="text-[#3a9ca5]/50">tix</span>
+                    </span>
+                  }
+                />
               </Link>
               <h1 className="text-2xl font-bold text-foreground">Create your account</h1>
               <p className="text-muted-foreground text-sm mt-1.5">

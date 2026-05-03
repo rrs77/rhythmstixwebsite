@@ -7,13 +7,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   FileText, MessageSquareQuote, Linkedin, Twitter, Youtube, Settings as SettingsIcon,
   Loader2, Lock, Plus, Trash2, Pencil, Save, X, Search, ExternalLink, Shield, Eye, EyeOff,
-  LayoutTemplate, Globe, AppWindow, ArrowUp, ArrowDown, Menu as MenuIcon,
+  LayoutTemplate, Globe, AppWindow, ArrowUp, ArrowDown, Menu as MenuIcon, Palette, RotateCcw,
 } from "lucide-react";
 import { TEMPLATE_LABELS, type PageTemplate, type PageData, CustomPageRenderer } from "@/components/CustomPageRenderer";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-type TabKey = "copy" | "apps" | "pages" | "navigation" | "testimonials" | "linkedin" | "twitter" | "youtube" | "visibility" | "settings";
+type TabKey = "copy" | "apps" | "pages" | "navigation" | "testimonials" | "linkedin" | "twitter" | "youtube" | "visibility" | "theme" | "settings";
 
 const TABS: { key: TabKey; label: string; icon: any }[] = [
   { key: "copy", label: "Site Copy", icon: FileText },
@@ -25,6 +25,7 @@ const TABS: { key: TabKey; label: string; icon: any }[] = [
   { key: "twitter", label: "Twitter / X", icon: Twitter },
   { key: "youtube", label: "YouTube", icon: Youtube },
   { key: "visibility", label: "Hidden Posts", icon: EyeOff },
+  { key: "theme", label: "Theme & Design", icon: Palette },
   { key: "settings", label: "Settings", icon: SettingsIcon },
 ];
 
@@ -88,6 +89,7 @@ export default function Admin() {
               {tab === "twitter" && <TwitterTab />}
               {tab === "youtube" && <YouTubeTab />}
               {tab === "visibility" && <VisibilityTab />}
+              {tab === "theme" && <ThemeTab />}
               {tab === "settings" && <SettingsTab />}
             </div>
           </div>
@@ -1709,6 +1711,216 @@ function NewNavLinkRow({
       <input value={label} onChange={(e) => setLabel(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") add(); }} placeholder={`Add to ${group} (label)`} className={inputCls} />
       <input value={href} onChange={(e) => setHref(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") add(); }} placeholder="/path or https://..." className={cn(inputCls, "font-mono text-xs")} />
       <Button size="sm" onClick={add} disabled={!valid || isPending} className="bg-[#3a9ca5] hover:bg-[#2d8890] text-white"><Plus className="w-3.5 h-3.5 mr-1" /> Add</Button>
+    </div>
+  );
+}
+
+// =====================================================================
+// THEME & DESIGN TAB
+// =====================================================================
+const THEME_DEFAULTS = {
+  primaryColor: "#3a9ca5",
+  accentColor: "#4cb5bd",
+  backgroundTone: "#ffffff",
+  radius: "1",
+  headingWeight: "700",
+};
+
+function ThemeTab() {
+  const { data: content, isLoading } = useContent();
+  const saveMutation = useSaveContent();
+  const [draft, setDraft] = useState<Record<string, string>>({});
+  const [saved, setSaved] = useState<string | null>(null);
+
+  const current = (k: keyof typeof THEME_DEFAULTS) =>
+    draft[`theme.${k}`] ?? content?.[`theme.${k}`] ?? THEME_DEFAULTS[k];
+
+  function setField(k: keyof typeof THEME_DEFAULTS, value: string) {
+    setDraft((d) => ({ ...d, [`theme.${k}`]: value }));
+  }
+
+  async function saveAll() {
+    const entries = Object.entries(draft);
+    if (!entries.length) return;
+    await Promise.all(entries.map(([key, value]) => saveMutation.mutateAsync({ key, value })));
+    setDraft({});
+    setSaved("Theme saved.");
+    setTimeout(() => setSaved(null), 2000);
+  }
+
+  async function resetAll() {
+    if (!confirm("Reset all theme settings to defaults?")) return;
+    await Promise.all(
+      Object.keys(THEME_DEFAULTS).map((k) =>
+        saveMutation.mutateAsync({ key: `theme.${k}`, value: "" }),
+      ),
+    );
+    setDraft({});
+    setSaved("Theme reset to defaults.");
+    setTimeout(() => setSaved(null), 2000);
+  }
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center py-16"><Loader2 className="w-6 h-6 animate-spin text-[#3a9ca5]" /></div>;
+  }
+
+  const dirty = Object.keys(draft).length > 0;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
+            <Palette className="w-5 h-5 text-[#3a9ca5]" />
+            Theme & Design
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Tune your site's brand colours, corner radius and heading weight. Changes apply live to every page.
+          </p>
+        </div>
+        <Button
+          onClick={resetAll}
+          variant="outline"
+          size="sm"
+          disabled={saveMutation.isPending}
+          className="gap-1.5 text-muted-foreground hover:text-red-600"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          Reset
+        </Button>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <ColorField
+          label="Primary colour"
+          help="Buttons, focus rings, links and brand accents."
+          value={current("primaryColor")}
+          onChange={(v) => setField("primaryColor", v)}
+        />
+        <ColorField
+          label="Accent colour"
+          help="Secondary highlights and gradient ends."
+          value={current("accentColor")}
+          onChange={(v) => setField("accentColor", v)}
+        />
+        <ColorField
+          label="Background tone"
+          help="Page background. Pure white by default."
+          value={current("backgroundTone")}
+          onChange={(v) => setField("backgroundTone", v)}
+        />
+        <div className="space-y-2">
+          <label className="text-sm font-semibold">Corner radius</label>
+          <p className="text-xs text-muted-foreground">{current("radius")}rem — controls how rounded buttons and cards feel.</p>
+          <input
+            type="range"
+            min={0}
+            max={2}
+            step={0.125}
+            value={parseFloat(current("radius"))}
+            onChange={(e) => setField("radius", e.target.value)}
+            className="w-full accent-[#3a9ca5]"
+          />
+          <div className="flex justify-between text-[10px] text-muted-foreground"><span>Sharp</span><span>Rounded</span><span>Pill</span></div>
+        </div>
+        <div className="space-y-2 sm:col-span-2">
+          <label className="text-sm font-semibold">Heading weight</label>
+          <p className="text-xs text-muted-foreground">How bold your h1/h2/h3 elements appear.</p>
+          <div className="flex gap-2">
+            {["500", "600", "700", "800", "900"].map((w) => (
+              <button
+                key={w}
+                type="button"
+                onClick={() => setField("headingWeight", w)}
+                className={cn(
+                  "flex-1 px-3 py-2 rounded-lg border text-sm transition-colors",
+                  current("headingWeight") === w
+                    ? "border-[#3a9ca5] bg-[#3a9ca5]/5 text-[#3a9ca5]"
+                    : "border-border text-muted-foreground hover:border-[#3a9ca5]/40",
+                )}
+                style={{ fontWeight: Number(w) }}
+              >
+                {w === "500" ? "Med" : w === "600" ? "Semi" : w === "700" ? "Bold" : w === "800" ? "X-Bold" : "Black"}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-dashed border-[#3a9ca5]/30 bg-[#3a9ca5]/[0.02] p-5">
+        <div className="text-xs font-semibold uppercase tracking-wide text-[#3a9ca5]/80 mb-3">Live preview</div>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            className="px-4 py-2 rounded-xl text-white text-sm font-semibold shadow-sm"
+            style={{ backgroundColor: current("primaryColor"), borderRadius: `${current("radius")}rem` }}
+          >
+            Primary button
+          </button>
+          <button
+            className="px-4 py-2 rounded-xl text-sm font-semibold border-2"
+            style={{
+              borderColor: current("accentColor"),
+              color: current("accentColor"),
+              borderRadius: `${current("radius")}rem`,
+            }}
+          >
+            Accent outline
+          </button>
+          <div
+            className="px-4 py-2 text-sm border bg-card"
+            style={{ borderRadius: `${current("radius")}rem` }}
+          >
+            Card with current radius
+          </div>
+          <h3 className="text-2xl ml-2" style={{ fontWeight: Number(current("headingWeight")) }}>
+            Heading sample
+          </h3>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <Button
+          onClick={saveAll}
+          disabled={!dirty || saveMutation.isPending}
+          className="bg-[#3a9ca5] hover:bg-[#2d8890] text-white gap-2"
+        >
+          {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          Save theme
+        </Button>
+        {dirty && <span className="text-xs text-amber-600">Unsaved changes</span>}
+        {saved && <span className="text-xs text-emerald-600">{saved}</span>}
+      </div>
+    </div>
+  );
+}
+
+function ColorField({
+  label, help, value, onChange,
+}: {
+  label: string;
+  help: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <label className="text-sm font-semibold">{label}</label>
+      <p className="text-xs text-muted-foreground">{help}</p>
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-12 h-10 rounded-lg border border-border bg-transparent cursor-pointer"
+        />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30"
+          placeholder="#3a9ca5"
+        />
+      </div>
     </div>
   );
 }

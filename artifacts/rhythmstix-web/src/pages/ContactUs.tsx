@@ -8,13 +8,20 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { EditableText } from "@/components/EditableText";
+import { useContent } from "@/hooks/use-content";
 
 const API_BASE = `${import.meta.env.BASE_URL}api`;
 
 export default function ContactUs() {
   const { toast } = useToast();
+  const { data: content } = useContent();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const phone = content?.["footer_phone"] || "01245 633 231";
+  const email = content?.["footer_email"] || "info@rhythmstix.co.uk";
+  const address = content?.["footer_address"] || "Rhythmstix Ltd, 33 Vicarage Road, Chelmsford, Essex CM2 9BP";
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -63,10 +70,15 @@ export default function ContactUs() {
             transition={{ duration: 0.5 }}
             className="mb-10"
           >
-            <h1 className="text-3xl md:text-4xl font-bold mb-3">Contact Us</h1>
-            <p className="text-muted-foreground text-lg max-w-2xl">
-              Have a question or need support? We'd love to hear from you.
-            </p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-3">
+              <EditableText contentKey="contact.heading" fallback="Contact Us" as="span" />
+            </h1>
+            <EditableText
+              contentKey="contact.subheading"
+              fallback="Have a question or need support? We'd love to hear from you."
+              as="p"
+              className="text-muted-foreground text-lg max-w-2xl"
+            />
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-10">
@@ -152,34 +164,35 @@ export default function ContactUs() {
               className="space-y-6"
             >
               <div className="rounded-2xl border border-border bg-card p-6">
-                <h3 className="font-semibold text-lg mb-4">Get in Touch</h3>
+                <h3 className="font-semibold text-lg mb-4">
+                  <EditableText contentKey="contact.contact_card_title" fallback="Get in Touch" as="span" />
+                </h3>
                 <div className="space-y-4">
                   <a
-                    href="tel:01245633231"
+                    href={`tel:${phone.replace(/\s+/g, "")}`}
                     className="flex items-start gap-3 text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <Phone size={18} className="mt-0.5 shrink-0 text-primary" />
-                    <span>01245 633 231</span>
+                    <span>{phone}</span>
                   </a>
                   <a
-                    href="mailto:info@rhythmstix.co.uk"
+                    href={`mailto:${email}`}
                     className="flex items-start gap-3 text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <Mail size={18} className="mt-0.5 shrink-0 text-primary" />
-                    <span>info@rhythmstix.co.uk</span>
+                    <span>{email}</span>
                   </a>
                 </div>
               </div>
 
               <div className="rounded-2xl border border-border bg-card p-6">
-                <h3 className="font-semibold text-lg mb-4">Our Address</h3>
+                <h3 className="font-semibold text-lg mb-4">
+                  <EditableText contentKey="contact.address_card_title" fallback="Our Address" as="span" />
+                </h3>
                 <div className="flex items-start gap-3 text-muted-foreground">
                   <MapPin size={18} className="mt-1 shrink-0 text-primary" />
-                  <address className="not-italic text-sm leading-relaxed">
-                    Rhythmstix Ltd<br />
-                    33 Vicarage Road<br />
-                    Chelmsford<br />
-                    Essex CM2 9BP
+                  <address className="not-italic text-sm leading-relaxed whitespace-pre-line">
+                    {address}
                   </address>
                 </div>
               </div>
