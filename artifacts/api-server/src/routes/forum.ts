@@ -37,7 +37,7 @@ router.post("/forum/categories", requireAdmin, async (req: Request, res: Respons
 });
 
 router.put("/forum/categories/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const { name, description, sortOrder } = req.body;
   const [updated] = await db.update(forumCategoriesTable)
     .set({ name, description, sortOrder })
@@ -47,7 +47,7 @@ router.put("/forum/categories/:id", requireAdmin, async (req: Request, res: Resp
 });
 
 router.delete("/forum/categories/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   await db.delete(forumRepliesTable).where(
     sql`${forumRepliesTable.topicId} IN (SELECT id FROM forum_topics WHERE category_id = ${id})`
   );
@@ -83,7 +83,7 @@ router.get("/forum/topics", async (req: Request, res: Response) => {
 });
 
 router.get("/forum/topics/:id", async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const [topic] = await db.select().from(forumTopicsTable).where(eq(forumTopicsTable.id, id));
   if (!topic) {
     res.status(404).json({ error: "Topic not found" });
@@ -120,7 +120,7 @@ router.post("/forum/topics", async (req: Request, res: Response) => {
 });
 
 router.put("/forum/topics/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const { isPinned, isLocked, title, content } = req.body;
   const updates: any = { updatedAt: new Date() };
   if (isPinned !== undefined) updates.isPinned = isPinned;
@@ -136,7 +136,7 @@ router.put("/forum/topics/:id", requireAdmin, async (req: Request, res: Response
 });
 
 router.delete("/forum/topics/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   await db.delete(forumRepliesTable).where(eq(forumRepliesTable.topicId, id));
   await db.delete(forumTopicsTable).where(eq(forumTopicsTable.id, id));
   res.json({ success: true });
@@ -181,7 +181,7 @@ router.post("/forum/replies", async (req: Request, res: Response) => {
 });
 
 router.delete("/forum/replies/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   await db.delete(forumRepliesTable).where(eq(forumRepliesTable.id, id));
   res.json({ success: true });
 });

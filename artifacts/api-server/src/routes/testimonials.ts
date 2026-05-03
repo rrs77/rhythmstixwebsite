@@ -20,7 +20,7 @@ router.post("/testimonials", requireAdmin, async (req: Request, res: Response) =
 });
 
 router.put("/testimonials/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const { quote, author, organization, sortOrder } = req.body;
   const [testimonial] = await db.update(testimonialsTable).set({
     quote, author, organization, sortOrder, updatedAt: new Date(),
@@ -33,7 +33,7 @@ router.put("/testimonials/:id", requireAdmin, async (req: Request, res: Response
 });
 
 router.delete("/testimonials/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   await db.delete(testimonialsTable).where(eq(testimonialsTable.id, id));
   res.json({ success: true });
 });

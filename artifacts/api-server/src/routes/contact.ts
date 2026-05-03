@@ -14,13 +14,16 @@ router.post("/contact", (req, res) => {
     return res.status(400).json({ error: "Please provide a valid email address." });
   }
 
-  console.log("=== NEW CONTACT FORM SUBMISSION ===");
-  console.log(`Name: ${name}`);
-  console.log(`Email: ${email}`);
-  console.log(`Subject: ${subject || "(none)"}`);
-  console.log(`Message: ${message}`);
-  console.log(`Time: ${new Date().toISOString()}`);
-  console.log("===================================");
+  req.log.info(
+    {
+      type: "contact_form",
+      name,
+      email,
+      subject: subject || null,
+      messageLength: typeof message === "string" ? message.length : 0,
+    },
+    "contact form submission",
+  );
 
   return res.json({ success: true, message: "Thank you for your message. We'll be in touch soon." });
 });

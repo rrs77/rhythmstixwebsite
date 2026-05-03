@@ -16,7 +16,7 @@ router.get("/content", async (_req: Request, res: Response) => {
 });
 
 router.put("/content/:key", requireAdmin, async (req: Request, res: Response) => {
-  const { key } = req.params;
+  const key = String(req.params.key);
   const { value } = req.body;
   if (typeof value !== "string") {
     res.status(400).json({ error: "value must be a string" });

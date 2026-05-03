@@ -1,4 +1,5 @@
 import { Router, type Request, type Response, type NextFunction } from "express";
+import rateLimit from "express-rate-limit";
 import {
   subscribeToMailchimp,
   unsubscribeFromMailchimp,
@@ -16,6 +17,30 @@ import {
 } from "../lib/jwt";
 
 const router = Router();
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many login attempts. Please try again later." },
+});
+
+const adminLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many admin login attempts. Please try again later." },
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many registration attempts. Please try again later." },
+});
 const WP_BASE = (process.env.WP_BASE_URL || "https://www.rhythmstix.co.uk").replace(/\/$/, "");
 const WC_BASE = `${WP_BASE}/wp-json/wc/v3`;
 const WC_KEY = process.env.WC_CONSUMER_KEY || "";
@@ -65,7 +90,7 @@ async function wpAuthenticate(username: string, password: string): Promise<boole
   }
 }
 
-router.post("/auth/login", async (req: Request, res: Response) => {
+router.post("/auth/login", loginLimiter, async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -121,7 +146,7 @@ router.get("/auth/me", (req: Request, res: Response) => {
   }
 });
 
-router.post("/auth/register", async (req: Request, res: Response) => {
+router.post("/auth/register", registerLimiter, async (req: Request, res: Response) => {
   try {
     const { email, password, firstName, lastName, subscribe } = req.body;
     if (!email || !password) {
@@ -372,7 +397,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
-router.post("/auth/admin-login", (req: Request, res: Response) => {
+router.post("/auth/admin-login", adminLoginLimiter, (req: Request, res: Response) => {
   if (!ADMIN_PASSWORD) {
     res.status(503).json({ error: "Admin login not configured" });
     return;

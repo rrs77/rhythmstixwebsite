@@ -20,7 +20,7 @@ router.post("/nav-links", requireAdmin, async (req: Request, res: Response) => {
 });
 
 router.put("/nav-links/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const { label, href, group, sortOrder } = req.body;
   const [link] = await db.update(navLinksTable).set({
     label, href, group, sortOrder, updatedAt: new Date(),
@@ -33,7 +33,7 @@ router.put("/nav-links/:id", requireAdmin, async (req: Request, res: Response) =
 });
 
 router.delete("/nav-links/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   await db.delete(navLinksTable).where(eq(navLinksTable.id, id));
   res.json({ success: true });
 });

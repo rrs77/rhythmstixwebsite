@@ -21,7 +21,7 @@ router.post("/products", requireAdmin, async (req: Request, res: Response) => {
 });
 
 router.put("/products/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const { title, description, icon, color, link, cta, sortOrder } = req.body;
   const [product] = await db.update(productsTable).set({
     title, description, icon, color, link, cta, sortOrder, updatedAt: new Date(),
@@ -34,7 +34,7 @@ router.put("/products/:id", requireAdmin, async (req: Request, res: Response) =>
 });
 
 router.delete("/products/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   await db.delete(productsTable).where(eq(productsTable.id, id));
   res.json({ success: true });
 });

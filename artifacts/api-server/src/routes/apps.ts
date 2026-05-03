@@ -73,7 +73,7 @@ router.post("/apps", requireAdmin, async (req: Request, res: Response) => {
 });
 
 router.put("/apps/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   if (!Number.isFinite(id)) {
     res.status(400).json({ error: "Invalid id" });
     return;
@@ -115,7 +115,7 @@ router.put("/apps/:id", requireAdmin, async (req: Request, res: Response) => {
 });
 
 router.delete("/apps/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   if (!Number.isFinite(id)) {
     res.status(400).json({ error: "Invalid id" });
     return;

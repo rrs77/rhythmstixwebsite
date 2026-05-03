@@ -118,7 +118,7 @@ router.post("/social/linkedin", requireAdmin, async (req: Request, res: Response
 });
 
 router.put("/social/linkedin/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const { title, description, url, date } = req.body;
   const [post] = await db.update(linkedinPostsTable).set({
     title,
@@ -134,7 +134,7 @@ router.put("/social/linkedin/:id", requireAdmin, async (req: Request, res: Respo
 });
 
 router.delete("/social/linkedin/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   await db.delete(linkedinPostsTable).where(eq(linkedinPostsTable.id, id));
   res.json({ success: true });
 });
@@ -166,7 +166,7 @@ router.post("/social/twitter", requireAdmin, async (req: Request, res: Response)
 });
 
 router.put("/social/twitter/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const { text, url, date } = req.body;
   const [post] = await db.update(twitterPostsTable).set({
     text,
@@ -181,7 +181,7 @@ router.put("/social/twitter/:id", requireAdmin, async (req: Request, res: Respon
 });
 
 router.delete("/social/twitter/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   await db.delete(twitterPostsTable).where(eq(twitterPostsTable.id, id));
   res.json({ success: true });
 });

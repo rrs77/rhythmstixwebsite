@@ -32,8 +32,13 @@ export default function Register() {
       setError("Passwords do not match.");
       return;
     }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -124,7 +129,7 @@ export default function Register() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    placeholder="At least 6 characters"
+                    placeholder="At least 8 characters"
                     className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
                   />
                   <button

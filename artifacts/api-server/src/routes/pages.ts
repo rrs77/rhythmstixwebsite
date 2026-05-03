@@ -23,7 +23,7 @@ router.get("/pages", requireAdmin, async (_req: Request, res: Response) => {
 });
 
 router.get("/pages/by-slug/:slug", async (req: Request, res: Response) => {
-  const slug = normalizeSlug(req.params.slug);
+  const slug = normalizeSlug(String(req.params.slug));
   const [page] = await db.select().from(customPagesTable).where(eq(customPagesTable.slug, slug)).limit(1);
   if (!page || !page.published) {
     res.status(404).json({ error: "Not found" });
@@ -70,7 +70,7 @@ router.post("/pages", requireAdmin, async (req: Request, res: Response) => {
 });
 
 router.put("/pages/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   if (!Number.isFinite(id)) {
     res.status(400).json({ error: "Invalid page id" });
     return;
@@ -122,7 +122,7 @@ router.put("/pages/:id", requireAdmin, async (req: Request, res: Response) => {
 });
 
 router.delete("/pages/:id", requireAdmin, async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   if (!Number.isFinite(id)) {
     res.status(400).json({ error: "Invalid page id" });
     return;

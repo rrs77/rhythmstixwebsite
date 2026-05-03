@@ -66,4 +66,18 @@ app.use(cookieParser());
 
 app.use("/api", router);
 
+app.use((req, res) => {
+  res.status(404).json({ error: "Not found" });
+});
+
+app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  req.log.error({ err }, "unhandled route error");
+  if (res.headersSent) return;
+  const message =
+    err instanceof Error && process.env.NODE_ENV !== "production"
+      ? err.message
+      : "Internal server error";
+  res.status(500).json({ error: message });
+});
+
 export default app;
