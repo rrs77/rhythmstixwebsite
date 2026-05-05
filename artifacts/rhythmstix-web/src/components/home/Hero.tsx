@@ -59,32 +59,6 @@ export function Hero() {
             />
           </motion.p>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-2"
-          >
-            <EditableText
-              contentKey="hero.heading"
-              fallback="Creative tools for educators."
-              as="span"
-            />
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="text-sm text-muted-foreground max-w-lg mx-auto"
-          >
-            <EditableText
-              contentKey="hero.description"
-              fallback="Music, performing arts, and AI-powered planning and assessment — all in one place."
-              as="span"
-              className="text-sm text-muted-foreground"
-            />
-          </motion.p>
         </div>
       </div>
     </section>
