@@ -66,3 +66,9 @@ id = "fQBPt7IZd3855veXU85_Q"
 uri = "file://batch4c-web-public-2.zip"
 type = "unspecified"
 title = "Batch 4c: Web Public Images Part 2 (1.9MB)"
+
+[[outputs]]
+id = "hcyxIg42kEGlNdaf-y6g8"
+uri = "file://exports/rhythmstix-website-20260505.zip"
+type = "unspecified"
+title = "Rhythmstix website source (zip)"
