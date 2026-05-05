@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm --filter @workspace/rhythmstix-web run build",
   "outputDirectory": "artifacts/rhythmstix-web/dist/public",
-  "framework": "vite",
+  "framework": null,
   "installCommand": "pnpm install --frozen-lockfile=false",
   "functions": {
     "api/index.ts": {
