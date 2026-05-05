@@ -1489,6 +1489,7 @@ interface NavLinkRow {
   href: string;
   group: string;
   sortOrder: number;
+  visible?: boolean;
 }
 
 const NAV_GROUPS: { key: string; label: string; description: string }[] = [
@@ -1549,7 +1550,7 @@ function NavigationTab() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, ...body }: { id: number; label: string; href: string; group: string; sortOrder: number }) => {
+    mutationFn: async ({ id, ...body }: { id: number; label?: string; href?: string; group?: string; sortOrder?: number; visible?: boolean }) => {
       const res = await fetch(`/api/nav-links/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -1623,13 +1624,14 @@ function NavigationTab() {
                   link={link}
                   isFirst={i === 0}
                   isLast={i === groupLinks.length - 1}
-                  onSave={(patch) => updateMutation.mutate({ id: link.id, label: patch.label, href: patch.href, group: link.group, sortOrder: patch.sortOrder })}
+                  onSave={(patch) => updateMutation.mutate({ id: link.id, label: patch.label, href: patch.href, sortOrder: patch.sortOrder })}
                   onDelete={() => { if (confirm(`Remove "${link.label}"?`)) deleteMutation.mutate(link.id); }}
+                  onToggleVisible={() => updateMutation.mutate({ id: link.id, visible: link.visible === false })}
                   onMove={(dir) => {
                     const swap = groupLinks[i + dir];
                     if (!swap) return;
-                    updateMutation.mutate({ id: link.id, label: link.label, href: link.href, group: link.group, sortOrder: swap.sortOrder });
-                    updateMutation.mutate({ id: swap.id, label: swap.label, href: swap.href, group: swap.group, sortOrder: link.sortOrder });
+                    updateMutation.mutate({ id: link.id, sortOrder: swap.sortOrder });
+                    updateMutation.mutate({ id: swap.id, sortOrder: link.sortOrder });
                   }}
                 />
               ))}
@@ -1654,7 +1656,7 @@ function NavigationTab() {
 }
 
 function NavLinkRowEditor({
-  link, isFirst, isLast, onSave, onDelete, onMove,
+  link, isFirst, isLast, onSave, onDelete, onMove, onToggleVisible,
 }: {
   link: NavLinkRow;
   isFirst: boolean;
@@ -1662,16 +1664,28 @@ function NavLinkRowEditor({
   onSave: (patch: { label: string; href: string; sortOrder: number }) => void;
   onDelete: () => void;
   onMove: (dir: -1 | 1) => void;
+  onToggleVisible: () => void;
 }) {
   const [label, setLabel] = useState(link.label);
   const [href, setHref] = useState(link.href);
   const dirty = label !== link.label || href !== link.href;
+  const hidden = link.visible === false;
   const inputCls = "px-2 py-1.5 rounded border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30";
   return (
-    <div className="grid grid-cols-[1fr_2fr_auto] gap-2 items-center">
+    <div className={cn("grid grid-cols-[1fr_2fr_auto] gap-2 items-center", hidden && "opacity-50")}>
       <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Label" className={inputCls} />
       <input value={href} onChange={(e) => setHref(e.target.value)} placeholder="/path or https://..." className={cn(inputCls, "font-mono text-xs")} />
       <div className="flex gap-0.5">
+        <button
+          onClick={onToggleVisible}
+          className={cn(
+            "p-1.5 rounded hover:bg-secondary",
+            hidden ? "text-muted-foreground/60" : "text-[#3a9ca5]"
+          )}
+          title={hidden ? "Hidden — click to show on the live site" : "Visible — click to hide from the live site"}
+        >
+          {hidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        </button>
         <button onClick={() => onMove(-1)} disabled={isFirst} className="p-1.5 rounded hover:bg-secondary text-muted-foreground disabled:opacity-30" title="Move up"><ArrowUp className="w-4 h-4" /></button>
         <button onClick={() => onMove(1)} disabled={isLast} className="p-1.5 rounded hover:bg-secondary text-muted-foreground disabled:opacity-30" title="Move down"><ArrowDown className="w-4 h-4" /></button>
         <button

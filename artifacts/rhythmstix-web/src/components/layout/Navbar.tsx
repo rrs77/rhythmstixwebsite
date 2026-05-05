@@ -13,6 +13,7 @@ interface NavLink {
   href: string;
   group: string;
   sortOrder: number;
+  visible?: boolean;
 }
 
 const FALLBACK_LINKS: Pick<NavLink, "label" | "href">[] = [
@@ -52,7 +53,8 @@ export function Navbar() {
   });
 
   const mainLinks = (navLinks ?? []).filter((l) => l.group === "main");
-  const links: Pick<NavLink, "label" | "href">[] = mainLinks.length > 0 ? mainLinks : FALLBACK_LINKS;
+  const visibleMain = mainLinks.filter((l) => l.visible !== false);
+  const links: Pick<NavLink, "label" | "href">[] = mainLinks.length > 0 ? visibleMain : FALLBACK_LINKS;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);

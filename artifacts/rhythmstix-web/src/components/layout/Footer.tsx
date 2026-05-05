@@ -10,6 +10,7 @@ interface NavLink {
   href: string;
   group: string;
   sortOrder: number;
+  visible?: boolean;
 }
 
 const FALLBACK_FOOTER_LINKS: Pick<NavLink, "label" | "href">[] = [
@@ -41,7 +42,7 @@ export function Footer() {
 
   const footerLinks: Pick<NavLink, "label" | "href">[] = (() => {
     const f = (navLinks ?? []).filter((l) => l.group === "footer");
-    return f.length ? f : FALLBACK_FOOTER_LINKS;
+    return f.length ? f.filter((l) => l.visible !== false) : FALLBACK_FOOTER_LINKS;
   })();
 
   const youtubeUrl = content?.["footer_youtube_url"] || "https://www.youtube.com/@RhythmstixMusicForEducation";
