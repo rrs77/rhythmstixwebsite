@@ -1,53 +1,88 @@
-import ProductPage from "./ProductPage";
-import { ClipboardCheck, BarChart3, FileText, Brain, Users, Shield, Target, Sliders, Database, FileSpreadsheet } from "lucide-react";
+import { useEffect, useMemo } from "react";
+import { Link } from "wouter";
+import { Loader2, ArrowLeft, ExternalLink } from "lucide-react";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { Button } from "@/components/ui/button";
+import { WPContent } from "@/components/WPContent";
+import { useWPPage } from "@/hooks/use-wp";
+import { decodeHtml, rewriteWPLinks } from "@/lib/wordpress";
+
+const WP_SLUG = "assessify";
+const APP_URL = "https://assessify.rhythmstix.co.uk/";
 
 export default function Assessify() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const { data: page, isLoading, error } = useWPPage(WP_SLUG);
+
+  const html = useMemo(() => {
+    if (!page?.content?.rendered) return "";
+    return rewriteWPLinks(page.content.rendered);
+  }, [page]);
+
+  const title = page?.title?.rendered ? decodeHtml(page.title.rendered) : "Assessify";
+
   return (
-    <ProductPage
-      name="Assessify"
-      subtitle="Assessment Transformed for Teachers"
-      icon={ClipboardCheck}
-      description={[
-        "Say goodbye to dry AI-generated reports with Assessify. Assessment across all subjects has always been a challenge — making it useful and transparent for pupils, and informative for parents, is often time-consuming and frustrating for teachers. But there is another way.",
-        "Assessify is a powerful assessment tool designed to work across any subject. Originally built for Performing Arts, its flexible framework adapts to any curriculum area — from Music and Drama to English, Science, and beyond. Through a user-friendly interface you can quickly and easily grade work, evaluate student progress and generate detailed reports. Leveraging the power of artificial intelligence, Assessify streamlines the assessment process for teachers and enhances student learning.",
-        "Using personalised 'I can' statements throughout all lessons for AFL, you can ensure that your reports are personable, relevant and helpful to pupils. Build your own bank of assessments for each year group you teach and tailor the rubrics to match the needs of your children — keeping all previous assessments in one place so you can review progress easily.",
-      ]}
-      features={[
-        { icon: Target, title: "Accurate & Fair Grading", description: "Ensures fair and unbiased grading of assignments and assessments based on teacher-created rubrics and assessment criteria lists — adaptable to any subject." },
-        { icon: Brain, title: "AI-Powered Reports", description: "Leverage bespoke AI tools to evaluate student performance and generate detailed, personalised reports — not dry, generic ones." },
-        { icon: BarChart3, title: "Insightful Analytics", description: "Generates detailed analytics and reports to inform your teaching, address student needs and support progress over time." },
-        { icon: Sliders, title: "Fully Customisable", description: "Customise assessment criteria to match your units, curriculum requirements and pupil needs across any subject. Create differentiated 'I can' statements or use the growing bank of ready-made criteria." },
-        { icon: Database, title: "Assessment Bank", description: "Build your own bank of assessments for each year group and subject. Keep all previous assessments in one place so you can review progress and be prepared for pupil progress meetings." },
-        { icon: FileSpreadsheet, title: "Ready-Made Spreadsheets", description: "Export detailed spreadsheets for each unit to print and share with colleagues. Get organised for those pupil progress meetings." },
-        { icon: Shield, title: "User-Friendly Interface", description: "Enjoy a seamless and intuitive experience with no advanced tech knowledge needed. Sign up, set up your classes, and start assessing." },
-        { icon: Users, title: "PeriPlanner Included", description: "PeriPlanner (now PeriFeedback) is included free with all Assessify plans — including the free plan — for scheduling and feedback management." },
-        { icon: FileText, title: "Termly Reviews & Reports", description: "Create pupil progress feedback reports and termly reviews for parents with personalised, curriculum-aligned content." },
-      ]}
-      pros={[
-        "Works across any subject — not limited to one curriculum area",
-        "Originally proven in Performing Arts, now adaptable to all disciplines",
-        "AI-powered reports that are personable and relevant, not dry and generic",
-        "Fair and unbiased grading based on teacher-created rubrics",
-        "Saves hours of administrative time on assessments and reports",
-        "Customisable 'I can' statements for meaningful AFL",
-        "Assessment bank keeps all previous assessments in one place",
-        "Ready-made spreadsheets for sharing with colleagues",
-        "PeriFeedback included free with all plans",
-        "Detailed analytics inform teaching and support progress",
-        "No advanced tech knowledge needed",
-      ]}
-      considerations={[
-        "Requires initial setup to create classes and customise assessment criteria",
-        "AI report features work best with consistent assessment data over time",
-        "Ready-made criteria currently strongest for Performing Arts, with other subjects growing",
-        "Best results when assessment criteria are tailored to your curriculum",
-      ]}
-      youtubeVideoId="WpnV7FNptW0"
-      ctaButtonLabel="Start Your Free Trial"
-      ctaHeading="Ready to transform your assessments?"
-      ctaText="Try Assessify free — no commitment, no card required. See how it transforms the way you assess, track, and report on student progress with AI-powered insights that actually sound like you wrote them."
-      externalUrl="https://assessify.rhythmstix.co.uk/"
-      externalLabel="Visit Assessify"
-    />
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navbar />
+      <main className="flex-grow pt-28 pb-16">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <Button variant="ghost" className="mb-6 text-muted-foreground" asChild>
+            <Link href="/">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Link>
+          </Button>
+
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold text-[#3a9ca5] mb-2">
+                {title}
+              </h1>
+              <div className="w-20 h-1 rounded-full bg-gradient-to-r from-[#3a9ca5] to-[#4cb5bd]" />
+            </div>
+            <Button asChild className="bg-[#3a9ca5] hover:bg-[#2f8089] text-white">
+              <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+                Open Assessify
+                <ExternalLink className="ml-2 w-4 h-4" />
+              </a>
+            </Button>
+          </div>
+
+          {isLoading && (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin text-[#3a9ca5]" />
+            </div>
+          )}
+
+          {error && (
+            <div className="rounded-2xl border border-red-200 bg-red-50/50 p-6 text-center">
+              <p className="text-sm text-red-700">
+                Couldn't load the latest content from WordPress. Please try again shortly.
+              </p>
+            </div>
+          )}
+
+          {page && (
+            <article className="rounded-2xl border border-[#3a9ca5]/10 bg-card p-6 md:p-10 shadow-sm">
+              <WPContent
+                className="wp-content prose prose-lg max-w-none"
+                html={html}
+              />
+            </article>
+          )}
+
+          {!isLoading && !error && !page && (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground">Assessify info isn't available right now.</p>
+            </div>
+          )}
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }

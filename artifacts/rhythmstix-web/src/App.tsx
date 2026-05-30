@@ -19,6 +19,9 @@ import ContactUs from "@/pages/ContactUs";
 import Cookies from "@/pages/Cookies";
 import Shop from "@/pages/Shop";
 import ShopProduct from "@/pages/ShopProduct";
+import Basket from "@/pages/Basket";
+import Checkout from "@/pages/Checkout";
+import CheckoutSuccess from "@/pages/CheckoutSuccess";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import ForgotPassword from "@/pages/ForgotPassword";
@@ -29,6 +32,7 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { AdminBar } from "@/components/AdminBar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { BasketProvider } from "@/contexts/BasketContext";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +53,9 @@ function Router() {
       <Route path="/cookies" component={Cookies} />
       <Route path="/shop" component={Shop} />
       <Route path="/shop/:familyId" component={ShopProduct} />
+      <Route path="/basket" component={Basket} />
+      <Route path="/checkout" component={Checkout} />
+      <Route path="/checkout/success" component={CheckoutSuccess} />
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/forgot-password" component={ForgotPassword} />
@@ -72,12 +79,14 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <ThemeProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
-            <CookieConsent />
-            <AdminBar />
-          </WouterRouter>
-          <Toaster />
+          <BasketProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <Router />
+              <CookieConsent />
+              <AdminBar />
+            </WouterRouter>
+            <Toaster />
+          </BasketProvider>
         </ThemeProvider>
       </TooltipProvider>
     </QueryClientProvider>

@@ -73,16 +73,17 @@ export function EditableImage({
   }
 
   // Admin sees the image (or empty state) with hover controls.
+  // Wrapper inherits the caller's className so layout (absolute positioning,
+  // sizing, etc.) matches the public path. The img/empty state fills the wrapper.
   return (
-    <div className="relative inline-block group">
+    <div className={cn("group", className)} style={{ position: className?.includes("absolute") ? undefined : "relative" }}>
       {hasImage ? (
-        <img src={url} alt={alt} className={className} />
+        <img src={url} alt={alt} className="w-full h-full object-contain" />
       ) : (
         <div
           className={cn(
-            "inline-flex items-center justify-center",
+            "w-full h-full inline-flex items-center justify-center",
             !emptyRender && "min-w-32 min-h-20 border-2 border-dashed border-[#3a9ca5]/40 rounded-xl bg-[#3a9ca5]/5 text-[#3a9ca5]/70 text-xs px-4 py-3",
-            className,
           )}
         >
           {emptyRender ?? "No image"}

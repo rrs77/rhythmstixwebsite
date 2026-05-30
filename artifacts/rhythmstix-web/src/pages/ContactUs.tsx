@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
+import { Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,7 +19,6 @@ export default function ContactUs() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const phone = content?.["footer_phone"] || "01245 633 231";
   const email = content?.["footer_email"] || "info@rhythmstix.co.uk";
   const address = content?.["footer_address"] || "Rhythmstix Ltd, 33 Vicarage Road, Chelmsford, Essex CM2 9BP";
 
@@ -143,7 +142,12 @@ export default function ContactUs() {
                       required
                     />
                   </div>
-                  <Button type="submit" size="lg" disabled={loading} className="w-full sm:w-auto">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={loading}
+                    className="w-full sm:w-auto bg-[#3a9ca5] hover:bg-[#2d8890] text-white disabled:opacity-60"
+                  >
                     {loading ? (
                       "Sending..."
                     ) : (
@@ -168,13 +172,6 @@ export default function ContactUs() {
                   <EditableText contentKey="contact.contact_card_title" fallback="Get in Touch" as="span" />
                 </h3>
                 <div className="space-y-4">
-                  <a
-                    href={`tel:${phone.replace(/\s+/g, "")}`}
-                    className="flex items-start gap-3 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <Phone size={18} className="mt-0.5 shrink-0 text-primary" />
-                    <span>{phone}</span>
-                  </a>
                   <a
                     href={`mailto:${email}`}
                     className="flex items-start gap-3 text-muted-foreground hover:text-foreground transition-colors"

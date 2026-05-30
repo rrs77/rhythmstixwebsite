@@ -1,5 +1,28 @@
 uploads = []
-generated = []
+
+[[generated]]
+id = "o_K1J591kjKpf4dQFBtc_"
+uri = "file://artifacts/rhythmstix-web/public/brand/hero.png"
+type = "image"
+title = "rhythmstix hero v5 faded semicircle"
+
+[[generated]]
+id = "WUC5X3kPQHVgtEe6mVOL1"
+uri = "file://artifacts/rhythmstix-web/public/brand/hero-girl.png"
+type = "image"
+title = "rhythmstix violinist isolated v2 full arms"
+
+[[generated]]
+id = "kxtchAoy2kmNdiXgqz2Ar"
+uri = "file://artifacts/rhythmstix-web/public/brand/concert.png"
+type = "image"
+title = "concert silhouette teal"
+
+[[generated]]
+id = "-tQ8Q5YUbzw99op9rmcH3"
+uri = "file://artifacts/rhythmstix-web/public/brand/hero-girl-fullbody.png"
+type = "image"
+title = "violinist full body"
 
 [[outputs]]
 id = "i6n8vQ5OSnE2gOS0YQhwy"

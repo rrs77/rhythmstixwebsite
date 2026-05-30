@@ -1,0 +1,238 @@
+Project: RhythmStix Website Deployment to Vercel
+
+## Initial Setup
+
+Repository:
+
+* GitHub: rrs77/rhythmstix-website-latest
+
+Vercel project created:
+
+* Project name: newrhythmstixwebsite
+
+Original deployment instructions:
+
+* Framework Preset: Other
+* Root Directory: ./
+* Node.js: 22.x
+* Environment variables:
+
+  * DATABASE_URL
+  * SESSION_SECRET
+  * ADMIN_PASSWORD
+  * WC_CONSUMER_KEY
+  * WC_CONSUMER_SECRET
+  * STRIPE_SECRET_KEY
+
+## Changes Made
+
+### 1. Root Directory
+
+Changed from:
+
+artifacts/api-server
+
+to:
+
+./
+
+(repository root)
+
+### 2. Node Version
+
+Initial deployment failed with:
+
+Found invalid Node.js Version: "24.x"
+
+Changed Vercel Node.js version:
+
+24.x → 22.x
+
+This resolved the Node version error.
+
+### 3. Environment Variables
+
+Added:
+
+* DATABASE_URL
+* SESSION_SECRET
+* ADMIN_PASSWORD
+* WC_CONSUMER_KEY
+* WC_CONSUMER_SECRET
+
+STRIPE_SECRET_KEY was uncertain and may not have been added initially.
+
+### 4. PNPM Lockfile Error
+
+Original error:
+
+ERR_PNPM_LOCKFILE_CONFIG_MISMATCH
+Cannot proceed with the frozen installation.
+Update your lockfile using "pnpm install --no-frozen-lockfile"
+
+Attempted fixes:
+
+* Install Command:
+  pnpm install --no-frozen-lockfile
+
+Added environment variables:
+
+ENABLE_EXPERIMENTAL_COREPACK=1
+
+PNPM_FLAGS=--no-frozen-lockfile
+
+After this change the lockfile error disappeared.
+
+## Current Build Behaviour
+
+### Frontend Build Succeeds
+
+Vite completes successfully:
+
+✓ 2281 modules transformed
+✓ built in ~8 seconds
+
+Output generated:
+
+dist/public/index.html
+dist/public/assets/index-*.css
+dist/public/assets/index-*.js
+
+Warnings only:
+
+* Sourcemap warnings
+* Chunk size warnings
+
+Neither appears fatal.
+
+### Secondary Build Stage
+
+After frontend build:
+
+Installing dependencies...
+Done in 2s using pnpm v10.26.1
+Using TypeScript 5.9.3 (local user-provided)
+
+Then deployment fails.
+
+Vercel UI shows:
+
+Build Failed
+
+api/index.ts: Emit skipped
+
+No detailed TypeScript error is visible in logs.
+
+## Files Inspected
+
+### /api/index.ts
+
+Original:
+
+import app from "../artifacts/api-server/src/app";
+
+export default app;
+
+Modified to:
+
+// @ts-nocheck
+import app from "../artifacts/api-server/src/app";
+
+export default app;
+
+This did not resolve the failure.
+
+### artifacts/api-server/src/app.ts
+
+Contains:
+
+* Express app setup
+* CORS
+* cookie-parser
+* pino-http
+* router registration
+* error handling
+
+No obvious TypeScript issues.
+
+### artifacts/api-server/src/routes/index.ts
+
+Contains route registrations:
+
+health
+auth
+content
+products
+testimonials
+nav-links
+shop
+woocommerce
+contact
+forum
+social
+pages
+apps
+blog-posts
+uploads
+
+No obvious TypeScript issues.
+
+### artifacts/api-server/src/index.ts
+
+Contains:
+
+* Reads PORT
+* app.listen(PORT)
+
+No obvious TypeScript issues.
+
+## Current Theory
+
+The frontend build succeeds.
+
+Failure occurs during Vercel's TypeScript processing of the serverless API.
+
+Vercel reports only:
+
+api/index.ts: Emit skipped
+
+but does not expose the underlying TypeScript error.
+
+Likely causes:
+
+1. A TypeScript error somewhere inside:
+   artifacts/api-server/src/**
+
+2. Vercel attempting to compile backend code as a serverless function and failing.
+
+3. A missing dependency/type import used by one of the route modules.
+
+4. A Vercel serverless function incompatibility.
+
+## Suggested Next Investigation
+
+Inspect:
+
+* vercel.json
+* tsconfig.json
+* package.json
+* artifacts/api-server/src/lib/logger.ts
+* all route files imported by routes/index.ts
+
+Particularly check:
+
+* TypeScript project references
+* Path aliases
+* Missing type packages
+* Build settings for serverless functions
+
+Potential experiment:
+Rename:
+
+/api/index.ts
+
+to:
+
+/api/index.js
+
+and update vercel.json accordingly to determine whether the failure is TypeScript-specific.

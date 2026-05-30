@@ -3,11 +3,41 @@ import { useLocation } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { useAuth, useOrders, useSubscription, type Order } from "@/hooks/use-auth";
+import {
+  useAuth,
+  useOrders,
+  useSubscription,
+  useProfile,
+  useUpdateProfile,
+  useDownloads,
+  forgotPassword,
+  type Order,
+  type Address,
+} from "@/hooks/use-auth";
 import { motion } from "framer-motion";
-import { User, Package, LogOut, Loader2, ShoppingBag, Receipt, Calendar, ChevronDown, ChevronUp, Mail, Bell } from "lucide-react";
+import {
+  User,
+  Package,
+  LogOut,
+  Loader2,
+  ShoppingBag,
+  Receipt,
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  Mail,
+  Bell,
+  MapPin,
+  Download,
+  KeyRound,
+  Pencil,
+  Save,
+  X as XIcon,
+  AlertCircle,
+} from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { EditableText } from "@/components/EditableText";
 
 const STATUS_STYLES: Record<string, string> = {
   completed: "bg-emerald-100 text-emerald-700",
@@ -136,14 +166,26 @@ function SubscriptionSection() {
             <Mail className="w-5 h-5 text-[#3a9ca5]" />
           </div>
           <div>
-            <h3 className="font-semibold text-sm text-foreground">Email Updates</h3>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-              Receive news, community updates, new resources, and admin announcements from Rhythmstix.
-            </p>
+            <EditableText
+              contentKey="account.subscription.title"
+              fallback="Email Updates"
+              as="h3"
+              className="font-semibold text-sm text-foreground"
+            />
+            <EditableText
+              contentKey="account.subscription.body"
+              fallback="Receive news, community updates, new resources, and admin announcements from Rhythmstix."
+              as="p"
+              className="text-xs text-muted-foreground mt-0.5 leading-relaxed"
+              multiline
+            />
             {!configured && (
-              <p className="text-xs text-amber-600 mt-1">
-                Email subscription service is being set up.
-              </p>
+              <EditableText
+                contentKey="account.subscription.notConfigured"
+                fallback="Email subscription service is being set up."
+                as="p"
+                className="text-xs text-amber-600 mt-1"
+              />
             )}
             {error && (
               <p className="text-xs text-red-500 mt-1">{error}</p>
@@ -165,6 +207,341 @@ function SubscriptionSection() {
             )}
           />
         </button>
+      </div>
+    </div>
+  );
+}
+
+function formatAddress(a: Address | undefined) {
+  if (!a) return [];
+  const lines = [
+    [a.first_name, a.last_name].filter(Boolean).join(" "),
+    a.company,
+    a.address_1,
+    a.address_2,
+    [a.city, a.state, a.postcode].filter(Boolean).join(", "),
+    a.country,
+  ].filter((line) => line && line.trim().length > 0);
+  return lines as string[];
+}
+
+const ADDR_FIELDS: Array<{ key: keyof Address; label: string; full?: boolean }> = [
+  { key: "first_name", label: "First name" },
+  { key: "last_name", label: "Last name" },
+  { key: "company", label: "Company", full: true },
+  { key: "address_1", label: "Address line 1", full: true },
+  { key: "address_2", label: "Address line 2", full: true },
+  { key: "city", label: "City" },
+  { key: "state", label: "County / State" },
+  { key: "postcode", label: "Postcode" },
+  { key: "country", label: "Country code (e.g. GB)" },
+  { key: "phone", label: "Phone" },
+];
+
+function AddressEditor({
+  value,
+  onChange,
+  showEmail,
+}: {
+  value: Address;
+  onChange: (next: Address) => void;
+  showEmail?: boolean;
+}) {
+  const set = (k: keyof Address, v: string) => onChange({ ...value, [k]: v });
+  const inputCls =
+    "w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]";
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {ADDR_FIELDS.map((f) => (
+        <div key={f.key} className={f.full ? "sm:col-span-2" : ""}>
+          <label className="text-xs font-medium text-muted-foreground mb-1 block">{f.label}</label>
+          <input
+            type="text"
+            value={(value[f.key] as string) || ""}
+            onChange={(e) => set(f.key, e.target.value)}
+            className={inputCls}
+          />
+        </div>
+      ))}
+      {showEmail && (
+        <div className="sm:col-span-2">
+          <label className="text-xs font-medium text-muted-foreground mb-1 block">Billing email</label>
+          <input
+            type="email"
+            value={value.email || ""}
+            onChange={(e) => set("email", e.target.value)}
+            className={inputCls}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProfileSection() {
+  const { data: profile, isLoading, error } = useProfile();
+  const updateProfile = useUpdateProfile();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<{ firstName: string; lastName: string; billing: Address; shipping: Address } | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  function startEdit() {
+    if (!profile) return;
+    setDraft({
+      firstName: profile.firstName || "",
+      lastName: profile.lastName || "",
+      billing: { ...profile.billing },
+      shipping: { ...profile.shipping },
+    });
+    setSaveError(null);
+    setEditing(true);
+  }
+
+  async function save() {
+    if (!draft) return;
+    setSaveError(null);
+    try {
+      await updateProfile.mutateAsync(draft);
+      setEditing(false);
+    } catch (e: any) {
+      setSaveError(e.message || "Failed to save profile");
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="bg-card rounded-xl border border-border p-5 flex items-center justify-center">
+        <Loader2 className="w-5 h-5 animate-spin text-[#3a9ca5]" />
+      </div>
+    );
+  }
+
+  if (error || !profile) {
+    return (
+      <div className="bg-card rounded-xl border border-border p-5 flex items-start gap-3 text-sm text-amber-700">
+        <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+        <div>
+          Couldn't load your profile from WooCommerce. Please try again later.
+        </div>
+      </div>
+    );
+  }
+
+  const billingLines = formatAddress(profile.billing);
+  const shippingLines = formatAddress(profile.shipping);
+
+  return (
+    <div className="bg-card rounded-xl border border-border p-5 space-y-5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-lg bg-[#3a9ca5]/10 flex items-center justify-center shrink-0">
+            <MapPin className="w-5 h-5 text-[#3a9ca5]" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-sm text-foreground">Profile & Addresses</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Synced from your Rhythmstix WooCommerce account.
+            </p>
+          </div>
+        </div>
+        {!editing ? (
+          <Button size="sm" variant="outline" onClick={startEdit}>
+            <Pencil className="w-3.5 h-3.5 mr-1.5" />
+            Edit
+          </Button>
+        ) : (
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => { setEditing(false); setSaveError(null); }} disabled={updateProfile.isPending}>
+              <XIcon className="w-3.5 h-3.5 mr-1.5" />
+              Cancel
+            </Button>
+            <Button size="sm" className="bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white" onClick={save} disabled={updateProfile.isPending}>
+              {updateProfile.isPending ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <Save className="w-3.5 h-3.5 mr-1.5" />}
+              Save
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {saveError && (
+        <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg p-2.5 flex gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0" /> {saveError}
+        </div>
+      )}
+
+      {!editing && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Name</h4>
+            <p className="text-sm">
+              {(profile.firstName || profile.lastName) ? `${profile.firstName} ${profile.lastName}`.trim() : <span className="text-muted-foreground italic">Not set</span>}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">{profile.email}</p>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Billing address</h4>
+            {billingLines.length > 0 ? (
+              <div className="text-sm leading-relaxed">{billingLines.map((l, i) => <div key={i}>{l}</div>)}</div>
+            ) : (
+              <p className="text-sm text-muted-foreground italic">No billing address on file</p>
+            )}
+            {profile.billing.phone && <p className="text-xs text-muted-foreground mt-1">{profile.billing.phone}</p>}
+          </div>
+          <div className="md:col-span-2">
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Shipping address</h4>
+            {shippingLines.length > 0 ? (
+              <div className="text-sm leading-relaxed">{shippingLines.map((l, i) => <div key={i}>{l}</div>)}</div>
+            ) : (
+              <p className="text-sm text-muted-foreground italic">No shipping address on file</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {editing && draft && (
+        <div className="space-y-5">
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Name</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs font-medium text-muted-foreground mb-1 block">First name</label>
+                <input
+                  type="text"
+                  value={draft.firstName}
+                  onChange={(e) => setDraft({ ...draft, firstName: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-muted-foreground mb-1 block">Last name</label>
+                <input
+                  type="text"
+                  value={draft.lastName}
+                  onChange={(e) => setDraft({ ...draft, lastName: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 focus:border-[#3a9ca5]"
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Billing address</h4>
+            <AddressEditor value={draft.billing} onChange={(billing) => setDraft({ ...draft, billing })} showEmail />
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Shipping address</h4>
+            <AddressEditor value={draft.shipping} onChange={(shipping) => setDraft({ ...draft, shipping })} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DownloadsSection() {
+  const { data: downloads, isLoading, error } = useDownloads();
+
+  if (isLoading) {
+    return (
+      <div className="bg-card rounded-xl border border-border p-5 flex items-center justify-center">
+        <Loader2 className="w-5 h-5 animate-spin text-[#3a9ca5]" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-card rounded-xl border border-border p-5 flex items-start gap-3 text-sm text-amber-700">
+        <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+        Couldn't load your purchased downloads. Please try again later.
+      </div>
+    );
+  }
+
+  if (!downloads || downloads.length === 0) {
+    return (
+      <div className="text-center py-10 bg-card rounded-xl border border-border">
+        <Download className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
+        <h3 className="font-semibold text-sm">No downloads yet</h3>
+        <p className="text-xs text-muted-foreground mt-1">
+          Downloadable resources from your purchases will appear here.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {downloads.map((d) => (
+        <div key={`${d.downloadId}-${d.orderId}`} className="bg-card rounded-xl border border-border p-4 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-lg bg-[#d4a017]/10 flex items-center justify-center shrink-0">
+            <Download className="w-5 h-5 text-[#d4a017]" />
+          </div>
+          <div className="flex-grow min-w-0">
+            <div className="font-semibold text-sm truncate">{d.productName}</div>
+            <div className="flex items-center gap-3 text-xs text-muted-foreground mt-0.5 flex-wrap">
+              {d.fileName && <span className="truncate">{d.fileName}</span>}
+              <span>Order #{d.orderId}</span>
+              {typeof d.downloadsRemaining === "number" && d.downloadsRemaining >= 0 && (
+                <span>{d.downloadsRemaining} left</span>
+              )}
+              {d.accessExpires && <span>Expires {new Date(d.accessExpires).toLocaleDateString("en-GB")}</span>}
+            </div>
+          </div>
+          <Button
+            asChild
+            size="sm"
+            className="bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white shrink-0"
+          >
+            <a href={d.downloadUrl} target="_blank" rel="noopener noreferrer">
+              <Download className="w-3.5 h-3.5 mr-1.5" />
+              Download
+            </a>
+          </Button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ChangePasswordSection({ email }: { email: string }) {
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function send() {
+    setSending(true);
+    setError(null);
+    try {
+      const res = await forgotPassword(email);
+      if (res?.success === false) throw new Error(res.error || "Failed to send reset link");
+      setSent(true);
+    } catch (e: any) {
+      setError(e.message || "Failed to send reset link");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div className="bg-card rounded-xl border border-border p-5 flex items-start gap-3">
+      <div className="w-10 h-10 rounded-lg bg-[#3a9ca5]/10 flex items-center justify-center shrink-0">
+        <KeyRound className="w-5 h-5 text-[#3a9ca5]" />
+      </div>
+      <div className="flex-grow">
+        <h3 className="font-semibold text-sm text-foreground">Password</h3>
+        <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+          Passwords are managed by your Rhythmstix WordPress account. We'll email a secure reset link to{" "}
+          <span className="font-medium text-foreground">{email}</span>.
+        </p>
+        {error && <p className="text-xs text-red-600 mt-2">{error}</p>}
+        {sent ? (
+          <p className="text-xs text-emerald-600 mt-2">Reset link sent — check your inbox.</p>
+        ) : (
+          <Button size="sm" variant="outline" className="mt-3" onClick={send} disabled={sending}>
+            {sending ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <KeyRound className="w-3.5 h-3.5 mr-1.5" />}
+            Send password reset email
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -228,8 +605,39 @@ export default function Account() {
 
             <div className="mb-8">
               <h2 className="text-lg font-bold flex items-center gap-2 mb-3">
+                <User className="w-5 h-5 text-[#3a9ca5]" />
+                <EditableText contentKey="account.profile.heading" fallback="Profile & Addresses" as="span" />
+              </h2>
+              <ProfileSection />
+            </div>
+
+            <div className="mb-8">
+              <h2 className="text-lg font-bold flex items-center gap-2 mb-3">
+                <Download className="w-5 h-5 text-[#3a9ca5]" />
+                <EditableText contentKey="account.products.heading" fallback="My Products" as="span" />
+              </h2>
+              <p className="text-sm text-muted-foreground mb-3 -mt-2">
+                <EditableText
+                  contentKey="account.products.subheading"
+                  fallback="Downloadable resources you've purchased."
+                  as="span"
+                />
+              </p>
+              <DownloadsSection />
+            </div>
+
+            <div className="mb-8">
+              <h2 className="text-lg font-bold flex items-center gap-2 mb-3">
+                <KeyRound className="w-5 h-5 text-[#3a9ca5]" />
+                <EditableText contentKey="account.security.heading" fallback="Security" as="span" />
+              </h2>
+              <ChangePasswordSection email={user.email} />
+            </div>
+
+            <div className="mb-8">
+              <h2 className="text-lg font-bold flex items-center gap-2 mb-3">
                 <Bell className="w-5 h-5 text-[#3a9ca5]" />
-                Notifications & Updates
+                <EditableText contentKey="account.notifications.heading" fallback="Notifications & Updates" as="span" />
               </h2>
               <SubscriptionSection />
             </div>
@@ -237,11 +645,14 @@ export default function Account() {
             <div className="mb-6">
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <Package className="w-5 h-5 text-[#3a9ca5]" />
-                Your Orders
+                <EditableText contentKey="account.orders.heading" fallback="Order History" as="span" />
               </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                View your purchase history and order details.
-              </p>
+              <EditableText
+                contentKey="account.orders.subheading"
+                fallback="View your purchase history and order details."
+                as="p"
+                className="text-sm text-muted-foreground mt-1"
+              />
             </div>
 
             {ordersLoading && (
@@ -253,10 +664,13 @@ export default function Account() {
             {orders && orders.length === 0 && (
               <div className="text-center py-16 bg-card rounded-2xl border border-border">
                 <ShoppingBag className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-                <h3 className="font-semibold mb-1">No orders yet</h3>
-                <p className="text-sm text-muted-foreground">
-                  Your purchase history will appear here.
-                </p>
+                <EditableText contentKey="account.orders.empty.title" fallback="No orders yet" as="h3" className="font-semibold mb-1" />
+                <EditableText
+                  contentKey="account.orders.empty.body"
+                  fallback="Your purchase history will appear here."
+                  as="p"
+                  className="text-sm text-muted-foreground"
+                />
               </div>
             )}
 

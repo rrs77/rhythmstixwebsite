@@ -1,31 +1,46 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useWPPosts } from "@/hooks/use-wp";
 import { decodeHtml } from "@/lib/wordpress";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Loader2, ArrowRight, Shield, Lock, X, Check,
-  Youtube, Linkedin, FileText, Play, Plus, Trash2, ExternalLink, Square, CheckSquare
+  Loader2, Shield, Lock, X, Check, ArrowRight,
+  Youtube, Linkedin, Facebook, Twitter, FileText, Play, Plus, EyeOff, Newspaper, Download
 } from "lucide-react";
-import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
-import { YouTubeModalOverlay } from "@/components/YouTubeModal";
+import { PostModal, type UnifiedPost } from "@/components/blog/PostModal";
 
-type SourceFilter = "all" | "wordpress" | "youtube" | "linkedin";
+type SourceFilter = "all" | "wordpress" | "youtube" | "linkedin" | "facebook" | "twitter" | "blog";
 
-interface UnifiedPost {
+interface SocialPostApi {
   id: string;
-  source: "wordpress" | "youtube" | "linkedin";
+  rawId: number;
+  source: "youtube" | "facebook" | "linkedin" | "twitter";
+  platform: "youtube" | "facebook" | "linkedin" | "twitter";
   title: string;
+  body: string;
   excerpt: string;
+  url: string;
+  thumbnail: string | null;
   date: string;
-  slug?: string;
+  hidden: boolean;
   videoId?: string;
-  thumbnail?: string;
-  url?: string;
+}
+
+function useSocialPostsAll(isAdmin: boolean) {
+  return useQuery<SocialPostApi[]>({
+    queryKey: ["social-posts-all", isAdmin ? "all" : "public"],
+    queryFn: async () => {
+      const url = isAdmin ? "/api/social/posts?includeHidden=1" : "/api/social/posts";
+      const res = await fetch(url, { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 60 * 1000,
+  });
 }
 
 function useAdminCheck() {
@@ -51,80 +66,117 @@ function useHiddenPosts() {
   });
 }
 
-function useHiddenSocial() {
-  return useQuery({
-    queryKey: ["hidden-social"],
+interface BlogPostApi {
+  id: string;
+  rawId: number;
+  title: string;
+  excerpt: string;
+  content: string;
+  date: string;
+  published: boolean;
+}
+
+function useBlogPosts(isAdmin: boolean) {
+  return useQuery<BlogPostApi[]>({
+    queryKey: ["blog-posts", isAdmin ? "all" : "public"],
     queryFn: async () => {
-      const res = await fetch("/api/social/hidden", { credentials: "include" });
-      return res.json() as Promise<string[]>;
+      const url = isAdmin ? "/api/blog-posts/all" : "/api/blog-posts";
+      const res = await fetch(url, { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
     },
     staleTime: 30 * 1000,
   });
 }
 
-function useYouTubeVideos() {
-  return useQuery({
-    queryKey: ["youtube-videos"],
-    queryFn: async () => {
-      const res = await fetch("/api/social/youtube");
-      return res.json();
-    },
-    staleTime: 10 * 60 * 1000,
-  });
-}
-
-function useLinkedinPosts() {
-  return useQuery({
-    queryKey: ["linkedin-posts"],
-    queryFn: async () => {
-      const res = await fetch("/api/social/linkedin");
-      return res.json();
-    },
-    staleTime: 5 * 60 * 1000,
-  });
-}
-
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "").replace(/&hellip;/g, "...").replace(/&nbsp;/g, " ").trim();
+  if (!html) return "";
+  if (typeof document === "undefined") {
+    return html
+      .replace(/<[^>]*>/g, "")
+      .replace(/&hellip;/g, "…")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)))
+      .replace(/&#x([0-9a-fA-F]+);/g, (_, n) => String.fromCharCode(parseInt(n, 16)))
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;|&apos;/g, "'")
+      .trim();
+  }
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return (div.textContent || div.innerText || "").replace(/\s+/g, " ").trim();
 }
 
 const SOURCE_ICONS = {
   wordpress: FileText,
   youtube: Youtube,
   linkedin: Linkedin,
+  facebook: Facebook,
+  twitter: Twitter,
+  blog: Newspaper,
 };
 
 const SOURCE_COLORS = {
   wordpress: "text-blue-600 bg-blue-50",
   youtube: "text-red-600 bg-red-50",
   linkedin: "text-[#0077b5] bg-[#0077b5]/10",
+  facebook: "text-[#1877f2] bg-[#1877f2]/10",
+  twitter: "text-sky-500 bg-sky-50",
+  blog: "text-[#3a9ca5] bg-[#3a9ca5]/10",
 };
 
 const SOURCE_LABELS = {
   wordpress: "Blog",
   youtube: "YouTube",
   linkedin: "LinkedIn",
+  facebook: "Facebook",
+  twitter: "Twitter",
+  blog: "Blog Post",
 };
 
 export default function BlogList() {
   const { data: wpPosts, isLoading: wpLoading } = useWPPosts(50);
-  const { data: ytVideos = [], isLoading: ytLoading } = useYouTubeVideos();
-  const { data: liPosts = [], isLoading: liLoading } = useLinkedinPosts();
   const { data: isAdmin } = useAdminCheck();
+  const { data: socialPosts = [], isLoading: socialLoading } = useSocialPostsAll(!!isAdmin);
   const { data: hiddenWpPosts = [] } = useHiddenPosts();
-  const { data: hiddenSocial = [] } = useHiddenSocial();
   const queryClient = useQueryClient();
 
   const [adminMode, setAdminMode] = useState(false);
+  useEffect(() => {
+    if (isAdmin) setAdminMode(true);
+  }, [isAdmin]);
+
+  const { data: blogPostsRaw = [], isLoading: blogLoading } = useBlogPosts(!!isAdmin);
+
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminPassword, setAdminPassword] = useState("");
   const [adminError, setAdminError] = useState("");
-  const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
-  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
-  const [showAddLinkedin, setShowAddLinkedin] = useState(false);
-  const [liTitle, setLiTitle] = useState("");
-  const [liDesc, setLiDesc] = useState("");
-  const [liUrl, setLiUrl] = useState("");
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>("wordpress");
+  const [activePost, setActivePost] = useState<UnifiedPost | null>(null);
+
+  // Blog post create form state (edits happen inside the post modal)
+  const [blogFormOpen, setBlogFormOpen] = useState(false);
+  const [bpTitle, setBpTitle] = useState("");
+  const [bpExcerpt, setBpExcerpt] = useState("");
+  const [bpContent, setBpContent] = useState("");
+  const [bpDate, setBpDate] = useState("");
+  const [bpPublished, setBpPublished] = useState(true);
+
+  function resetBlogForm() {
+    setBpTitle("");
+    setBpExcerpt("");
+    setBpContent("");
+    setBpDate("");
+    setBpPublished(true);
+  }
+
+  function openCreateBlog() {
+    resetBlogForm();
+    setBlogFormOpen(true);
+  }
 
   const adminLoginMutation = useMutation({
     mutationFn: async (password: string) => {
@@ -168,55 +220,67 @@ export default function BlogList() {
   });
 
   const toggleSocialMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const current = hiddenSocial || [];
-      const newHidden = current.includes(id)
-        ? current.filter((h) => h !== id)
-        : [...current, id];
-      const res = await fetch("/api/social/hidden", {
-        method: "PUT",
+    mutationFn: async ({ rawId, hidden }: { rawId: number; hidden: boolean }) => {
+      const res = await fetch(`/api/social/posts/${rawId}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ ids: newHidden }),
+        body: JSON.stringify({ hidden }),
       });
       if (!res.ok) throw new Error("Failed to update");
-      return newHidden;
     },
-    onSuccess: (newHidden) => {
-      queryClient.setQueryData(["hidden-social"], newHidden);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["social-posts-all"] });
     },
   });
 
-  const addLinkedinMutation = useMutation({
+  const importWpMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch("/api/social/linkedin", {
+      const res = await fetch("/api/blog-posts/import-wordpress", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || "Import failed");
+      }
+      return res.json() as Promise<{ imported: number; skipped: number; hiddenTotal: number }>;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["hidden-posts"] });
+      alert(`Import complete: ${data.imported} new post${data.imported === 1 ? "" : "s"} imported, ${data.skipped} skipped.`);
+    },
+    onError: (err: Error) => {
+      alert(`Import failed: ${err.message}`);
+    },
+  });
+
+  const saveBlogMutation = useMutation({
+    mutationFn: async () => {
+      const payload = {
+        title: bpTitle,
+        excerpt: bpExcerpt,
+        content: bpContent,
+        date: bpDate ? new Date(bpDate).toISOString() : new Date().toISOString(),
+        published: bpPublished,
+      };
+      const res = await fetch("/api/blog-posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ title: liTitle, description: liDesc, url: liUrl }),
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || "Failed to save");
+      }
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["linkedin-posts"] });
-      setLiTitle("");
-      setLiDesc("");
-      setLiUrl("");
-      setShowAddLinkedin(false);
-    },
-  });
-
-  const deleteLinkedinMutation = useMutation({
-    mutationFn: async (id: number) => {
-      const res = await fetch(`/api/social/linkedin/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed");
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["linkedin-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
+      setBlogFormOpen(false);
+      resetBlogForm();
     },
   });
 
@@ -236,40 +300,50 @@ export default function BlogList() {
       }
     }
 
-    for (const v of ytVideos) {
+    for (const s of socialPosts) {
+      const fullText = stripHtml(s.body || "");
       items.push({
-        id: v.id,
-        source: "youtube",
-        title: v.title,
-        excerpt: v.description?.substring(0, 200) || "",
-        date: v.date,
-        videoId: v.videoId,
-        thumbnail: v.thumbnail,
-        url: v.url,
+        id: s.id,
+        rawId: s.rawId,
+        source: s.source,
+        title: s.title || (fullText ? fullText.split(/\r?\n/)[0].slice(0, 120) : "Post"),
+        excerpt: fullText.substring(0, 200),
+        body: fullText,
+        date: s.date,
+        url: s.url,
+        thumbnail: s.thumbnail || undefined,
+        videoId: s.videoId,
+        published: !s.hidden,
       });
     }
 
-    for (const l of liPosts) {
+    for (const b of blogPostsRaw) {
       items.push({
-        id: l.id,
-        source: "linkedin",
-        title: l.title,
-        excerpt: l.description?.substring(0, 200) || "",
-        date: l.date,
-        url: l.url,
+        id: b.id,
+        source: "blog",
+        title: b.title,
+        excerpt: b.excerpt || stripHtml(b.content).substring(0, 200),
+        body: b.content,
+        date: b.date,
+        rawId: b.rawId,
+        published: b.published,
       });
     }
 
     items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     return items;
-  }, [wpPosts, ytVideos, liPosts]);
+  }, [wpPosts, socialPosts, blogPostsRaw]);
 
   const isHidden = (post: UnifiedPost) => {
     if (post.source === "wordpress") {
       const wpId = parseInt(post.id.replace("wp:", ""));
       return hiddenWpPosts.includes(wpId);
     }
-    return hiddenSocial.includes(post.id);
+    if (post.source === "blog") {
+      return post.published === false;
+    }
+    // social posts: published=false means hidden=true
+    return post.published === false;
   };
 
   const filteredPosts = unifiedPosts.filter((p) => {
@@ -278,14 +352,36 @@ export default function BlogList() {
     return true;
   });
 
-  const isLoading = wpLoading || ytLoading || liLoading;
+  const isLoading = wpLoading || socialLoading || blogLoading;
+
+  const toggleBlogPublishMutation = useMutation({
+    mutationFn: async ({ id, published }: { id: number; published: boolean }) => {
+      const res = await fetch(`/api/blog-posts/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ published }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
+    },
+  });
 
   function handleToggleHide(post: UnifiedPost) {
-    if (post.source === "wordpress") {
-      const wpId = parseInt(post.id.replace("wp:", ""));
+    // Always toggle relative to the freshest known state for this post, not the
+    // (possibly stale) object the modal handed us — otherwise repeated clicks
+    // recompute the same target and the visibility never actually changes.
+    const live = unifiedPosts.find((p) => p.id === post.id) ?? post;
+    if (live.source === "wordpress") {
+      const wpId = parseInt(live.id.replace("wp:", ""));
       toggleWpMutation.mutate(wpId);
-    } else {
-      toggleSocialMutation.mutate(post.id);
+    } else if (live.source === "blog" && live.rawId !== undefined) {
+      toggleBlogPublishMutation.mutate({ id: live.rawId, published: !(live.published ?? true) });
+    } else if (live.rawId !== undefined) {
+      toggleSocialMutation.mutate({ rawId: live.rawId, hidden: live.published !== false });
     }
   }
 
@@ -298,7 +394,7 @@ export default function BlogList() {
   }
 
   const sourceCounts = useMemo(() => {
-    const counts = { all: 0, wordpress: 0, youtube: 0, linkedin: 0 };
+    const counts: Record<SourceFilter, number> = { all: 0, wordpress: 0, youtube: 0, linkedin: 0, facebook: 0, twitter: 0, blog: 0 };
     for (const p of unifiedPosts) {
       if (adminMode || !isHidden(p)) {
         counts.all++;
@@ -306,11 +402,20 @@ export default function BlogList() {
       }
     }
     return counts;
-  }, [unifiedPosts, adminMode, hiddenWpPosts, hiddenSocial]);
+  }, [unifiedPosts, adminMode, hiddenWpPosts]);
 
   const hiddenCount = useMemo(() => {
     return unifiedPosts.filter((p) => isHidden(p)).length;
-  }, [unifiedPosts, hiddenWpPosts, hiddenSocial]);
+  }, [unifiedPosts, hiddenWpPosts]);
+
+  // The open post must reflect the *latest* query data, not a frozen snapshot
+  // captured when it was clicked. Without this, saving or toggling visibility
+  // leaves the modal showing stale published/content values (e.g. the hide/show
+  // toggle appears to do nothing because its `hidden` prop never updates).
+  const liveActivePost = useMemo(
+    () => (activePost ? unifiedPosts.find((p) => p.id === activePost.id) ?? activePost : null),
+    [activePost, unifiedPosts],
+  );
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -369,77 +474,128 @@ export default function BlogList() {
           {adminMode && (
             <div className="mb-4 space-y-3">
               <div className="bg-[#3a9ca5]/5 border border-[#3a9ca5]/20 rounded-xl px-4 py-3 text-sm text-[#3a9ca5]">
-                <strong>Admin mode:</strong> Tick the checkbox on any post to hide it from visitors. Untick to show it again.
+                <strong>Admin mode:</strong> Click any post to open it in a modal where you can edit, hide, or delete it. Use <em>Add Blog Post</em> to publish a new article from scratch.
                 {hiddenCount > 0 && (
                   <span className="ml-1 font-medium">({hiddenCount} post{hiddenCount !== 1 ? "s" : ""} currently hidden)</span>
                 )}
               </div>
-              <Button
-                onClick={() => setShowAddLinkedin(!showAddLinkedin)}
-                variant="outline"
-                size="sm"
-                className="gap-1.5 border-[#0077b5]/30 text-[#0077b5]"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Add LinkedIn Post
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  onClick={openCreateBlog}
+                  size="sm"
+                  className="gap-1.5 bg-[#3a9ca5] hover:bg-[#2d8890] text-white"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Add Blog Post
+                </Button>
+                <Button
+                  onClick={() => {
+                    if (confirm("Import all WordPress posts into this site? Already-imported posts will be skipped, and imported posts will be hidden from the live WordPress feed.")) {
+                      importWpMutation.mutate();
+                    }
+                  }}
+                  size="sm"
+                  variant="outline"
+                  disabled={importWpMutation.isPending}
+                  className="gap-1.5 border-[#d4a017] text-[#d4a017] hover:bg-[#d4a017]/10"
+                >
+                  {importWpMutation.isPending ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Download className="w-3.5 h-3.5" />
+                  )}
+                  {importWpMutation.isPending ? "Importing…" : "Import all WordPress posts"}
+                </Button>
+              </div>
             </div>
           )}
 
           <AnimatePresence>
-            {showAddLinkedin && adminMode && (
+            {blogFormOpen && adminMode && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <div className="bg-card rounded-xl border border-[#0077b5]/20 p-5 mb-6">
+                <div className="bg-card rounded-xl border border-[#3a9ca5]/30 p-5 mb-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-semibold text-sm flex items-center gap-2">
-                      <Linkedin className="w-4 h-4 text-[#0077b5]" />
-                      Add LinkedIn Post
+                      <Newspaper className="w-4 h-4 text-[#3a9ca5]" />
+                      Add Blog Post
                     </h3>
-                    <button onClick={() => setShowAddLinkedin(false)} className="text-muted-foreground hover:text-foreground">
+                    <button
+                      onClick={() => { setBlogFormOpen(false); resetBlogForm(); }}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-xs text-muted-foreground mb-3">
-                    Copy the title, description and URL from your LinkedIn post to add it to your blog feed.
-                  </p>
                   <div className="space-y-3">
-                    <input
-                      type="text"
-                      value={liTitle}
-                      onChange={(e) => setLiTitle(e.target.value)}
-                      placeholder="Post title"
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#0077b5]/30"
-                    />
-                    <textarea
-                      value={liDesc}
-                      onChange={(e) => setLiDesc(e.target.value)}
-                      placeholder="Description / excerpt"
-                      rows={3}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#0077b5]/30 resize-none"
-                    />
-                    <input
-                      type="url"
-                      value={liUrl}
-                      onChange={(e) => setLiUrl(e.target.value)}
-                      placeholder="LinkedIn post URL (e.g. https://www.linkedin.com/posts/...)"
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#0077b5]/30"
-                    />
+                    <div>
+                      <label className="text-xs font-semibold uppercase text-muted-foreground mb-1 block">Title</label>
+                      <input
+                        type="text"
+                        value={bpTitle}
+                        onChange={(e) => setBpTitle(e.target.value)}
+                        placeholder="A short, descriptive headline"
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold uppercase text-muted-foreground mb-1 block">Excerpt (preview shown on the card)</label>
+                      <textarea
+                        value={bpExcerpt}
+                        onChange={(e) => setBpExcerpt(e.target.value)}
+                        placeholder="One or two sentences that summarise the post."
+                        rows={2}
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold uppercase text-muted-foreground mb-1 block">Body</label>
+                      <textarea
+                        value={bpContent}
+                        onChange={(e) => setBpContent(e.target.value)}
+                        placeholder="Write the full post here. Line breaks are preserved."
+                        rows={10}
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30 resize-y leading-relaxed"
+                      />
+                    </div>
+                    <div className="flex gap-3 items-end">
+                      <div className="flex-1">
+                        <label className="text-xs font-semibold uppercase text-muted-foreground mb-1 block">Publish date</label>
+                        <input
+                          type="date"
+                          value={bpDate}
+                          onChange={(e) => setBpDate(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-[#3a9ca5]/30"
+                        />
+                      </div>
+                      <label className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-background text-sm cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={bpPublished}
+                          onChange={(e) => setBpPublished(e.target.checked)}
+                          className="accent-[#3a9ca5]"
+                        />
+                        Visible to public
+                      </label>
+                    </div>
+                    {saveBlogMutation.isError && (
+                      <p className="text-xs text-red-600">{(saveBlogMutation.error as Error)?.message || "Failed to save"}</p>
+                    )}
                     <div className="flex gap-2">
                       <Button
-                        onClick={() => addLinkedinMutation.mutate()}
-                        disabled={!liTitle.trim() || !liUrl.trim() || addLinkedinMutation.isPending}
-                        className="bg-[#0077b5] hover:bg-[#005e93] text-white"
+                        onClick={() => saveBlogMutation.mutate()}
+                        disabled={!bpTitle.trim() || saveBlogMutation.isPending}
+                        className="bg-[#3a9ca5] hover:bg-[#2d8890] text-white"
                         size="sm"
                       >
-                        {addLinkedinMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
-                        Add Post
+                        {saveBlogMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Check className="w-4 h-4 mr-1" />}
+                        Publish post
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => setShowAddLinkedin(false)}>
+                      <Button variant="outline" size="sm" onClick={() => { setBlogFormOpen(false); resetBlogForm(); }}>
                         Cancel
                       </Button>
                     </div>
@@ -450,7 +606,7 @@ export default function BlogList() {
           </AnimatePresence>
 
           <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
-            {(["all", "wordpress", "youtube", "linkedin"] as SourceFilter[]).map((filter) => {
+            {(["wordpress", "youtube", "linkedin", "facebook", "twitter", "all"] as SourceFilter[]).map((filter) => {
               const count = sourceCounts[filter];
               const isActive = sourceFilter === filter;
               return (
@@ -509,50 +665,10 @@ export default function BlogList() {
                         hidden && adminMode && "opacity-50 border-dashed border-red-300"
                       )}
                     >
-                      {adminMode && (
-                        <div className="flex items-center gap-3 px-5 pt-4 pb-0">
-                          <button
-                            onClick={() => handleToggleHide(post)}
-                            disabled={toggleWpMutation.isPending || toggleSocialMutation.isPending}
-                            className={cn(
-                              "flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border",
-                              hidden
-                                ? "bg-red-50 border-red-200 text-red-600 hover:bg-red-100"
-                                : "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100"
-                            )}
-                          >
-                            {hidden ? (
-                              <>
-                                <Square className="w-3.5 h-3.5" />
-                                Hidden — click to show
-                              </>
-                            ) : (
-                              <>
-                                <CheckSquare className="w-3.5 h-3.5" />
-                                Visible — click to hide
-                              </>
-                            )}
-                          </button>
-                          {post.source === "linkedin" && (
-                            <button
-                              onClick={() => {
-                                const liId = parseInt(post.id.replace("li:", ""));
-                                if (confirm("Delete this LinkedIn post?")) deleteLinkedinMutation.mutate(liId);
-                              }}
-                              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 transition-all"
-                              title="Delete permanently"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                              Delete
-                            </button>
-                          )}
-                        </div>
-                      )}
-
                       {post.source === "youtube" ? (
                         <div className="flex gap-4 p-4">
                           <button
-                            onClick={() => setActiveVideoId(post.videoId || null)}
+                            onClick={() => setActivePost(post)}
                             className="group/thumb relative shrink-0 w-44 h-24 sm:w-52 sm:h-[7.25rem] rounded-xl overflow-hidden cursor-pointer"
                           >
                             <img
@@ -567,17 +683,23 @@ export default function BlogList() {
                             </div>
                           </button>
                           <div className="flex-grow min-w-0 py-0.5">
-                            <div className="flex items-center gap-2 mb-1.5">
+                            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                               <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium", sourceColor)}>
                                 <SourceIcon className="w-3 h-3" />
                                 {SOURCE_LABELS[post.source]}
                               </span>
+                              {hidden && adminMode && (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+                                  <EyeOff className="w-3 h-3" />
+                                  Hidden
+                                </span>
+                              )}
                               <span className="text-xs text-muted-foreground">
                                 {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                               </span>
                             </div>
                             <button
-                              onClick={() => setActiveVideoId(post.videoId || null)}
+                              onClick={() => setActivePost(post)}
                               className="text-left group"
                             >
                               <h2 className="text-base font-semibold mb-1 text-foreground group-hover:text-[#3a9ca5] transition-colors line-clamp-2">
@@ -591,47 +713,43 @@ export default function BlogList() {
                         </div>
                       ) : (
                         <div className="p-5">
-                          <div className="flex items-center gap-2 mb-2.5">
+                          <div className="flex items-center gap-2 mb-2.5 flex-wrap">
                             <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium", sourceColor)}>
                               <SourceIcon className="w-3 h-3" />
                               {SOURCE_LABELS[post.source]}
                             </span>
+                            {hidden && adminMode && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+                                <EyeOff className="w-3 h-3" />
+                                Hidden
+                              </span>
+                            )}
                             <span className="text-xs text-muted-foreground">
                               {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                             </span>
                           </div>
 
-                          {post.source === "wordpress" ? (
-                            <Link
-                              href={`/${post.slug}`}
-                              className="group block"
-                            >
-                              <h2 className="text-lg font-semibold mb-1.5 text-foreground group-hover:text-[#3a9ca5] transition-colors">
-                                {post.title}
-                              </h2>
+                          <button
+                            type="button"
+                            onClick={() => setActivePost(post)}
+                            className="group block w-full text-left"
+                          >
+                            <h2 className={cn(
+                              "text-lg font-semibold mb-1.5 text-foreground transition-colors",
+                              post.source === "linkedin" ? "group-hover:text-[#0077b5]" : "group-hover:text-[#3a9ca5]"
+                            )}>
+                              {post.title}
+                            </h2>
+                            {post.excerpt && (
                               <p className="text-muted-foreground text-sm line-clamp-2 mb-2.5">{post.excerpt}</p>
-                              <span className="inline-flex items-center text-[#3a9ca5] text-sm font-medium">
-                                Read More <ArrowRight className="w-4 h-4 ml-1" />
-                              </span>
-                            </Link>
-                          ) : (
-                            <a
-                              href={post.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group block"
-                            >
-                              <h2 className="text-lg font-semibold mb-1.5 text-foreground group-hover:text-[#0077b5] transition-colors">
-                                {post.title}
-                              </h2>
-                              {post.excerpt && (
-                                <p className="text-muted-foreground text-sm line-clamp-2 mb-2.5">{post.excerpt}</p>
-                              )}
-                              <span className="inline-flex items-center text-[#0077b5] text-sm font-medium">
-                                View on LinkedIn <ExternalLink className="w-3.5 h-3.5 ml-1" />
-                              </span>
-                            </a>
-                          )}
+                            )}
+                            <span className={cn(
+                              "inline-flex items-center text-sm font-medium",
+                              post.source === "linkedin" ? "text-[#0077b5]" : "text-[#3a9ca5]"
+                            )}>
+                              {post.source === "wordpress" ? "Read More" : "Read full post"} <ArrowRight className="w-4 h-4 ml-1" />
+                            </span>
+                          </button>
                         </div>
                       )}
                     </div>
@@ -644,13 +762,21 @@ export default function BlogList() {
       </main>
       <Footer />
 
-      {activeVideoId && (
-        <YouTubeModalOverlay
-          videoId={activeVideoId}
-          isOpen={true}
-          onClose={() => setActiveVideoId(null)}
-        />
-      )}
+      <AnimatePresence>
+        {liveActivePost && (
+          <PostModal
+            post={liveActivePost}
+            isAdmin={adminMode}
+            hidden={isHidden(liveActivePost)}
+            onClose={() => setActivePost(null)}
+            onToggleHide={(p) => handleToggleHide(p)}
+            onDeleted={() => {
+              queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
+              queryClient.invalidateQueries({ queryKey: ["social-posts-all"] });
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

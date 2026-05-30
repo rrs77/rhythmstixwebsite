@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { Link, useLocation } from "wouter";
 import { useAdminMode } from "@/hooks/use-admin";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Shield, Lock, LogOut, X, Loader2 } from "lucide-react";
+import { Shield, Lock, LogOut, X, Loader2, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function AdminBar() {
   const { data: isAdmin } = useAdminMode();
+  const [location] = useLocation();
+  const onAdminPage = location === "/admin" || location.startsWith("/admin/");
   const [showLogin, setShowLogin] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -46,15 +49,26 @@ export function AdminBar() {
         <div className="flex items-center gap-2">
           <Shield className="w-4 h-4" />
           <span className="font-medium">Admin Mode</span>
-          <span className="text-white/70 text-xs">— Hover over text to edit</span>
+          <span className="text-white/70 text-xs hidden sm:inline">— Hover over text to edit</span>
         </div>
-        <button
-          onClick={() => logoutMutation.mutate()}
-          className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-white/20 hover:bg-white/30 transition-colors text-xs font-medium"
-        >
-          <LogOut className="w-3 h-3" />
-          Logout
-        </button>
+        <div className="flex items-center gap-2">
+          {!onAdminPage && (
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-white/20 hover:bg-white/30 transition-colors text-xs font-medium"
+            >
+              <Settings className="w-3 h-3" />
+              Admin Settings
+            </Link>
+          )}
+          <button
+            onClick={() => logoutMutation.mutate()}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-white/20 hover:bg-white/30 transition-colors text-xs font-medium"
+          >
+            <LogOut className="w-3 h-3" />
+            Logout
+          </button>
+        </div>
       </div>
     );
   }

@@ -12,37 +12,34 @@ import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
 
 function extractFirstYouTube(html: string): string | null {
-  const iframeMatch = html.match(
-    /src=["'](?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/([a-zA-Z0-9_-]+)/
-  );
-  if (iframeMatch) return iframeMatch[1];
-
-  const linkMatch = html.match(
-    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/
-  );
-  if (linkMatch) return linkMatch[1];
-
+  const patterns = [
+    /src=["'](?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/([a-zA-Z0-9_-]{11})/i,
+    /(?:https?:)?\/\/(?:www\.)?youtube\.com\/watch\?(?:[^"'\s]*&)?v=([a-zA-Z0-9_-]{11})/i,
+    /(?:https?:)?\/\/(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/i,
+    /(?:https?:)?\/\/(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/i,
+  ];
+  for (const re of patterns) {
+    const m = html.match(re);
+    if (m) return m[1];
+  }
   return null;
 }
 
 function removeFirstYouTubeEmbed(html: string): string {
-  let cleaned = html.replace(
-    /<figure[^>]*class="[^"]*wp-block-embed-youtube[^"]*"[^>]*>[\s\S]*?<\/figure>/i,
-    ""
-  );
-  if (cleaned !== html) return cleaned;
-
-  cleaned = html.replace(
-    /<iframe[^>]*src=["'][^"']*youtube[^"']*["'][^>]*><\/iframe>/i,
-    ""
-  );
-  if (cleaned !== html) return cleaned;
-
-  cleaned = html.replace(
-    /<div[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>[\s\S]*?<\/div>\s*<\/div>/i,
-    ""
-  );
-  return cleaned;
+  // Each pattern is constrained to contain a YouTube URL marker so we never
+  // strip an unrelated embed (e.g. Vimeo/Twitter) when the post mixes them.
+  const tries: RegExp[] = [
+    /<figure[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>(?:[\s\S](?!<\/figure>))*?(?:youtube(?:-nocookie)?\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)[a-zA-Z0-9_-]{11}[\s\S]*?<\/figure>/i,
+    /<div[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>(?:[\s\S](?!<\/div>\s*<\/div>))*?(?:youtube(?:-nocookie)?\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)[a-zA-Z0-9_-]{11}[\s\S]*?<\/div>\s*<\/div>/i,
+    /<p>\s*<iframe[^>]*src=["'][^"']*youtube[^"']*["'][^>]*>(?:<\/iframe>)?\s*<\/p>/i,
+    /<iframe[^>]*src=["'][^"']*youtube[^"']*["'][^>]*>(?:<\/iframe>)?/i,
+    /<p>\s*(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)[a-zA-Z0-9_-]{11}[^<]*<\/p>/i,
+  ];
+  for (const re of tries) {
+    const next = html.replace(re, "");
+    if (next !== html) return next;
+  }
+  return html;
 }
 
 export default function BlogPost() {
@@ -113,7 +110,7 @@ export default function BlogPost() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  <YouTubeThumbnail videoId={youtubeId} className="mb-8 aspect-video max-w-md mx-auto rounded-xl" />
+                  <YouTubeThumbnail videoId={youtubeId} className="mb-8 aspect-video w-full rounded-2xl" />
                 </motion.div>
               ) : heroImage ? (
                 <motion.div

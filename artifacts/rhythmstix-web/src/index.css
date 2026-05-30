@@ -35,27 +35,31 @@
 }
 
 :root {
-  --background: 180 15% 97%;
-  --foreground: 210 25% 15%;
-  
+  /* Warm cream background, deep charcoal text, muted taupe secondary text */
+  --background: 40 30% 97%;
+  --foreground: 220 18% 16%;
+
   --card: 0 0% 100%;
-  --card-foreground: 210 25% 15%;
-  
-  --border: 180 10% 88%;
-  --input: 180 10% 88%;
+  --card-foreground: 220 18% 16%;
+
+  --border: 35 18% 88%;
+  --input: 35 18% 88%;
   --ring: 184 42% 44%;
 
+  /* Primary stays Rhythmstix teal */
   --primary: 184 42% 44%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 180 12% 93%;
-  --secondary-foreground: 210 20% 25%;
+  --secondary: 38 25% 94%;
+  --secondary-foreground: 220 15% 25%;
 
-  --muted: 180 10% 94%;
-  --muted-foreground: 210 10% 45%;
+  --muted: 38 22% 95%;
+  --muted-foreground: 30 10% 42%;
 
-  --accent: 184 50% 38%;
+  /* Mustard accent — used for CTAs, highlights, decorative bits */
+  --accent: 43 78% 47%;
   --accent-foreground: 0 0% 100%;
+  --mustard: 43 78% 47%;
 
   --destructive: 0 62.8% 50%;
   --destructive-foreground: 0 0% 100%;
@@ -146,10 +150,34 @@
   color: hsl(var(--muted-foreground));
 }
 .wp-content iframe {
+  display: block;
   max-width: 100%;
   border-radius: 12px;
   margin: 1.5rem 0;
+  border: 0;
 }
+.wp-content figure.wp-block-embed,
+.wp-content .wp-block-embed,
+.wp-content .wp-block-embed__wrapper,
+.wp-content .yt-modal-trigger {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+.wp-content figure.wp-block-embed iframe,
+.wp-content .wp-block-embed__wrapper iframe,
+.wp-content iframe[src*="youtube.com"],
+.wp-content iframe[src*="youtu.be"],
+.wp-content iframe[src*="vimeo.com"] {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+.wp-content figure { margin: 1.5rem 0; max-width: 100%; }
+.wp-content figure img { max-width: 100%; height: auto; }
 .wp-content table {
   width: 100%;
   border-collapse: collapse;

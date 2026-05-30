@@ -1,10 +1,21 @@
 import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowRight, ExternalLink, Sparkles, Maximize2 } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { EditableText } from "@/components/EditableText";
 import { Button } from "@/components/ui/button";
+import { PortalModal } from "@/components/PortalModal";
+import { resolveInternal } from "@/lib/wp-link";
+
+const TEACHING_PORTAL_URL = "https://app.rhythmstix.co.uk/";
+
+function isTeachingPortal(app: { slug?: string; title?: string; appUrl?: string | null }) {
+  if (app.slug === "teaching-portal") return true;
+  if ((app.title || "").trim().toLowerCase() === "teaching portal") return true;
+  if (app.appUrl && app.appUrl.replace(/\/$/, "") === TEACHING_PORTAL_URL.replace(/\/$/, "")) return true;
+  return false;
+}
 
 interface AppItem {
   id: number;
@@ -21,33 +32,72 @@ interface AppItem {
   sortOrder: number;
 }
 
-function isExternal(href: string) {
-  return /^https?:\/\//i.test(href);
-}
-
 function AppCard({ app, index }: { app: AppItem; index: number }) {
   const initial = app.title.trim()[0]?.toUpperCase() || "·";
   const [logoBroken, setLogoBroken] = useState(false);
   const showLogo = app.logoUrl && !logoBroken;
+  const portal = isTeachingPortal(app);
+  const infoBtnClass = "flex-1 min-w-0 px-2 border-[#3a9ca5]/30 text-[#3a9ca5] hover:bg-[#3a9ca5]/5 hover:text-[#3a9ca5]";
+  const infoInner = (
+    <>
+      <span className="truncate">Learn more</span>
+      <ArrowRight className="ml-1 w-3.5 h-3.5 shrink-0 hidden xl:inline-block" />
+    </>
+  );
+  const infoInternal = app.infoHref ? resolveInternal(app.infoHref) : null;
   const infoButton = app.infoHref ? (
-    isExternal(app.infoHref) ? (
-      <Button asChild size="sm" variant="outline" className="flex-1 border-[#3a9ca5]/30 text-[#3a9ca5] hover:bg-[#3a9ca5]/5 hover:text-[#3a9ca5]">
-        <a href={app.infoHref} target="_blank" rel="noopener noreferrer">Learn more <ArrowRight className="ml-1 w-3.5 h-3.5" /></a>
+    infoInternal ? (
+      <Button asChild size="sm" variant="outline" className={infoBtnClass}>
+        <Link href={infoInternal}>{infoInner}</Link>
       </Button>
     ) : (
-      <Button asChild size="sm" variant="outline" className="flex-1 border-[#3a9ca5]/30 text-[#3a9ca5] hover:bg-[#3a9ca5]/5 hover:text-[#3a9ca5]">
-        <Link href={app.infoHref}>Learn more <ArrowRight className="ml-1 w-3.5 h-3.5" /></Link>
+      <Button asChild size="sm" variant="outline" className={infoBtnClass}>
+        <a href={app.infoHref} target="_blank" rel="noopener noreferrer">{infoInner}</a>
       </Button>
     )
   ) : null;
 
-  const openButton = app.appUrl ? (
-    <Button asChild size="sm" className="flex-1 text-white shadow-sm" style={{ background: `linear-gradient(135deg, ${app.accentFrom}, ${app.accentTo})` }}>
-      <a href={app.appUrl} target="_blank" rel="noopener noreferrer">Open app <ExternalLink className="ml-1 w-3.5 h-3.5" /></a>
-    </Button>
-  ) : (
-    <Button size="sm" disabled className="flex-1 opacity-60">Coming soon</Button>
-  );
+  // The Teaching Portal opens in the same modal as the header "Portal" link,
+  // even when an admin hasn't set an explicit appUrl — the URL is fixed.
+  const openHref = portal ? (app.appUrl || TEACHING_PORTAL_URL) : app.appUrl;
+  const appInternal = openHref ? resolveInternal(openHref) : null;
+
+  let openButton: React.ReactNode = null;
+  if (portal && openHref) {
+    openButton = (
+      <PortalModal url={openHref} title={app.title}>
+        {(open) => (
+          <Button
+            size="sm"
+            className="flex-1 min-w-0 px-2 text-white shadow-sm hover:opacity-90"
+            style={{ background: "#3a9ca5" }}
+            onClick={open}
+          >
+            <span className="truncate">Open app</span>
+            <Maximize2 className="ml-1 w-3.5 h-3.5 shrink-0 hidden xl:inline-block" />
+          </Button>
+        )}
+      </PortalModal>
+    );
+  } else if (openHref && appInternal) {
+    openButton = (
+      <Button asChild size="sm" className="flex-1 min-w-0 px-2 text-white shadow-sm hover:opacity-90" style={{ background: "#3a9ca5" }}>
+        <Link href={appInternal}>
+          <span className="truncate">Open app</span>
+          <ArrowRight className="ml-1 w-3.5 h-3.5 shrink-0 hidden xl:inline-block" />
+        </Link>
+      </Button>
+    );
+  } else if (openHref) {
+    openButton = (
+      <Button asChild size="sm" className="flex-1 min-w-0 px-2 text-white shadow-sm hover:opacity-90" style={{ background: "#3a9ca5" }}>
+        <a href={openHref} target="_blank" rel="noopener noreferrer">
+          <span className="truncate">Open app</span>
+          <ExternalLink className="ml-1 w-3.5 h-3.5 shrink-0 hidden xl:inline-block" />
+        </a>
+      </Button>
+    );
+  }
 
   return (
     <motion.div
@@ -127,7 +177,7 @@ export function ProductGrid() {
           className="mb-6"
         >
           <div className="flex items-center gap-3 mb-1">
-            <div className="w-1 h-7 rounded-full bg-gradient-to-b from-[#3a9ca5] to-[#4cb5bd]" />
+            <div className="w-1 h-7 rounded-full bg-gradient-to-b from-[#d4a017] to-[#e0b73a]" />
             <EditableText
               contentKey="products.heading"
               fallback="Apps, Tools & Teaching Portal"
@@ -159,10 +209,15 @@ export function ProductGrid() {
         )}
 
         {!isLoading && apps.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground text-sm">No apps yet — add some from the admin dashboard.</div>
+          <EditableText
+            contentKey="products.empty"
+            fallback="No apps yet — add some from the admin dashboard."
+            as="div"
+            className="text-center py-12 text-muted-foreground text-sm"
+          />
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {apps.map((app, i) => (
             <AppCard key={app.id} app={app} index={i} />
           ))}

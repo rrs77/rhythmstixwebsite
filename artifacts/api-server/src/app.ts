@@ -60,7 +60,17 @@ app.use(cors({
   },
   credentials: true,
 }));
-app.use(express.json());
+app.use(express.json({
+  verify: (req, _res, buf) => {
+    const path = (req.url || "").split("?")[0].replace(/\/$/, "");
+    if (
+      (path === "/api/webhooks/woocommerce" || path === "/api/webhooks/stripe") &&
+      Buffer.isBuffer(buf)
+    ) {
+      (req as express.Request & { rawBody?: Buffer }).rawBody = Buffer.from(buf);
+    }
+  },
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 

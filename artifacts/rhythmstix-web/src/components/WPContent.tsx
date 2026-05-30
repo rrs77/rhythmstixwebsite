@@ -18,26 +18,32 @@ function extractAllYouTubeIds(html: string): string[] {
   return ids;
 }
 
+const YT_TRIGGER_HTML = (videoId: string) =>
+  `<div class="yt-modal-trigger" data-video-id="${videoId}" style="cursor:pointer;position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:16/9;margin:1.5rem 0;display:block;width:100%;max-width:100%;box-sizing:border-box;">` +
+  `<img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="Video" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:0;margin:0;" />` +
+  `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.2);">` +
+  `<div style="width:64px;height:64px;border-radius:50%;background:#dc2626;display:flex;align-items:center;justify-content:center;">` +
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>` +
+  `</div></div></div>`;
+
 function replaceYouTubeIframes(html: string): string {
-  return html.replace(
-    /<p>(?:\s*)<iframe[^>]*src=["'](?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/([a-zA-Z0-9_-]+)[^"']*["'][^>]*>(?:<\/iframe>)?(?:\s*)<\/p>/gi,
-    (_match, videoId) =>
-      `<div class="yt-modal-trigger" data-video-id="${videoId}" style="cursor:pointer;position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:16/9;margin-bottom:1rem;">` +
-      `<img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="Video" style="width:100%;height:100%;object-fit:cover;" />` +
-      `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.2);">` +
-      `<div style="width:64px;height:64px;border-radius:50%;background:#dc2626;display:flex;align-items:center;justify-content:center;">` +
-      `<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>` +
-      `</div></div></div>`
-  ).replace(
-    /<iframe[^>]*src=["'](?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/([a-zA-Z0-9_-]+)[^"']*["'][^>]*>(?:<\/iframe>)?/gi,
-    (_match, videoId) =>
-      `<div class="yt-modal-trigger" data-video-id="${videoId}" style="cursor:pointer;position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:16/9;margin-bottom:1rem;">` +
-      `<img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="Video" style="width:100%;height:100%;object-fit:cover;" />` +
-      `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.2);">` +
-      `<div style="width:64px;height:64px;border-radius:50%;background:#dc2626;display:flex;align-items:center;justify-content:center;">` +
-      `<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>` +
-      `</div></div></div>`
-  );
+  return html
+    .replace(
+      /<figure[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>[\s\S]*?(?:youtube(?:-nocookie)?\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})[\s\S]*?<\/figure>/gi,
+      (_m, videoId) => YT_TRIGGER_HTML(videoId),
+    )
+    .replace(
+      /<p>(?:\s*)<iframe[^>]*src=["'](?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/([a-zA-Z0-9_-]{11})[^"']*["'][^>]*>(?:<\/iframe>)?(?:\s*)<\/p>/gi,
+      (_m, videoId) => YT_TRIGGER_HTML(videoId),
+    )
+    .replace(
+      /<iframe[^>]*src=["'](?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/([a-zA-Z0-9_-]{11})[^"']*["'][^>]*>(?:<\/iframe>)?/gi,
+      (_m, videoId) => YT_TRIGGER_HTML(videoId),
+    )
+    .replace(
+      /<p>\s*(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/watch\?(?:[^"'<\s]*&)?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})[^<]*<\/p>/gi,
+      (_m, videoId) => YT_TRIGGER_HTML(videoId),
+    );
 }
 
 export function WPContent({ html, className = "" }: WPContentProps) {

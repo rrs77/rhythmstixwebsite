@@ -1,0 +1,85 @@
+Keep this task as lightweight as possible. Do not redesign the admin dashboard or website unless small UI changes are genuinely needed for functionality.
+
+Use the existing Admin Dashboard sections for:
+
+* LinkedIn
+* Twitter/X
+* YouTube
+
+Add a new Facebook section matching the existing social sections.
+
+Social importing:
+
+* Connect/sync LinkedIn, Twitter/X, YouTube, and Facebook where APIs allow
+* Import the most recent posts/items automatically
+* Import as much historical content as each API allows
+* Store imported items in the local database
+* Do not rely on the original platforms to display public content after importing
+
+Admin management:
+
+* Show all imported items in Admin Settings
+* Allow admin to:
+
+  * Show/hide individual items
+  * Delete items from the website database only
+  * Re-sync/import items where needed
+* Hidden items must not appear publicly
+* Hidden items must remain visible/manageable in admin
+* Show clear Visible/Hidden labels
+
+Feed controls:
+
+* Allow admin to temporarily enable/disable an entire social feed source
+* Example:
+
+  * Hide all LinkedIn content temporarily
+  * Hide all Facebook content temporarily
+  * Hide all YouTube content temporarily
+* Disabled feeds should not appear publicly but should remain connected in settings
+* Admin should be able to re-enable feeds at any time without re-importing content
+
+Important:
+Imported social posts do not need text editing fields because the original content should be edited on the original social media platforms.
+
+Public Blog/feed:
+
+* Show the most recent visible items from all enabled sources
+* Sort by newest first
+* Include:
+
+  * Website Blog posts
+  * LinkedIn posts
+  * Twitter/X posts
+  * YouTube videos
+  * Facebook posts
+* Show a small source icon/label on each item:
+
+  * LinkedIn icon
+  * YouTube icon
+  * Twitter/X icon
+  * Facebook icon
+  * Website/Blog icon for internal posts
+
+Modal behaviour:
+
+* Clicking any visible item should open it in a modal overlay
+* Grey/dim the page background while open
+* Support enlarge/minimise/fullscreen where possible
+* Automatically embed supported media where possible
+
+Media embeds:
+
+* Support YouTube, SoundCloud, Vimeo, Spotify, LinkedIn, Facebook, Twitter/X, and similar providers where embedding is supported
+
+Blog posts:
+
+* Replace “Add LinkedIn Post” with “Add Blog Post”
+* Internal website blog posts should remain rich HTML editable
+* Imported WordPress posts should remain editable after migration
+
+Setup guidance:
+
+* Show clear admin guidance if API keys, permissions, public visibility, feed access, or tokens are required before importing works
+
+Keep the current design, structure, and layout unchanged where possible.

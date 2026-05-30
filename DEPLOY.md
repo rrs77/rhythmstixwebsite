@@ -36,10 +36,24 @@ The minimum to get a working deploy is:
 
 Add these next, in this order, to unlock features:
 
+- `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` — enable the shop / Stripe Checkout (see §3)
 - `BLOB_READ_WRITE_TOKEN` — enable image uploads (logo, EditableImage)
 - `MAILCHIMP_API_KEY` + `MAILCHIMP_LIST_ID` — enable newsletter signups
 
-## 3. Vercel Blob (image uploads)
+## 3. Stripe (shop checkout)
+
+The shop uses Stripe Checkout (hosted) — no card details ever touch your server.
+
+1. **Stripe Dashboard → Developers → API keys** — copy the **Secret key** (`sk_live_…`) and add it as `STRIPE_SECRET_KEY` in Vercel env vars.
+2. **Stripe Dashboard → Developers → Webhooks → Add endpoint**:
+   - URL: `https://<your-domain>/api/webhooks/stripe`
+   - Events to send: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired`
+3. After saving, click **Reveal** next to **Signing secret** (`whsec_…`) and add it as `STRIPE_WEBHOOK_SECRET` in Vercel env vars.
+4. Redeploy so both env vars take effect.
+
+> Without `STRIPE_WEBHOOK_SECRET`, the webhook endpoint returns 503 in production and orders will not be marked as paid automatically. The `/checkout/success` page has a synchronous fallback (`/api/shop/orders/confirm?session_id=…`) that covers the gap between checkout completion and the webhook firing, so a missing webhook secret causes delayed/missing order confirmation emails but does not break the customer-facing success page.
+
+## 4. Vercel Blob (image uploads)
 
 1. Vercel dashboard → your project → **Storage** tab → **Create Database**
    → choose **Blob**.
@@ -48,7 +62,7 @@ Add these next, in this order, to unlock features:
    — you don't need to copy it manually.
 4. Redeploy so the new env var takes effect.
 
-## 4. Custom domain
+## 5. Custom domain
 
 1. **Settings → Domains → Add** → enter `rhythmstix.co.uk` (and `www.`).
 2. Vercel will show DNS records to add at your registrar:
@@ -56,7 +70,7 @@ Add these next, in this order, to unlock features:
    - `www`: a `CNAME` to `cname.vercel-dns.com`
 3. Wait for DNS to propagate (usually < 1 hour). TLS is automatic.
 
-## 5. Post-deploy admin checklist
+## 6. Post-deploy admin checklist
 
 Once the site is live, log in to `/admin` with `ADMIN_PASSWORD` and:
 
@@ -70,7 +84,7 @@ Once the site is live, log in to `/admin` with `ADMIN_PASSWORD` and:
 - [ ] **Navigation & Footer tab** — confirm menus.
 - [ ] **Settings tab** — set social URLs (LinkedIn, YouTube, Facebook).
 
-## 6. Verifying the deploy
+## 7. Verifying the deploy
 
 ```bash
 # Replace with your real domain
@@ -90,7 +104,7 @@ the repo root (not `artifacts/rhythmstix-web`).
 If `/api/healthz` returns 500, check the function logs in Vercel —
 usually means `DATABASE_URL` or `SESSION_SECRET` is missing.
 
-## 7. Local development still uses Replit
+## 8. Local development still uses Replit
 
 Nothing about this Vercel setup changes how Replit dev works. The same
 `api/index.ts` glue file is only loaded by Vercel; locally, the API is run

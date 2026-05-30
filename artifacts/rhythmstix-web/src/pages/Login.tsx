@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { LogIn, Loader2, Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Link } from "wouter";
 import { EditableImage } from "@/components/EditableImage";
+import { EditableText } from "@/components/EditableText";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -46,6 +47,7 @@ export default function Login() {
               <Link href="/" className="inline-block mb-6">
                 <EditableImage
                   contentKey="brand.logo"
+                  fallback="/brand/logo.png"
                   alt="Rhythmstix"
                   className="h-10 mx-auto object-contain"
                   emptyRender={
@@ -55,10 +57,18 @@ export default function Login() {
                   }
                 />
               </Link>
-              <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
-              <p className="text-muted-foreground text-sm mt-1.5">
-                Sign in to your Rhythmstix account
-              </p>
+              <EditableText
+                contentKey="login.heading"
+                fallback="Welcome back"
+                as="h1"
+                className="text-2xl font-bold text-foreground"
+              />
+              <EditableText
+                contentKey="login.subheading"
+                fallback="Sign in to your Rhythmstix account"
+                as="p"
+                className="text-muted-foreground text-sm mt-1.5"
+              />
             </div>
 
             <form onSubmit={handleSubmit} className="bg-card rounded-2xl border border-border p-6 space-y-4">
@@ -109,7 +119,11 @@ export default function Login() {
 
               <div className="flex justify-end">
                 <Link href="/forgot-password" className="text-xs text-[#3a9ca5] hover:underline">
-                  Forgot your password?
+                  <EditableText
+                    contentKey="login.forgotLink"
+                    fallback="Forgot your password?"
+                    as="span"
+                  />
                 </Link>
               </div>
 
@@ -121,18 +135,26 @@ export default function Login() {
                 {isLoggingIn ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Signing in...
+                    <EditableText contentKey="login.submitLoading" fallback="Signing in..." as="span" />
                   </>
                 ) : (
-                  "Sign In"
+                  <EditableText contentKey="login.submit" fallback="Sign In" as="span" />
                 )}
               </Button>
             </form>
 
             <p className="text-center text-sm text-muted-foreground mt-6">
-              Don't have an account?{" "}
+              <EditableText
+                contentKey="login.noAccountPrompt"
+                fallback="Don't have an account?"
+                as="span"
+              />{" "}
               <Link href="/register" className="text-[#3a9ca5] hover:underline">
-                Create one
+                <EditableText
+                  contentKey="login.createLink"
+                  fallback="Create one"
+                  as="span"
+                />
               </Link>
             </p>
           </motion.div>

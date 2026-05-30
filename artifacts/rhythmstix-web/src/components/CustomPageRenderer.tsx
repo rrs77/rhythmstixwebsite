@@ -1,8 +1,9 @@
 import { Link } from "wouter";
 import { ArrowRight, Check, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { WPContent } from "@/components/WPContent";
 
-export type PageTemplate = "standard" | "cards" | "features" | "about" | "contact";
+export type PageTemplate = "standard" | "cards" | "features" | "about" | "contact" | "richhtml";
 
 export interface PageData {
   eyebrow?: string;
@@ -25,6 +26,7 @@ export const TEMPLATE_LABELS: Record<PageTemplate, { label: string; description:
   features:  { label: "Hero + Features", description: "Hero, feature checklist and a call-to-action button." },
   about:     { label: "About / Bio",  description: "Image alongside a bio with an optional CTA." },
   contact:   { label: "Contact",      description: "Hero with email, phone and address details." },
+  richhtml:  { label: "Rich HTML",    description: "Full WYSIWYG-style HTML body. Use for pages migrated from WordPress with images, columns and rich layout." },
 };
 
 function PageHero({ data }: { data: PageData }) {
@@ -197,12 +199,29 @@ function ContactTemplate({ data }: { data: PageData }) {
   );
 }
 
+function RichHtmlTemplate({ data }: { data: PageData }) {
+  return (
+    <div className="max-w-5xl mx-auto">
+      <PageHero data={data} />
+      {data.body && (
+        <div className="rounded-2xl border border-[#3a9ca5]/10 bg-card p-6 md:p-10 shadow-sm">
+          <WPContent
+            className="wp-content prose prose-lg max-w-none"
+            html={data.body}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function CustomPageRenderer({ template, data }: { template: PageTemplate; data: PageData }) {
   switch (template) {
     case "cards":    return <CardsTemplate data={data} />;
     case "features": return <FeaturesTemplate data={data} />;
     case "about":    return <AboutTemplate data={data} />;
     case "contact":  return <ContactTemplate data={data} />;
+    case "richhtml": return <RichHtmlTemplate data={data} />;
     default:         return <StandardTemplate data={data} />;
   }
 }

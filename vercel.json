@@ -1,11 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm --filter @workspace/rhythmstix-web run build",
+  "buildCommand": "pnpm --filter @workspace/api-server run build && pnpm --filter @workspace/rhythmstix-web run build",
   "outputDirectory": "artifacts/rhythmstix-web/dist/public",
   "framework": null,
   "installCommand": "pnpm install --frozen-lockfile=false",
   "functions": {
-    "api/index.ts": {
+    "api/index.js": {
       "runtime": "@vercel/node@3.2.29",
       "maxDuration": 30,
       "memory": 1024

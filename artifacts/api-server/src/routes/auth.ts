@@ -291,6 +291,104 @@ router.post("/auth/forgot-password", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/account/profile", async (req: Request, res: Response) => {
+  try {
+    const user = getUserFromRequest(req);
+    if (!user) {
+      res.status(401).json({ error: "Not authenticated" });
+      return;
+    }
+    const response = await wcFetch(`customers/${user.id}`);
+    if (!response.ok) {
+      res.status(502).json({ error: "Failed to fetch profile from WooCommerce" });
+      return;
+    }
+    const c = await response.json() as any;
+    res.json({
+      id: c.id,
+      email: c.email,
+      username: c.username,
+      firstName: c.first_name,
+      lastName: c.last_name,
+      avatar: c.avatar_url,
+      billing: c.billing || {},
+      shipping: c.shipping || {},
+      dateCreated: c.date_created,
+    });
+  } catch {
+    res.status(500).json({ error: "Failed to fetch profile" });
+  }
+});
+
+router.put("/account/profile", async (req: Request, res: Response) => {
+  try {
+    const user = getUserFromRequest(req);
+    if (!user) {
+      res.status(401).json({ error: "Not authenticated" });
+      return;
+    }
+    const { firstName, lastName, billing, shipping } = req.body || {};
+    const payload: Record<string, unknown> = {};
+    if (typeof firstName === "string") payload.first_name = firstName;
+    if (typeof lastName === "string") payload.last_name = lastName;
+    if (billing && typeof billing === "object") payload.billing = billing;
+    if (shipping && typeof shipping === "object") payload.shipping = shipping;
+
+    const response = await fetch(wcUrl(`customers/${user.id}`), {
+      method: "PUT",
+      headers: { Authorization: WC_AUTH_HEADER, "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      const errData = (await response.json().catch(() => ({}))) as any;
+      res.status(response.status).json({ error: errData?.message || "Failed to update profile" });
+      return;
+    }
+    const c = await response.json() as any;
+    res.json({
+      id: c.id,
+      email: c.email,
+      username: c.username,
+      firstName: c.first_name,
+      lastName: c.last_name,
+      billing: c.billing || {},
+      shipping: c.shipping || {},
+    });
+  } catch {
+    res.status(500).json({ error: "Failed to update profile" });
+  }
+});
+
+router.get("/account/downloads", async (req: Request, res: Response) => {
+  try {
+    const user = getUserFromRequest(req);
+    if (!user) {
+      res.status(401).json({ error: "Not authenticated" });
+      return;
+    }
+    const response = await wcFetch(`customers/${user.id}/downloads`);
+    if (!response.ok) {
+      res.status(502).json({ error: "Failed to fetch downloads" });
+      return;
+    }
+    const items = await response.json() as any[];
+    const mapped = items.map((d: any) => ({
+      downloadId: d.download_id,
+      downloadUrl: d.download_url,
+      productId: d.product_id,
+      productName: d.product_name,
+      fileName: d.file?.name || d.download_name || null,
+      orderId: d.order_id,
+      orderKey: d.order_key,
+      downloadsRemaining: d.downloads_remaining,
+      accessExpires: d.access_expires,
+    }));
+    res.json(mapped);
+  } catch {
+    res.status(500).json({ error: "Failed to fetch downloads" });
+  }
+});
+
 router.get("/account/orders", async (req: Request, res: Response) => {
   try {
     const user = getUserFromRequest(req);
@@ -402,8 +500,9 @@ router.post("/auth/admin-login", adminLoginLimiter, (req: Request, res: Response
     res.status(503).json({ error: "Admin login not configured" });
     return;
   }
-  const { password } = req.body;
-  if (password === ADMIN_PASSWORD) {
+  const raw = req.body?.password;
+  const password = typeof raw === "string" ? raw.trim() : "";
+  if (password.length > 0 && password === ADMIN_PASSWORD.trim()) {
     setAdminCookie(res);
     res.json({ success: true });
   } else {

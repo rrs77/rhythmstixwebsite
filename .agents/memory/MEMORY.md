@@ -1,0 +1,3 @@
+- [Vercel deploy](vercel-deploy.md) — Hobby plan needs owner-authored commits (re-author via GitHub API); API must be pre-bundled to JS since @vercel/node type-checks raw TS without workspace tsconfig.
+- [Blog/post modal live state](blog-modal-live-state.md) — modals opened from a mutable list must render live query data by id, not a frozen activePost snapshot (caused stuck toggle + "vanishing" content).
+- [Dev vs prod databases](dev-vs-prod-databases.md) — DATABASE_URL=dev, NEON_DATABASE_URL=prod (live Vercel site); seed data must be copied to prod; trust the server API over flaky neon() HTTP reads of published flags.

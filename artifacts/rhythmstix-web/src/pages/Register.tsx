@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Loader2, Eye, EyeOff, Mail, Lock, User, CheckSquare } from "lucide-react";
 import { Link } from "wouter";
 import { EditableImage } from "@/components/EditableImage";
+import { EditableText } from "@/components/EditableText";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -65,6 +66,7 @@ export default function Register() {
               <Link href="/" className="inline-block mb-6">
                 <EditableImage
                   contentKey="brand.logo"
+                  fallback="/brand/logo.png"
                   alt="Rhythmstix"
                   className="h-10 mx-auto object-contain"
                   emptyRender={
@@ -74,10 +76,18 @@ export default function Register() {
                   }
                 />
               </Link>
-              <h1 className="text-2xl font-bold text-foreground">Create your account</h1>
-              <p className="text-muted-foreground text-sm mt-1.5">
-                Join the Rhythmstix community
-              </p>
+              <EditableText
+                contentKey="register.heading"
+                fallback="Create your account"
+                as="h1"
+                className="text-2xl font-bold text-foreground"
+              />
+              <EditableText
+                contentKey="register.subheading"
+                fallback="Join the Rhythmstix community"
+                as="p"
+                className="text-muted-foreground text-sm mt-1.5"
+              />
             </div>
 
             <form onSubmit={handleSubmit} className="bg-card rounded-2xl border border-border p-6 space-y-4">
@@ -182,9 +192,13 @@ export default function Register() {
                     {subscribe && <CheckSquare className="w-3.5 h-3.5 text-white" />}
                   </div>
                 </div>
-                <span className="text-sm text-muted-foreground leading-snug">
-                  Keep me updated with news, resources, and community updates from Rhythmstix
-                </span>
+                <EditableText
+                  contentKey="register.subscribeLabel"
+                  fallback="Keep me updated with news, resources, and community updates from Rhythmstix"
+                  as="span"
+                  className="text-sm text-muted-foreground leading-snug"
+                  multiline
+                />
               </label>
 
               <Button
@@ -195,18 +209,26 @@ export default function Register() {
                 {isRegistering ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating account...
+                    <EditableText contentKey="register.submitLoading" fallback="Creating account..." as="span" />
                   </>
                 ) : (
-                  "Create Account"
+                  <EditableText contentKey="register.submit" fallback="Create Account" as="span" />
                 )}
               </Button>
             </form>
 
             <p className="text-center text-sm text-muted-foreground mt-6">
-              Already have an account?{" "}
+              <EditableText
+                contentKey="register.haveAccountPrompt"
+                fallback="Already have an account?"
+                as="span"
+              />{" "}
               <Link href="/login" className="text-[#3a9ca5] hover:underline">
-                Sign in
+                <EditableText
+                  contentKey="register.signInLink"
+                  fallback="Sign in"
+                  as="span"
+                />
               </Link>
             </p>
           </motion.div>

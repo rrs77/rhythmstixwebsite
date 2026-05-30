@@ -6,3 +6,7 @@ export * from "./forum";
 export * from "./social-posts";
 export * from "./pages";
 export * from "./apps";
+export * from "./blog-posts";
+export * from "./woo-products";
+export * from "./woo-product-category-sort";
+export * from "./shop";

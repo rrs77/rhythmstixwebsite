@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "wouter";
+import { useParams, Link, useLocation } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { useGroupedProducts, createOrder, type ShopProduct as Product } from "@/hooks/use-shop";
-import { ArrowLeft, Loader2, Package, Download, ShoppingCart, Check, Music, BookOpen, Sparkles } from "lucide-react";
+import { useGroupedProducts, type ShopProduct as Product } from "@/hooks/use-shop";
+import { useBasket } from "@/contexts/BasketContext";
+import { ArrowLeft, Loader2, Package, Download, ShoppingCart, Check, Music, BookOpen, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -26,32 +27,31 @@ function formatPrice(price: string): string {
   return `£${num.toFixed(2)}`;
 }
 
-function ProductCard({ product, index }: { product: Product; index: number }) {
-  const [purchasing, setPurchasing] = useState(false);
-  const [purchased, setPurchased] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+function ProductCard({ product, index, familyId }: { product: Product; index: number; familyId: string }) {
+  const { add, items } = useBasket();
+  const [, setLocation] = useLocation();
+  const [justAdded, setJustAdded] = useState(false);
   const isFree = parseFloat(product.price) === 0 || !product.price;
   const desc = stripHtml(product.description);
+  const inBasket = items.some((i) => i.productId === product.id);
 
-  const handlePurchase = async () => {
-    setPurchasing(true);
-    setError(null);
-    try {
-      const result = await createOrder(product.id);
-      if (result.paymentUrl && parseFloat(result.total) > 0) {
-        window.open(result.paymentUrl, "_blank");
-      } else {
-        setPurchased(true);
-      }
-    } catch (err: any) {
-      if (err.message === "LOGIN_REQUIRED") {
-        setError("Please log in first to purchase.");
-      } else {
-        setError(err.message || "Something went wrong. Please try again.");
-      }
-    } finally {
-      setPurchasing(false);
-    }
+  const handleAdd = () => {
+    add({
+      productId: product.id,
+      name: product.name,
+      price: parseFloat(product.price) || 0,
+      image: product.images[0]?.src || null,
+      slug: product.slug,
+      familyId,
+      downloadable: product.downloadable,
+    });
+    setJustAdded(true);
+    window.setTimeout(() => setJustAdded(false), 1800);
+  };
+
+  const handleBuyNow = () => {
+    if (!inBasket) handleAdd();
+    setLocation("/checkout");
   };
 
   return (
@@ -97,29 +97,31 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
           )}
         </div>
 
-        <div className="mt-4">
-          {purchased ? (
-            <Button variant="outline" className="w-full text-green-600 border-green-200" disabled>
-              <Check className="w-4 h-4 mr-2" />
-              Order Placed
-            </Button>
-          ) : (
-            <Button
-              className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white"
-              onClick={handlePurchase}
-              disabled={purchasing}
-            >
-              {purchasing ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
+        <div className="mt-4 space-y-2">
+          <Button
+            className="w-full bg-[#3a9ca5] hover:bg-[#4cb5bd] text-white"
+            onClick={handleAdd}
+          >
+            {justAdded ? (
+              <>
+                <Check className="w-4 h-4 mr-2" />
+                Added to basket
+              </>
+            ) : (
+              <>
                 <ShoppingCart className="w-4 h-4 mr-2" />
-              )}
-              {isFree ? "Get Free Download" : "Add to Basket"}
-            </Button>
-          )}
-          {error && (
-            <p className="text-xs text-red-500 mt-2 text-center">{error}</p>
-          )}
+                {inBasket ? "Add another" : isFree ? "Add to basket" : "Add to basket"}
+              </>
+            )}
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full border-[#3a9ca5]/30 text-[#3a9ca5] hover:bg-[#3a9ca5]/5 hover:text-[#3a9ca5]"
+            onClick={handleBuyNow}
+          >
+            {isFree ? "Get it now" : "Buy now"}
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
         </div>
       </div>
     </motion.div>
@@ -230,7 +232,7 @@ export default function ShopProduct() {
                   : "grid-cols-1 sm:grid-cols-2"
               )}>
                 {family.products.map((product, i) => (
-                  <ProductCard key={product.id} product={product} index={i} />
+                  <ProductCard key={product.id} product={product} index={i} familyId={family.id} />
                 ))}
               </div>
             </>

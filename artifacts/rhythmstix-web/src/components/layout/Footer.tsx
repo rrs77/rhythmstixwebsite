@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Youtube, Linkedin, Facebook, MapPin, Phone, Mail } from "lucide-react";
 import { EditableText } from "@/components/EditableText";
+import { EditableImage } from "@/components/EditableImage";
 import { useContent } from "@/hooks/use-content";
 
 interface NavLink {
@@ -23,9 +24,7 @@ const FALLBACK_FOOTER_LINKS: Pick<NavLink, "label" | "href">[] = [
   { label: "Copyright", href: "/copyright-and-licenses" },
 ];
 
-function isExternal(href: string): boolean {
-  return /^https?:\/\//i.test(href);
-}
+import { resolveInternal } from "@/lib/wp-link";
 
 export function Footer() {
   const { data: navLinks } = useQuery<NavLink[]>({
@@ -59,12 +58,6 @@ export function Footer() {
               <span className="border-b-2 border-[#3a9ca5]/30 pb-0.5">Contact Us</span>
             </h3>
             <div className="flex items-center gap-2.5 text-muted-foreground hover:text-foreground transition-colors text-sm">
-              <Phone size={14} className="shrink-0 text-[#3a9ca5]" />
-              <EditableText contentKey="footer_phone" fallback="01245 633 231" as="span">
-                {(v) => <a href={`tel:${v.replace(/\s+/g, "")}`}>{v}</a>}
-              </EditableText>
-            </div>
-            <div className="flex items-center gap-2.5 text-muted-foreground hover:text-foreground transition-colors text-sm">
               <Mail size={14} className="shrink-0 text-[#3a9ca5]" />
               <EditableText contentKey="footer_email" fallback="info@rhythmstix.co.uk" as="span">
                 {(v) => <a href={`mailto:${v}`}>{v}</a>}
@@ -91,9 +84,12 @@ export function Footer() {
                 <span className="border-b-2 border-[#3a9ca5]/30 pb-0.5">Links</span>
               </h3>
               <ul className="grid grid-cols-2 gap-x-6 gap-y-1.5">
-                {footerLinks.map((link) => (
+                {footerLinks.map((link) => {
+                  const internal = resolveInternal(link.href);
+                  const ext = !internal && /^https?:\/\//i.test(link.href);
+                  return (
                   <li key={link.label}>
-                    {isExternal(link.href) ? (
+                    {ext ? (
                       <a
                         href={link.href}
                         target="_blank"
@@ -103,12 +99,13 @@ export function Footer() {
                         {link.label}
                       </a>
                     ) : (
-                      <Link href={link.href} className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">
+                      <Link href={internal || link.href} className="text-muted-foreground hover:text-[#3a9ca5] transition-colors text-xs">
                         {link.label}
                       </Link>
                     )}
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             </div>
           </div>
@@ -133,8 +130,24 @@ export function Footer() {
         </div>
 
         <div className="pt-4 border-t border-border/60 flex flex-col md:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-muted-foreground text-xs">
-            <span className="font-bold text-foreground/80">rhythm<span className="text-[#3a9ca5]">stix</span></span>
+          <div className="flex items-center gap-3 text-muted-foreground text-xs">
+            <Link href="/" aria-label="Rhythmstix home" className="inline-flex items-center">
+              <EditableImage
+                contentKey="brand.logo"
+                fallback="/brand/logo.png"
+                alt="Rhythmstix"
+                className="h-8 w-auto object-contain"
+                emptyRender={
+                  <span
+                    className="font-black text-base tracking-tight leading-none"
+                    style={{ fontFamily: "'Poppins', sans-serif" }}
+                  >
+                    <span className="text-foreground/85">RHYTHM</span>
+                    <span style={{ color: "#d4a017" }}>STIX</span>
+                  </span>
+                }
+              />
+            </Link>
             <EditableText contentKey="footer_copyright" fallback="© 2021" as="span" />
           </div>
           <EditableText contentKey="footer_tagline" fallback="Designed for education." as="p" className="text-[10px] text-muted-foreground/50" />
